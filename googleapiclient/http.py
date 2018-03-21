@@ -28,9 +28,7 @@ __author__ = 'jcgregorio@google.com (Joe Gregorio)'
 from six import BytesIO, StringIO
 from six.moves.urllib.parse import urlparse, urlunparse, quote, unquote
 
-import base64
 import copy
-import gzip
 import httplib2
 import json
 import logging
@@ -38,7 +36,6 @@ import mimetypes
 import os
 import random
 import socket
-import sys
 import time
 import uuid
 
@@ -70,6 +67,12 @@ from googleapiclient.errors import ResumableUploadError
 from googleapiclient.errors import UnexpectedBodyError
 from googleapiclient.errors import UnexpectedMethodError
 from googleapiclient.model import JsonModel
+
+if _auth.HAS_OAUTH2CLIENT:
+  from oauth2client.client import HttpAccessTokenRefreshError
+  AUTH_RETRY_EXCEPTIONS = (HttpAccessTokenRefreshError,)
+else:
+  AUTH_RETRY_EXCEPTIONS = (BaseException,)
 
 
 LOGGER = logging.getLogger(__name__)
@@ -1117,7 +1120,24 @@ class BatchHttpRequest(object):
     self._rand = random.random
     self._sleep = time.sleep
 
-  def _refresh_and_apply_credentials(self, request, http):
+  def _retry_auth_refresh_credentials(self, creds, num_retries=0):
+    for retry_num in range(num_retries + 1):
+      if retry_num > 0:
+        # Sleep before retrying.
+        sleep_time = self._rand() * 2 ** retry_num
+        LOGGER.warning(
+            'Sleeping %.2f seconds before retry %d of %d for %s',
+            sleep_time, retry_num, num_retries, '_auth.refresh_credentials')
+        self._sleep(sleep_time)
+
+      try:
+        return _auth.refresh_credentials(creds)
+      except AUTH_RETRY_EXCEPTIONS as e:
+        status = getattr(e, 'status', None)
+        if status is None or not _should_retry_response(status, e.args[0:1]):
+          raise
+
+  def _refresh_and_apply_credentials(self, request, http, num_retries=0):
     """Refresh the credentials and apply to the request.
 
     Args:
@@ -1139,14 +1159,13 @@ class BatchHttpRequest(object):
 
     if creds is not None:
       if id(creds) not in self._refreshed_credentials:
-        _auth.refresh_credentials(creds)
+        self._retry_auth_refresh_credentials(creds, num_retries)
         self._refreshed_credentials[id(creds)] = 1
 
     # Only apply the credentials if we are using the http object passed in,
     # otherwise apply() will get called during _serialize_request().
     if request.http is None or not request_credentials:
       _auth.apply_credentials(creds, request.headers)
-
 
   def _id_to_header(self, id_):
     """Convert an id to a Content-ID header value.
@@ -1164,7 +1183,8 @@ class BatchHttpRequest(object):
 
     return '<%s+%s>' % (self._base_id, quote(id_))
 
-  def _header_to_id(self, header):
+  @staticmethod
+  def _header_to_id(header):
     """Convert a Content-ID header value to an id.
 
     Presumes the Content-ID header conforms to the format that _id_to_header()
@@ -1187,7 +1207,8 @@ class BatchHttpRequest(object):
 
     return unquote(id_)
 
-  def _serialize_request(self, request):
+  @staticmethod
+  def _serialize_request(request):
     """Convert an HttpRequest object into a string.
 
     Args:
@@ -1233,7 +1254,8 @@ class BatchHttpRequest(object):
 
     return status_line + body
 
-  def _deserialize_response(self, payload):
+  @staticmethod
+  def _deserialize_response(payload):
     """Convert string into httplib2 response and content.
 
     Args:
@@ -1328,7 +1350,7 @@ class BatchHttpRequest(object):
     """
     message = MIMEMultipart('mixed')
     # Message should not write out it's own headers.
-    setattr(message, '_write_headers', lambda self: None)
+    setattr(message, '_write_headers', lambda x: None)
 
     # Add all the individual requests.
     for request_id in order:
@@ -1424,7 +1446,7 @@ class BatchHttpRequest(object):
     if creds is not None:
       if not _auth.is_valid(creds):
         LOGGER.info('Attempting refresh to obtain initial access_token')
-        _auth.refresh_credentials(creds)
+        self._retry_auth_refresh_credentials(creds, num_retries)
 
     self._execute(http, self._order, self._requests, num_retries)
 
@@ -1448,11 +1470,10 @@ class BatchHttpRequest(object):
       for request_id in self._order:
         resp, content = self._responses[request_id]
 
-        # We'll only retry 401s once on the first attempt
         if resp['status'] == '401' and retry_num == 0:
           redo_order.append(request_id)
           request = self._requests[request_id]
-          self._refresh_and_apply_credentials(request, http)
+          self._refresh_and_apply_credentials(request, http, num_retries)
           redo_requests[request_id] = request
         elif _should_retry_response(resp.status, content):
           redo_order.append(request_id)
