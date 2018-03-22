@@ -1134,7 +1134,7 @@ class BatchHttpRequest(object):
         return _auth.refresh_credentials(creds)
       except AUTH_RETRY_EXCEPTIONS as e:
         status = getattr(e, 'status', None)
-        if status is None or not _should_retry_response(status, e.args[0:1]):
+        if status is None or not _should_retry_response(status, str(e)) or retry_num == num_retries:
           raise
 
   def _refresh_and_apply_credentials(self, request, http, num_retries=0):
