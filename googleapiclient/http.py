@@ -175,6 +175,8 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
           'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED', ):
         raise
       exception = socket_error
+    except socket.timeout as socket_timeout:
+      exception = socket.timeout
 
     if exception:
       if retry_num == num_retries:
