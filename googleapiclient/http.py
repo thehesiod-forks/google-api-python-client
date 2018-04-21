@@ -176,6 +176,7 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
         raise
       exception = socket_error
     except socket.timeout as socket_timeout:
+      # https://github.com/google/google-api-python-client/issues/494
       exception = socket.timeout
 
     if exception:
