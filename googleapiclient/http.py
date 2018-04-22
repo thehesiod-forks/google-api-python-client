@@ -174,7 +174,7 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
     except socket.error as socket_error:
       # https://github.com/google/google-api-python-client/issues/494
       # socket.timeout has no errno
-      if not isinstance(socket_error, socket.timeout) or \
+      if not isinstance(socket_error, socket.timeout) and \
             socket.errno.errorcode.get(socket_error.errno) not in {
           'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED'}:
         raise
