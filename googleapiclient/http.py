@@ -172,14 +172,13 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
     except _ssl_SSLError as ssl_error:
       exception = ssl_error
     except socket.error as socket_error:
-      # errno's contents differ by platform, so we have to match by name.
-      if socket.errno.errorcode.get(socket_error.errno) not in (
-          'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED', ):
+      # https://github.com/google/google-api-python-client/issues/494
+      # socket.timeout has no errno
+      if not isinstance(sucket_error, socket.timeout) or \
+            socket.errno.errorcode.get(socket_error.errno) not in {
+          'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED'}:
         raise
       exception = socket_error
-    except socket.timeout as socket_timeout:
-      # https://github.com/google/google-api-python-client/issues/494
-      exception = socket.timeout
 
     if exception:
       if retry_num == num_retries:
