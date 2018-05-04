@@ -181,7 +181,9 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
         'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED'}:
         raise
       exception = socket_error
-
+    except AUTH_RETRY_EXCEPTIONS as auth_error:
+      exception = auth_error
+    
     if exception:
       if retry_num == num_retries:
         raise exception
@@ -1150,7 +1152,7 @@ class BatchHttpRequest(object):
         return _auth.refresh_credentials(creds)
       except AUTH_RETRY_EXCEPTIONS as e:
         status = getattr(e, 'status', None)
-        if retry_num >= num_retries or status is None or not _should_retry_response(status, str(e)):
+        if retry_num >= num_retries:
           raise
 
   def _refresh_and_apply_credentials(self, request, http, num_retries=0):
