@@ -177,6 +177,7 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
         raise
       exception = socket_error
     except AUTH_RETRY_EXCEPTIONS as auth_error:
+      # oddly you can occasionally get an auth error that succeeds on a retry
       exception = auth_error
     
     if exception:
@@ -1146,7 +1147,7 @@ class BatchHttpRequest(object):
       try:
         return _auth.refresh_credentials(creds)
       except AUTH_RETRY_EXCEPTIONS as e:
-        status = getattr(e, 'status', None)
+        # oddly you can occasionally get an auth error that succeeds on a retry
         if retry_num >= num_retries:
           raise
 
