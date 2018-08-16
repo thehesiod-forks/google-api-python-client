@@ -19,8 +19,7 @@ object supporting an execute() method that does the
 actuall HTTP request.
 """
 from __future__ import absolute_import
-import six
-from six.moves import http_client
+import six.moves
 from six.moves import range
 
 __author__ = 'jcgregorio@google.com (Joe Gregorio)'
@@ -65,9 +64,17 @@ from googleapiclient.model import JsonModel
 
 if _auth.HAS_OAUTH2CLIENT:
   from oauth2client.client import HttpAccessTokenRefreshError
-  AUTH_RETRY_EXCEPTIONS = (HttpAccessTokenRefreshError,)
+
+  if six.PY3:
+    AUTH_RETRY_EXCEPTIONS = (HttpAccessTokenRefreshError, ConnectionError)
+  else:
+    AUTH_RETRY_EXCEPTIONS = (HttpAccessTokenRefreshError, socket.error)
 else:
-  AUTH_RETRY_EXCEPTIONS = (BaseException,)
+  # TODO: replace with google auth exception
+  class _NeverRaisedException(Exception):
+    pass
+
+  AUTH_RETRY_EXCEPTIONS = (_NeverRaisedException,)
 
 
 LOGGER = logging.getLogger(__name__)
