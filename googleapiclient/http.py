@@ -62,10 +62,11 @@ from googleapiclient.errors import UnexpectedBodyError
 from googleapiclient.errors import UnexpectedMethodError
 from googleapiclient.model import JsonModel
 
-AUTH_RETRY_EXCEPTIONS = (socket.error,)
-
+RETRY_EXCEPTIONS = tuple()
 if six.PY3:
-  AUTH_RETRY_EXCEPTIONS += (ConnectionError,)
+  RETRY_EXCEPTIONS += (ConnectionError,)
+
+AUTH_RETRY_EXCEPTIONS = tuple()
 
 if _auth.HAS_OAUTH2CLIENT:
   from oauth2client.client import HttpAccessTokenRefreshError
@@ -134,6 +135,63 @@ def _should_retry_response(resp_status, content):
   return False
 
 
+class _RetryException(Exception):
+  def __init__(self, retry_reason):
+    self.retry_reason = retry_reason
+
+
+def _retry_generator(num_retries, rand, sleep, retry_string_suffix=''):
+  """
+  Generator which will yield the current retry_num for each retry, raise if there are no retries left
+
+  :param num_retries: number of retries
+  """
+  exception = retry_reason = None
+  for retry_num in range(num_retries + 1):
+    try:
+      retry_reason = retry_reason or exception
+      if retry_num > 0:
+        # Sleep before retrying.
+        sleep_time = rand() * 2 ** retry_num
+        LOGGER.warning(
+            'Sleeping %.2f seconds before retry %d of %d%s, after %s',
+            sleep_time, retry_num, num_retries, retry_string_suffix, retry_reason)
+        sleep(sleep_time)
+
+      retry_reason = None
+      yield
+
+      return  # On success, exit
+    except _ssl_SSLError as ssl_error:
+      exception = ssl_error
+    except socket.timeout as socket_timeout:
+      # It's important that this be before socket.error as it's a subclass
+      # socket.timeout has no errorcode
+      exception = socket_timeout
+    except socket.error as socket_error:
+      # errno's contents differ by platform, so we have to match by name.
+      if socket.errno.errorcode.get(socket_error.errno) not in {
+        'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED'}:
+        raise
+      exception = socket_error
+    except RETRY_EXCEPTIONS as e:
+      exception = e
+    except AUTH_RETRY_EXCEPTIONS as auth_error:
+      # oddly you can occasionally get an auth error that succeeds on a retry
+      exception = auth_error
+    except httplib2.ServerNotFoundError as server_not_found_error:
+      exception = server_not_found_error
+    except _RetryException as e:
+      exception = e
+      retry_reason = e.retry_reason
+
+    if exception:
+      if retry_num == num_retries:
+        raise exception
+      else:
+        continue
+
+
 def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
                    **kwargs):
   """Retries an HTTP request multiple times while handling errors.
@@ -153,51 +211,13 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
   Returns:
     resp, content - Response from the http request (may be HTTP 5xx).
   """
-  resp = None
-  content = None
-  for retry_num in range(num_retries + 1):
-    if retry_num > 0:
-      # Sleep before retrying.
-      sleep_time = rand() * 2 ** retry_num
-      LOGGER.warning(
-          'Sleeping %.2f seconds before retry %d of %d for %s: %s %s, after %s',
-          sleep_time, retry_num, num_retries, req_type, method, uri,
-          resp.status if resp else exception)
-      sleep(sleep_time)
+  for _ in _retry_generator(num_retries, rand, sleep, " for %s: %s %s'" % (req_type, method, uri)):
+    resp, content = http.request(uri, method, *args, **kwargs)
 
-    try:
-      exception = None
-      resp, content = http.request(uri, method, *args, **kwargs)
-    # Retry on SSL errors and socket timeout errors.
-    except _ssl_SSLError as ssl_error:
-      exception = ssl_error
-    except socket.timeout as socket_timeout:
-      # It's important that this be before socket.error as it's a subclass
-      # socket.timeout has no errorcode
-      exception = socket_timeout
-    except socket.error as socket_error:
-      # errno's contents differ by platform, so we have to match by name.
-      if socket.errno.errorcode.get(socket_error.errno) not in {
-        'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED'}:
-        raise
-      exception = socket_error
-    except AUTH_RETRY_EXCEPTIONS as auth_error:
-      # oddly you can occasionally get an auth error that succeeds on a retry
-      exception = auth_error
-    
-    except httplib2.ServerNotFoundError as server_not_found_error:
-      exception = server_not_found_error
+    if _should_retry_response(resp.status, content):
+      raise _RetryException(resp.status)
 
-    if exception:
-      if retry_num == num_retries:
-        raise exception
-      else:
-        continue
-
-    if not _should_retry_response(resp.status, content):
-      break
-
-  return resp, content
+    return resp, content
 
 
 class MediaUploadProgress(object):
@@ -1150,21 +1170,8 @@ class BatchHttpRequest(object):
     self._sleep = time.sleep
 
   def _retry_auth_refresh_credentials(self, creds, num_retries=0):
-    for retry_num in range(num_retries + 1):
-      if retry_num > 0:
-        # Sleep before retrying.
-        sleep_time = self._rand() * 2 ** retry_num
-        LOGGER.warning(
-            'Sleeping %.2f seconds before retry %d of %d for %s',
-            sleep_time, retry_num, num_retries, '_auth.refresh_credentials')
-        self._sleep(sleep_time)
-
-      try:
+    for _ in _retry_generator(num_retries, self._rand, self._sleep, '_auth.refresh_credentials'):
         return _auth.refresh_credentials(creds)
-      except AUTH_RETRY_EXCEPTIONS as e:
-        # oddly you can occasionally get an auth error that succeeds on a retry
-        if retry_num >= num_retries:
-          raise
 
   def _refresh_and_apply_credentials(self, request, http, num_retries=0):
     """Refresh the credentials and apply to the request.
