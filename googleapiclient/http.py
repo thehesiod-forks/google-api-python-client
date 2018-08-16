@@ -62,20 +62,18 @@ from googleapiclient.errors import UnexpectedBodyError
 from googleapiclient.errors import UnexpectedMethodError
 from googleapiclient.model import JsonModel
 
+AUTH_RETRY_EXCEPTIONS = (socket.error,)
+
+if six.PY3:
+  AUTH_RETRY_EXCEPTIONS += (ConnectionError,)
+
 if _auth.HAS_OAUTH2CLIENT:
   from oauth2client.client import HttpAccessTokenRefreshError
+  AUTH_RETRY_EXCEPTIONS += (HttpAccessTokenRefreshError,)
 
-  if six.PY3:
-    AUTH_RETRY_EXCEPTIONS = (HttpAccessTokenRefreshError, ConnectionError)
-  else:
-    AUTH_RETRY_EXCEPTIONS = (HttpAccessTokenRefreshError, socket.error)
-else:
-  # TODO: replace with google auth exception
-  class _NeverRaisedException(Exception):
-    pass
-
-  AUTH_RETRY_EXCEPTIONS = (_NeverRaisedException,)
-
+if _auth.HAS_GOOGLE_AUTH:
+  from google.auth.exceptions import RefreshError
+  AUTH_RETRY_EXCEPTIONS += (RefreshError,)
 
 LOGGER = logging.getLogger(__name__)
 
