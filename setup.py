@@ -46,12 +46,6 @@ install_requires = [
     'uritemplate>=3.0.0,<4dev',
 ]
 
-dependency_links = [
-    # until https://github.com/httplib2/httplib2/pull/111 is merged
-    "git+ssh://git@github.com/thehesiod/httplib2.git@18_timeouts#egg=httplib2-0.11.3"
-]
-
-
 long_desc = """The Google API Client for Python is a client library for
 accessing the Plus, Moderator, and many other Google APIs."""
 
@@ -66,7 +60,6 @@ setup(
     author="Google Inc.",
     url="http://github.com/google/google-api-python-client/",
     install_requires=install_requires,
-    dependency_links=dependency_links,
     packages=packages,
     package_data={},
     license="Apache 2.0",
