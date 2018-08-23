@@ -39,14 +39,18 @@ packages = [
 ]
 
 install_requires = [
-    # until https://github.com/httplib2/httplib2/pull/111 is merged
-    'https://github.com/thehesiod/httplib2.git@18_timeouts#egg=httplib2',
-
+    'httplib2>=0.9.2,<1dev',
     'google-auth>=1.4.1',
     'google-auth-httplib2>=0.0.3',
     'six>=1.6.1,<2dev',
     'uritemplate>=3.0.0,<4dev',
 ]
+
+dependency_links = [
+    # until https://github.com/httplib2/httplib2/pull/111 is merged
+    "git+git://github.com/thehesiod/httplib2.git@18_timeouts#egg=httplib2"
+]
+
 
 long_desc = """The Google API Client for Python is a client library for
 accessing the Plus, Moderator, and many other Google APIs."""
@@ -62,6 +66,7 @@ setup(
     author="Google Inc.",
     url="http://github.com/google/google-api-python-client/",
     install_requires=install_requires,
+    dependency_links=dependency_links,
     packages=packages,
     package_data={},
     license="Apache 2.0",
