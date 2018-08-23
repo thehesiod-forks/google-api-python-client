@@ -48,7 +48,7 @@ install_requires = [
 
 dependency_links = [
     # until https://github.com/httplib2/httplib2/pull/111 is merged
-    "git+https://github.com/thehesiod/httplib2.git@18_timeouts#egg=httplib2"
+    "git+https://github.com/thehesiod/httplib2.git@18_timeouts#egg=httplib2-0.11.3"
 ]
 
 
