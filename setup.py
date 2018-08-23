@@ -40,7 +40,7 @@ packages = [
 
 install_requires = [
     # until https://github.com/httplib2/httplib2/pull/111 is merged
-    'git+git://github.com/thehesiod/httplib2.git@18_timeouts#egg=httplib2',
+    'https://github.com/thehesiod/httplib2.git@18_timeouts#egg=httplib2',
 
     'google-auth>=1.4.1',
     'google-auth-httplib2>=0.0.3',
