@@ -62,6 +62,7 @@ from googleapiclient.errors import UnexpectedBodyError
 from googleapiclient.errors import UnexpectedMethodError
 from googleapiclient.model import JsonModel
 
+# These are platform specific exceptions
 RETRY_EXCEPTIONS = tuple()
 if six.PY3:
   RETRY_EXCEPTIONS += (ConnectionError,)
@@ -1170,6 +1171,17 @@ class BatchHttpRequest(object):
           raise
       except AUTH_RETRY_EXCEPTIONS as e:
         # oddly you can occasionally get an auth error that succeeds on a retry
+        if retry_num >= num_retries:
+          raise
+      except socket.timeout as e:
+        # It's important that this be before socket.error as it's a subclass
+        if retry_num >= num_retries:
+          raise
+      except socket.error as e:
+        # errno's contents differ by platform, so we have to match by name.
+        if socket.errno.errorcode.get(e.errno) not in {
+          'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED'}:
+          raise
         if retry_num >= num_retries:
           raise
 
