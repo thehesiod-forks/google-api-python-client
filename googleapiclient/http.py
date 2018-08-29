@@ -87,6 +87,8 @@ _TOO_MANY_REQUESTS = 429
 
 DEFAULT_HTTP_TIMEOUT_SEC = 60
 
+_MAX_SLEEP_S = 25
+
 _LEGACY_BATCH_URI = 'https://www.googleapis.com/batch'
 
 
@@ -160,7 +162,7 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
   for retry_num in range(num_retries + 1):
     if retry_num > 0:
       # Sleep before retrying.
-      sleep_time = rand() * 2 ** retry_num
+      sleep_time = min(rand() * 2 ** retry_num, _MAX_SLEEP_S)
       LOGGER.warning(
           'Sleeping %.2f seconds before retry %d of %d for %s: %s %s, after %s',
           sleep_time, retry_num, num_retries, req_type, method, uri,
@@ -986,7 +988,8 @@ class HttpRequest(object):
 
     for retry_num in range(num_retries + 1):
       if retry_num > 0:
-        self._sleep(self._rand() * 2**retry_num)
+        sleep_time = min(self._rand() * 2**retry_num, _MAX_SLEEP_S)
+        self._sleep(sleep_time)
         LOGGER.warning(
             'Retry #%d for media upload: %s %s, following status: %d'
             % (retry_num, self.method, self.uri, resp.status))
@@ -1157,7 +1160,7 @@ class BatchHttpRequest(object):
     for retry_num in range(num_retries + 1):
       if retry_num > 0:
         # Sleep before retrying.
-        sleep_time = self._rand() * 2 ** retry_num
+        sleep_time = min(self._rand() * 2 ** retry_num, _MAX_SLEEP_S)
         LOGGER.warning(
             'Sleeping %.2f seconds before retry %d of %d for %s',
             sleep_time, retry_num, num_retries, '_auth.refresh_credentials')
@@ -1511,7 +1514,7 @@ class BatchHttpRequest(object):
 
       if retry_num > 0:
         # Sleep before retrying.
-        sleep_time = self._rand() * 2 ** retry_num
+        sleep_time = min(self._rand() * 2 ** retry_num, _MAX_SLEEP_S)
         LOGGER.warning(
             'Sleeping %.2f seconds before retry %d of %d for %s: %s %s',
             sleep_time, retry_num, num_retries, 'request', 'POST',
