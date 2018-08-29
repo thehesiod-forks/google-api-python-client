@@ -175,6 +175,11 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
     # Retry on SSL errors and socket timeout errors.
     except _ssl_SSLError as ssl_error:
       exception = ssl_error
+    except AUTH_RETRY_EXCEPTIONS as auth_error:
+      # oddly you can occasionally get an auth error that succeeds on a retry
+      exception = auth_error
+    except RETRY_EXCEPTIONS as e:  # ConnectionResetError is subclass of socket.error
+      exception = e
     except socket.timeout as socket_timeout:
       # It's important that this be before socket.error as it's a subclass
       # socket.timeout has no errorcode
@@ -185,12 +190,7 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
         'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED'}:
         raise
       exception = socket_error
-    except RETRY_EXCEPTIONS as e:
-      exception = e
-    except AUTH_RETRY_EXCEPTIONS as auth_error:
-      # oddly you can occasionally get an auth error that succeeds on a retry
-      exception = auth_error
-    
+
     except httplib2.ServerNotFoundError as server_not_found_error:
       exception = server_not_found_error
 
