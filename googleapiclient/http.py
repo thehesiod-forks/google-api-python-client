@@ -140,8 +140,8 @@ def _should_retry_response(resp_status, content):
   return False
 
 
-def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
-                   **kwargs):
+def retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
+                  **kwargs):
   """Retries an HTTP request multiple times while handling errors.
 
   If after all retries the request still fails, last error is either returned as
@@ -699,7 +699,7 @@ class MediaIoBaseDownload(object):
             self._progress, self._progress + self._chunksize)
     http = self._request.http
 
-    resp, content = _retry_request(
+    resp, content = retry_request(
         http, num_retries, 'media download', self._sleep, self._rand, self._uri,
         'GET', headers=headers)
 
@@ -859,7 +859,7 @@ class HttpRequest(object):
       self.headers['content-length'] = str(len(self.body))
 
     # Handle retries for server-side errors.
-    resp, content = _retry_request(
+    resp, content = retry_request(
           http, num_retries, 'request', self._sleep, self._rand, str(self.uri),
           method=str(self.method), body=self.body, headers=self.headers)
 
@@ -935,7 +935,7 @@ class HttpRequest(object):
         start_headers['X-Upload-Content-Length'] = size
       start_headers['content-length'] = str(self.body_size)
 
-      resp, content = _retry_request(
+      resp, content = retry_request(
           http, num_retries, 'resumable URI request', self._sleep, self._rand,
           self.uri, method=self.method, body=self.body, headers=start_headers)
 
@@ -1435,9 +1435,9 @@ class BatchHttpRequest(object):
     headers['content-type'] = ('multipart/mixed; '
                                'boundary="%s"') % message.get_boundary()
 
-    resp, content = _retry_request(http, num_retries, 'request', self._sleep,
-                                   self._rand, self._batch_uri, 'POST',
-                                   body=body, headers=headers)
+    resp, content = retry_request(http, num_retries, 'request', self._sleep,
+                                  self._rand, self._batch_uri, 'POST',
+                                  body=body, headers=headers)
 
     if resp.status >= 300:
       raise HttpError(resp, content, uri=self._batch_uri)

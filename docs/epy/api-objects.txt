@@ -70,7 +70,7 @@ googleapiclient.http	googleapiclient.http-module.html
 googleapiclient.http._TOO_MANY_REQUESTS	googleapiclient.http-module.html#_TOO_MANY_REQUESTS
 googleapiclient.http.set_user_agent	googleapiclient.http-module.html#set_user_agent
 googleapiclient.http.tunnel_patch	googleapiclient.http-module.html#tunnel_patch
-googleapiclient.http._retry_request	googleapiclient.http-module.html#_retry_request
+googleapiclient.http.retry_request	googleapiclient.http-module.html#retry_request
 googleapiclient.http.DEFAULT_CHUNK_SIZE	googleapiclient.http-module.html#DEFAULT_CHUNK_SIZE
 googleapiclient.http.LOGGER	googleapiclient.http-module.html#LOGGER
 googleapiclient.http.DEFAULT_HTTP_TIMEOUT_SEC	googleapiclient.http-module.html#DEFAULT_HTTP_TIMEOUT_SEC

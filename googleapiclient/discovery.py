@@ -30,8 +30,7 @@ __all__ = [
 
 from six import BytesIO
 from six.moves import http_client
-from six.moves.urllib.parse import urlencode, urlparse, urljoin, \
-  urlunparse, parse_qsl
+from six.moves.urllib.parse import urljoin
 
 # Standard library imports
 import copy
@@ -47,6 +46,8 @@ import logging
 import mimetypes
 import os
 import re
+import time
+import random
 
 # Third-party imports
 import httplib2
@@ -68,6 +69,7 @@ from googleapiclient.http import HttpMockSequence
 from googleapiclient.http import HttpRequest
 from googleapiclient.http import MediaFileUpload
 from googleapiclient.http import MediaUpload
+from googleapiclient.http import retry_request
 from googleapiclient.model import JsonModel
 from googleapiclient.model import MediaModel
 from googleapiclient.model import RawModel
@@ -78,6 +80,8 @@ from googleapiclient._helpers import positional
 
 
 # The client library requires a version of httplib2 that supports RETRIES.
+# This was originally set to 1, however
+# NOTE: this is really ATTEMPTS
 httplib2.RETRIES = 1
 
 logger = logging.getLogger(__name__)
@@ -120,10 +124,12 @@ STACK_QUERY_PARAMETER_DEFAULT_VALUE = {'type': 'string', 'location': 'query'}
 # Library-specific reserved words beyond Python keywords.
 RESERVED_WORDS = frozenset(['body'])
 
+
 # patch _write_lines to avoid munging '\r' into '\n'
 # ( https://bugs.python.org/issue18886 https://bugs.python.org/issue19003 )
 class _BytesGenerator(BytesGenerator):
   _write_lines = BytesGenerator.write
+
 
 def fix_method_name(name):
   """Fix method names to avoid '$' characters and reserved word conflicts.
@@ -176,7 +182,8 @@ def build(serviceName,
           requestBuilder=HttpRequest,
           credentials=None,
           cache_discovery=True,
-          cache=None):
+          cache=None,
+          num_retries=0):
   """Construct a Resource for interacting with an API.
 
   Construct a Resource object for interacting with an API. The serviceName and
@@ -202,6 +209,7 @@ def build(serviceName,
     cache_discovery: Boolean, whether or not to cache the discovery doc.
     cache: googleapiclient.discovery_cache.base.CacheBase, an optional
       cache object for the discovery documents.
+    num_retries: int, optional number of retries
 
   Returns:
     A Resource object with methods for interacting with the service.
@@ -221,7 +229,7 @@ def build(serviceName,
 
     try:
       content = _retrieve_discovery_doc(
-        requested_url, discovery_http, cache_discovery, cache, developerKey)
+        requested_url, discovery_http, cache_discovery, cache, developerKey, num_retries)
       return build_from_document(content, base=discovery_url, http=http,
           developerKey=developerKey, model=model, requestBuilder=requestBuilder,
           credentials=credentials)
@@ -236,7 +244,7 @@ def build(serviceName,
 
 
 def _retrieve_discovery_doc(url, http, cache_discovery, cache=None,
-                            developerKey=None):
+                            developerKey=None, num_retries=0):
   """Retrieves the discovery_doc from cache or the internet.
 
   Args:
@@ -246,13 +254,13 @@ def _retrieve_discovery_doc(url, http, cache_discovery, cache=None,
     cache_discovery: Boolean, whether or not to cache the discovery doc.
     cache: googleapiclient.discovery_cache.base.Cache, an optional cache
       object for the discovery documents.
+    num_retries: int, optional number of retries
 
   Returns:
     A unicode string representation of the discovery document.
   """
   if cache_discovery:
     from . import discovery_cache
-    from .discovery_cache import base
     if cache is None:
       cache = discovery_cache.autodetect()
     if cache:
@@ -261,6 +269,7 @@ def _retrieve_discovery_doc(url, http, cache_discovery, cache=None,
         return content
 
   actual_url = url
+
   # REMOTE_ADDR is defined by the CGI spec [RFC3875] as the environment
   # variable that contains the network address of the client sending the
   # request. If it exists then add that to the request for the discovery
@@ -271,7 +280,7 @@ def _retrieve_discovery_doc(url, http, cache_discovery, cache=None,
     actual_url = _add_query_parameter(url, 'key', developerKey)
   logger.info('URL being requested: GET %s', actual_url)
 
-  resp, content = http.request(actual_url)
+  resp, content = retry_request(http, num_retries, 'discovery', time.sleep, random.random, actual_url, 'GET')
 
   if resp.status >= 400:
     raise HttpError(resp, content, uri=actual_url)
@@ -286,8 +295,10 @@ def _retrieve_discovery_doc(url, http, cache_discovery, cache=None,
   except ValueError as e:
     logger.error('Failed to parse as JSON: ' + content)
     raise InvalidJsonError()
+
   if cache_discovery and cache:
     cache.set(url, content)
+
   return content
 
 
@@ -335,7 +346,7 @@ def build_from_document(
   if isinstance(service, six.string_types):
     service = json.loads(service)
 
-  if  'rootUrl' not in service and (isinstance(http, (HttpMock,
+  if 'rootUrl' not in service and (isinstance(http, (HttpMock,
                                                       HttpMockSequence))):
       logger.error("You are using HttpMock or HttpMockSequence without" +
                    "having the service discovery doc in cache. Try calling " +
@@ -733,7 +744,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
         # temporary workaround for non-paging methods incorrectly requiring
         # page token parameter (cf. drive.changes.watch vs. drive.changes.list)
         if name not in _PAGE_TOKEN_NAMES or _findPageTokenName(
-            _methodProperties(methodDesc, schema, 'response')):
+                _methodProperties(methodDesc, schema, 'response')):
           raise TypeError('Missing required parameter "%s"' % name)
 
     for name, regex in six.iteritems(parameters.pattern_params):
@@ -754,7 +765,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
         # name differently, since we want to handle both
         # arg='value' and arg=['value1', 'value2']
         if (name in parameters.repeated_params and
-            not isinstance(kwargs[name], six.string_types)):
+                not isinstance(kwargs[name], six.string_types)):
           values = kwargs[name]
         else:
           values = [kwargs[name]]
@@ -798,7 +809,6 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
     url = _urljoin(self._baseUrl, expanded_url + query)
 
     resumable = None
-    multipart_boundary = ''
 
     if media_filename:
       # Ensure we end up with a valid MediaUpload object.
@@ -1069,6 +1079,7 @@ class Resource(object):
     if resourceDesc == rootDesc:
       batch_uri = '%s%s' % (
         rootDesc['rootUrl'], rootDesc.get('batchPath', 'batch'))
+
       def new_batch_http_request(callback=None):
         """Create a BatchHttpRequest object based on the discovery document.
 
@@ -1170,6 +1181,7 @@ def _findPageTokenName(fields):
   """
   return next((tokenName for tokenName in _PAGE_TOKEN_NAMES
               if tokenName in fields), None)
+
 
 def _methodProperties(methodDesc, schema, name):
   """Get properties of a field in a method description.
