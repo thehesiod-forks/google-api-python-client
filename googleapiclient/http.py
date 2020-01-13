@@ -166,7 +166,7 @@ def retry_request(
     for retry_num in range(num_retries + 1):
         if retry_num > 0:
             # Sleep before retrying.
-      sleep_time = min(rand() * 2 ** retry_num, _MAX_SLEEP_S)
+            sleep_time = min(rand() * 2 ** retry_num, _MAX_SLEEP_S)
             LOGGER.warning(
                 "Sleeping %.2f seconds before retry %d of %d for %s: %s %s, after %s",
                 sleep_time,
@@ -185,11 +185,11 @@ def retry_request(
         # Retry on SSL errors and socket timeout errors.
         except _ssl_SSLError as ssl_error:
             exception = ssl_error
-    except AUTH_RETRY_EXCEPTIONS as auth_error:
-      # oddly you can occasionally get an auth error that succeeds on a retry
-      exception = auth_error
-    except RETRY_EXCEPTIONS as e:  # ConnectionResetError is subclass of socket.error
-      exception = e
+        except AUTH_RETRY_EXCEPTIONS as auth_error:
+            # oddly you can occasionally get an auth error that succeeds on a retry
+            exception = auth_error
+        except RETRY_EXCEPTIONS as e:  # ConnectionResetError is subclass of socket.error
+            exception = e
         except socket.timeout as socket_timeout:
             # It's important that this be before socket.error as it's a subclass
             # socket.timeout has no errorcode
@@ -204,7 +204,6 @@ def retry_request(
             }:
                 raise
             exception = socket_error
-
         except httplib2.ServerNotFoundError as server_not_found_error:
             exception = server_not_found_error
 
@@ -1044,8 +1043,8 @@ class HttpRequest(object):
 
         for retry_num in range(num_retries + 1):
             if retry_num > 0:
-        sleep_time = min(self._rand() * 2**retry_num, _MAX_SLEEP_S)
-        self._sleep(sleep_time)
+                sleep_time = min(self._rand() * 2**retry_num, _MAX_SLEEP_S)
+                self._sleep(sleep_time)
                 LOGGER.warning(
                     "Retry #%d for media upload: %s %s, following status: %d"
                     % (retry_num, self.method, self.uri, resp.status)
@@ -1213,49 +1212,49 @@ class BatchHttpRequest(object):
         # A map of id(Credentials) that have been refreshed.
         self._refreshed_credentials = {}
 
-    # Stubs for testing.
-    self._rand = random.random
-    self._sleep = time.sleep
+        # Stubs for testing.
+        self._rand = random.random
+        self._sleep = time.sleep
 
-  def _retry_auth_refresh_credentials(self, creds, num_retries=0):
-    for retry_num in range(num_retries + 1):
-      if retry_num > 0:
-        # Sleep before retrying.
-        sleep_time = min(self._rand() * 2 ** retry_num, _MAX_SLEEP_S)
-        LOGGER.warning(
-            'Sleeping %.2f seconds before retry %d of %d for %s',
-            sleep_time, retry_num, num_retries, '_auth.refresh_credentials')
-        self._sleep(sleep_time)
+    def _retry_auth_refresh_credentials(self, creds, num_retries=0):
+        for retry_num in range(num_retries + 1):
+            if retry_num > 0:
+                # Sleep before retrying.
+                sleep_time = min(self._rand() * 2 ** retry_num, _MAX_SLEEP_S)
+                LOGGER.warning(
+                    'Sleeping %.2f seconds before retry %d of %d for %s',
+                    sleep_time, retry_num, num_retries, '_auth.refresh_credentials')
+                self._sleep(sleep_time)
 
-      try:
-        return _auth.refresh_credentials(creds)
-      except RETRY_EXCEPTIONS as e:
-        # oddly you can occasionally get an auth error that succeeds on a retry
-        if retry_num >= num_retries:
-          raise
-      except AUTH_RETRY_EXCEPTIONS as e:
-        # oddly you can occasionally get an auth error that succeeds on a retry
-        if retry_num >= num_retries:
-          raise
-      except socket.timeout as e:
-        # It's important that this be before socket.error as it's a subclass
-        if retry_num >= num_retries:
-          raise
-      except socket.error as e:
-        # errno's contents differ by platform, so we have to match by name.
-        if socket.errno.errorcode.get(e.errno) not in {
-          'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED'}:
-          raise
-        if retry_num >= num_retries:
-          raise
+            try:
+                return _auth.refresh_credentials(creds)
+            except RETRY_EXCEPTIONS as e:
+                # oddly you can occasionally get an auth error that succeeds on a retry
+                if retry_num >= num_retries:
+                    raise
+            except AUTH_RETRY_EXCEPTIONS as e:
+                # oddly you can occasionally get an auth error that succeeds on a retry
+                if retry_num >= num_retries:
+                    raise
+            except socket.timeout as e:
+                # It's important that this be before socket.error as it's a subclass
+                if retry_num >= num_retries:
+                    raise
+            except socket.error as e:
+                # errno's contents differ by platform, so we have to match by name.
+                if socket.errno.errorcode.get(e.errno) not in {
+                    'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED'}:
+                    raise
+                if retry_num >= num_retries:
+                    raise
 
-  def _refresh_and_apply_credentials(self, request, http, num_retries=0):
+    def _refresh_and_apply_credentials(self, request, http, num_retries=0):
         """Refresh the credentials and apply to the request.
 
-    Args:
-      request: HttpRequest, the request.
-      http: httplib2.Http, the global http object for the batch.
-    """
+        Args:
+          request: HttpRequest, the request.
+          http: httplib2.Http, the global http object for the batch.
+        """
         # For the credentials to refresh, but only once per refresh_token
         # If there is no http per the request then refresh the http passed in
         # via execute()
@@ -1271,7 +1270,7 @@ class BatchHttpRequest(object):
 
         if creds is not None:
             if id(creds) not in self._refreshed_credentials:
-        self._retry_auth_refresh_credentials(creds, num_retries)
+                self._retry_auth_refresh_credentials(creds, num_retries)
                 self._refreshed_credentials[id(creds)] = 1
 
         # Only apply the credentials if we are using the http object passed in,
@@ -1282,14 +1281,14 @@ class BatchHttpRequest(object):
     def _id_to_header(self, id_):
         """Convert an id to a Content-ID header value.
 
-    Args:
-      id_: string, identifier of individual request.
+        Args:
+          id_: string, identifier of individual request.
 
-    Returns:
-      A Content-ID header with the id_ encoded into it. A UUID is prepended to
-      the value because Content-ID headers are supposed to be universally
-      unique.
-    """
+        Returns:
+          A Content-ID header with the id_ encoded into it. A UUID is prepended to
+          the value because Content-ID headers are supposed to be universally
+          unique.
+        """
         if self._base_id is None:
             self._base_id = uuid.uuid4()
 
@@ -1298,21 +1297,21 @@ class BatchHttpRequest(object):
         # https://github.com/google/google-api-python-client/issues/164
         return "<%s + %s>" % (self._base_id, quote(id_))
 
-  @staticmethod
-  def _header_to_id(header):
+    @staticmethod
+    def _header_to_id(header):
         """Convert a Content-ID header value to an id.
 
-    Presumes the Content-ID header conforms to the format that _id_to_header()
-    returns.
+        Presumes the Content-ID header conforms to the format that _id_to_header()
+        returns.
 
-    Args:
-      header: string, Content-ID header value.
+        Args:
+          header: string, Content-ID header value.
 
-    Returns:
-      The extracted id value.
+        Returns:
+          The extracted id value.
 
-    Raises:
-      BatchError if the header is not in the expected format.
+        Raises:
+          BatchError if the header is not in the expected format.
     """
         if header[0] != "<" or header[-1] != ">":
             raise BatchError("Invalid value for Content-ID: %s" % header)
@@ -1322,16 +1321,16 @@ class BatchHttpRequest(object):
 
         return unquote(id_)
 
-  @staticmethod
-  def _serialize_request(request):
+    @staticmethod
+    def _serialize_request(request):
         """Convert an HttpRequest object into a string.
 
-    Args:
-      request: HttpRequest, the request to serialize.
+        Args:
+          request: HttpRequest, the request to serialize.
 
-    Returns:
-      The request as a string in application/http format.
-    """
+        Returns:
+          The request as a string in application/http format.
+        """
         # Construct status line
         parsed = urlparse(request.uri)
         request_line = urlunparse(
@@ -1371,16 +1370,16 @@ class BatchHttpRequest(object):
 
         return status_line + body
 
-  @staticmethod
-  def _deserialize_response(payload):
+    @staticmethod
+    def _deserialize_response(payload):
         """Convert string into httplib2 response and content.
 
-    Args:
-      payload: string, headers and body as a string.
+        Args:
+          payload: string, headers and body as a string.
 
-    Returns:
-      A pair (resp, content), such as would be returned from httplib2.request.
-    """
+        Returns:
+          A pair (resp, content), such as would be returned from httplib2.request.
+        """
         # Strip off the status line
         status_line, payload = payload.split("\n", 1)
         protocol, status, reason = status_line.split(" ", 2)
@@ -1403,11 +1402,11 @@ class BatchHttpRequest(object):
     def _new_id(self):
         """Create a new id.
 
-    Auto incrementing number that avoids conflicts with ids already used.
+        Auto incrementing number that avoids conflicts with ids already used.
 
-    Returns:
-       string, a new unique id.
-    """
+        Returns:
+           string, a new unique id.
+        """
         self._last_auto_id += 1
         while str(self._last_auto_id) in self._requests:
             self._last_auto_id += 1
@@ -1417,31 +1416,31 @@ class BatchHttpRequest(object):
     def add(self, request, callback=None, request_id=None):
         """Add a new request.
 
-    Every callback added will be paired with a unique id, the request_id. That
-    unique id will be passed back to the callback when the response comes back
-    from the server. The default behavior is to have the library generate it's
-    own unique id. If the caller passes in a request_id then they must ensure
-    uniqueness for each request_id, and if they are not an exception is
-    raised. Callers should either supply all request_ids or never supply a
-    request id, to avoid such an error.
+        Every callback added will be paired with a unique id, the request_id. That
+        unique id will be passed back to the callback when the response comes back
+        from the server. The default behavior is to have the library generate it's
+        own unique id. If the caller passes in a request_id then they must ensure
+        uniqueness for each request_id, and if they are not an exception is
+        raised. Callers should either supply all request_ids or never supply a
+        request id, to avoid such an error.
 
-    Args:
-      request: HttpRequest, Request to add to the batch.
-      callback: callable, A callback to be called for this response, of the
-        form callback(id, response, exception). The first parameter is the
-        request id, and the second is the deserialized response object. The
-        third is an googleapiclient.errors.HttpError exception object if an HTTP error
-        occurred while processing the request, or None if no errors occurred.
-      request_id: string, A unique id for the request. The id will be passed
-        to the callback with the response.
+        Args:
+          request: HttpRequest, Request to add to the batch.
+          callback: callable, A callback to be called for this response, of the
+            form callback(id, response, exception). The first parameter is the
+            request id, and the second is the deserialized response object. The
+            third is an googleapiclient.errors.HttpError exception object if an HTTP error
+            occurred while processing the request, or None if no errors occurred.
+          request_id: string, A unique id for the request. The id will be passed
+            to the callback with the response.
 
-    Returns:
-      None
+        Returns:
+          None
 
-    Raises:
-      BatchError if a media request is added to a batch.
-      KeyError is the request_id is not unique.
-    """
+        Raises:
+          BatchError if a media request is added to a batch.
+          KeyError is the request_id is not unique.
+        """
 
         if len(self._order) >= MAX_BATCH_LIMIT:
             raise BatchError(
@@ -1458,19 +1457,19 @@ class BatchHttpRequest(object):
         self._callbacks[request_id] = callback
         self._order.append(request_id)
 
-  def _execute(self, http, order, requests, num_retries=0):
+    def _execute(self, http, order, requests, num_retries=0):
         """Serialize batch request, send to server, process response.
 
-    Args:
-      http: httplib2.Http, an http object to be used to make the request with.
-      order: list, list of request ids in the order they were added to the
-        batch.
-      requests: list, list of request objects to send.
+        Args:
+          http: httplib2.Http, an http object to be used to make the request with.
+          order: list, list of request ids in the order they were added to the
+            batch.
+          requests: list, list of request objects to send.
 
-    Raises:
-      httplib2.HttpLib2Error if a transport error has occured.
-      googleapiclient.errors.BatchError if the response is the wrong format.
-    """
+        Raises:
+          httplib2.HttpLib2Error if a transport error has occured.
+          googleapiclient.errors.BatchError if the response is the wrong format.
+        """
         message = MIMEMultipart("mixed")
         # Message should not write out it's own headers.
         setattr(message, "_write_headers", lambda x: None)
@@ -1533,24 +1532,24 @@ class BatchHttpRequest(object):
             self._responses[request_id] = (response, content)
 
     @util.positional(1)
-  def execute(self, http=None, num_retries=0):
+    def execute(self, http=None, num_retries=0):
         """Execute all the requests as a single batched HTTP request.
 
-    Args:
-      http: httplib2.Http, an http object to be used in place of the one the
-        HttpRequest request object was constructed with. If one isn't supplied
-        then use a http object from the requests in this batch.
-      num_retries: Integer, number of times to retry with randomized
-            exponential backoff. If all retries fail, the raised HttpError
-            represents the last request. If zero (default), we attempt the
-            request only once.
-    Returns:
-      None
+        Args:
+          http: httplib2.Http, an http object to be used in place of the one the
+            HttpRequest request object was constructed with. If one isn't supplied
+            then use a http object from the requests in this batch.
+          num_retries: Integer, number of times to retry with randomized
+                exponential backoff. If all retries fail, the raised HttpError
+                represents the last request. If zero (default), we attempt the
+                request only once.
+        Returns:
+          None
 
-    Raises:
-      httplib2.HttpLib2Error if a transport error has occured.
-      googleapiclient.errors.BatchError if the response is the wrong format.
-    """
+        Raises:
+          httplib2.HttpLib2Error if a transport error has occured.
+          googleapiclient.errors.BatchError if the response is the wrong format.
+        """
         # If we have no requests return
         if len(self._order) == 0:
             return None
@@ -1574,48 +1573,48 @@ class BatchHttpRequest(object):
                 LOGGER.info("Attempting refresh to obtain initial access_token")
                 self._retry_auth_refresh_credentials(creds, num_retries)
 
-    self._execute(http, self._order, self._requests, num_retries)
+        self._execute(http, self._order, self._requests, num_retries)
 
         # Loop over all the requests and check for 401s. For each 401 request the
         # credentials should be refreshed and then sent again in a separate batch.
-    # Otherwise retry any failed requests up to `num_retries` in new batches.
-    retry_num = 0
-    while True:
-      redo_requests = {}
-      redo_order = []
+        # Otherwise retry any failed requests up to `num_retries` in new batches.
+        retry_num = 0
+        while True:
+            redo_requests = {}
+            redo_order = []
 
-      if retry_num > 0:
-        # Sleep before retrying.
-        sleep_time = min(self._rand() * 2 ** retry_num, _MAX_SLEEP_S)
-        LOGGER.warning(
-            'Sleeping %.2f seconds before retry %d of %d for %s: %s %s',
-            sleep_time, retry_num, num_retries, 'request', 'POST',
-            self._batch_uri)
-        self._sleep(sleep_time)
+            if retry_num > 0:
+                # Sleep before retrying.
+                sleep_time = min(self._rand() * 2 ** retry_num, _MAX_SLEEP_S)
+                LOGGER.warning(
+                    'Sleeping %.2f seconds before retry %d of %d for %s: %s %s',
+                    sleep_time, retry_num, num_retries, 'request', 'POST',
+                    self._batch_uri)
+                self._sleep(sleep_time)
 
-      for request_id in self._order:
-        resp, content = self._responses[request_id]
+            for request_id in self._order:
+                resp, content = self._responses[request_id]
 
-        if resp["status"] == "401" and retry_num == 0:
-          redo_order.append(request_id)
-          request = self._requests[request_id]
-          self._refresh_and_apply_credentials(request, http, num_retries)
-          redo_requests[request_id] = request
-        elif _should_retry_response(resp.status, content):
-          redo_order.append(request_id)
-          request = self._requests[request_id]
-          redo_requests[request_id] = request
+                if resp["status"] == "401" and retry_num == 0:
+                    redo_order.append(request_id)
+                    request = self._requests[request_id]
+                    self._refresh_and_apply_credentials(request, http, num_retries)
+                    redo_requests[request_id] = request
+                elif _should_retry_response(resp.status, content):
+                    redo_order.append(request_id)
+                    request = self._requests[request_id]
+                    redo_requests[request_id] = request
 
-      if redo_requests:
-        self._execute(http, redo_order, redo_requests)
-        retry_num += 1
+            if redo_requests:
+                self._execute(http, redo_order, redo_requests)
+                retry_num += 1
 
-        if retry_num >= num_retries:
-          break
+                if retry_num >= num_retries:
+                    break
 
-        continue
+                continue
 
-      break
+            break
 
         # Now process all callbacks that are erroring, and raise an exception for
         # ones that return a non-2xx response? Or add extra parameter to callback

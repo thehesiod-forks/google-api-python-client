@@ -181,8 +181,9 @@ def build(
     requestBuilder=HttpRequest,
     credentials=None,
     cache_discovery=True,
-          cache=None,
-          num_retries=0):
+    cache=None,
+    num_retries=0
+):
     """Construct a Resource for interacting with an API.
 
   Construct a Resource object for interacting with an API. The serviceName and
@@ -245,8 +246,8 @@ def build(
     raise UnknownApiNameOrVersion("name: %s  version: %s" % (serviceName, version))
 
 
-def _retrieve_discovery_doc(url, http, cache_discovery, cache=None,
-                            developerKey=None, num_retries=0):
+def _retrieve_discovery_doc(url, http, cache_discovery, cache=None, developerKey=None,
+                            num_retries=0):
     """Retrieves the discovery_doc from cache or the internet.
 
   Args:
@@ -263,7 +264,8 @@ def _retrieve_discovery_doc(url, http, cache_discovery, cache=None,
   """
     if cache_discovery:
         from . import discovery_cache
-    from .discovery_cache import base
+        from .discovery_cache import base
+
         if cache is None:
             cache = discovery_cache.autodetect()
         if cache:
@@ -283,7 +285,7 @@ def _retrieve_discovery_doc(url, http, cache_discovery, cache=None,
         actual_url = _add_query_parameter(url, "key", developerKey)
     logger.info("URL being requested: GET %s", actual_url)
 
-  resp, content = retry_request(http, num_retries, 'discovery', time.sleep, random.random, actual_url, 'GET')
+    resp, content = retry_request(http, num_retries, "discovery", time.sleep, random.random, actual_url, "GET")
 
     if resp.status >= 400:
         raise HttpError(resp, content, uri=actual_url)
@@ -1243,7 +1245,6 @@ def _findPageTokenName(fields):
     return next(
         (tokenName for tokenName in _PAGE_TOKEN_NAMES if tokenName in fields), None
     )
-
 
 
 def _methodProperties(methodDesc, schema, name):
