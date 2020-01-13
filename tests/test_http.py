@@ -40,7 +40,9 @@ import random
 import socket
 import ssl
 import time
+import math
 
+import googleapiclient
 from googleapiclient.discovery import build
 from googleapiclient.errors import BatchError
 from googleapiclient.errors import HttpError
@@ -60,6 +62,9 @@ from googleapiclient.http import _StreamSlice
 from googleapiclient.http import set_user_agent
 from googleapiclient.model import JsonModel
 from oauth2client.client import Credentials
+
+
+googleapiclient.http._MAX_SLEEP_S = math.inf
 
 
 class MockCredentials(Credentials):
@@ -715,7 +720,7 @@ ETag: "etag/sheep"\r\n\r\n{"baz": "qux"}
 BATCH_ERROR_500_RESPONSE = b"""--batch_foobarbaz
 Content-Type: application/http
 Content-Transfer-Encoding: binary
-Content-ID: <randomness+1>
+Content-ID: <randomness + 1>
 
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -725,7 +730,7 @@ ETag: "etag/pony"\r\n\r\n{"foo": 42}
 --batch_foobarbaz
 Content-Type: application/http
 Content-Transfer-Encoding: binary
-Content-ID: <randomness+2>
+Content-ID: <randomness + 2>
 
 HTTP/1.1 500 Internal Server Error
 Content-Type: application/json
