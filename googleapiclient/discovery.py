@@ -66,7 +66,6 @@ from googleapiclient.http import HttpMockSequence
 from googleapiclient.http import HttpRequest
 from googleapiclient.http import MediaFileUpload
 from googleapiclient.http import MediaUpload
-from googleapiclient.http import retry_request
 from googleapiclient.model import JsonModel
 from googleapiclient.model import MediaModel
 from googleapiclient.model import RawModel
@@ -77,7 +76,6 @@ from googleapiclient._helpers import positional
 
 
 # The client library requires a version of httplib2 that supports RETRIES.
-# This was originally set to 1, however
 # NOTE: this is really ATTEMPTS
 httplib2.RETRIES = 1
 
@@ -126,7 +124,6 @@ STACK_QUERY_PARAMETER_DEFAULT_VALUE = {"type": "string", "location": "query"}
 
 # Library-specific reserved words beyond Python keywords.
 RESERVED_WORDS = frozenset(["body"])
-
 
 # patch _write_lines to avoid munging '\r' into '\n'
 # ( https://bugs.python.org/issue18886 https://bugs.python.org/issue19003 )
@@ -402,7 +399,6 @@ def _retrieve_discovery_doc(
             raise UnknownApiNameOrVersion("name: %s  version: %s" % (serviceName, version))
 
     actual_url = url
-
     # REMOTE_ADDR is defined by the CGI spec [RFC3875] as the environment
     # variable that contains the network address of the client sending the
     # request. If it exists then add that to the request for the discovery
@@ -428,10 +424,8 @@ def _retrieve_discovery_doc(
     except ValueError as e:
         logger.error("Failed to parse as JSON: " + content)
         raise InvalidJsonError()
-
     if cache_discovery and cache:
         cache.set(url, content)
-
     return content
 
 

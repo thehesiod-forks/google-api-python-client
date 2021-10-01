@@ -766,7 +766,7 @@ class MediaIoBaseDownload(object):
             self._rand,
             self._uri,
             "GET",
-            headers=headers
+            headers=headers,
         )
 
         if resp.status in [200, 206]:
@@ -949,7 +949,7 @@ class HttpRequest(object):
             str(self.uri),
             method=str(self.method),
             body=self.body,
-            headers=self.headers
+            headers=self.headers,
         )
 
         for callback in self.response_callbacks:
@@ -1033,7 +1033,7 @@ class HttpRequest(object):
                 self.uri,
                 method=self.method,
                 body=self.body,
-                headers=start_headers
+                headers=start_headers,
             )
 
             if resp.status == 200 and "location" in resp:
@@ -1352,7 +1352,6 @@ class BatchHttpRequest(object):
         # https://github.com/googleapis/google-api-python-client/issues/164
         return "<%s + %s>" % (self._base_id, urllib.parse.quote(id_))
 
-    @staticmethod
     def _header_to_id(header):
         """Convert a Content-ID header value to an id.
 
@@ -1376,8 +1375,7 @@ class BatchHttpRequest(object):
 
         return urllib.parse.unquote(id_)
 
-    @staticmethod
-    def _serialize_request(request):
+    def _serialize_request(self, request):
         """Convert an HttpRequest object into a string.
 
         Args:
@@ -1425,8 +1423,7 @@ class BatchHttpRequest(object):
 
         return status_line + body
 
-    @staticmethod
-    def _deserialize_response(payload):
+    def _deserialize_response(self, payload):
         """Convert string into httplib2 response and content.
 
         Args:
