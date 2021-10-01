@@ -61,9 +61,7 @@ from googleapiclient.errors import UnexpectedMethodError
 from googleapiclient.model import JsonModel
 
 # These are platform specific exceptions
-RETRY_EXCEPTIONS = tuple()
-if six.PY3:
-  RETRY_EXCEPTIONS += (ConnectionError,)
+RETRY_EXCEPTIONS = (ConnectionError,)
 
 AUTH_RETRY_EXCEPTIONS = tuple()
 
