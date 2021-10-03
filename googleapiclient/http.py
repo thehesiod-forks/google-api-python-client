@@ -1350,7 +1350,7 @@ class BatchHttpRequest(object):
         # https://github.com/googleapis/google-api-python-client/issues/164
         return "<%s + %s>" % (self._base_id, urllib.parse.quote(id_))
 
-    def _header_to_id(header):
+    def _header_to_id(self, header):
         """Convert a Content-ID header value to an id.
 
         Presumes the Content-ID header conforms to the format that _id_to_header()
