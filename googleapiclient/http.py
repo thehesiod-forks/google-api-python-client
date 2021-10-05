@@ -160,7 +160,7 @@ def _should_retry_response(resp_status, content):
     return False
 
 
-def retry_request(
+def _retry_request(
     http, num_retries, req_type, sleep, rand, uri, method, *args, **kwargs
 ):
     """Retries an HTTP request multiple times while handling errors.
@@ -756,7 +756,7 @@ class MediaIoBaseDownload(object):
         )
         http = self._request.http
 
-        resp, content = retry_request(
+        resp, content = _retry_request(
             http,
             num_retries,
             "media download",
@@ -938,7 +938,7 @@ class HttpRequest(object):
             self.headers["content-length"] = str(len(self.body))
 
         # Handle retries for server-side errors.
-        resp, content = retry_request(
+        resp, content = _retry_request(
             http,
             num_retries,
             "request",
@@ -1022,7 +1022,7 @@ class HttpRequest(object):
                 start_headers["X-Upload-Content-Length"] = size
             start_headers["content-length"] = str(self.body_size)
 
-            resp, content = retry_request(
+            resp, content = _retry_request(
                 http,
                 num_retries,
                 "resumable URI request",
@@ -1548,7 +1548,7 @@ class BatchHttpRequest(object):
             "multipart/mixed; " 'boundary="%s"'
         ) % message.get_boundary()
 
-        resp, content = retry_request(
+        resp, content = _retry_request(
             http, num_retries, "request", self._sleep, self._rand, self._batch_uri, "POST",
             body=body, headers=headers
         )

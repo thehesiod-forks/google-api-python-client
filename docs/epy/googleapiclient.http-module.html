@@ -57,7 +57,7 @@
 <!-- ==================== MODULE DESCRIPTION ==================== -->
 <h1 class="epydoc">Module http</h1><p class="nomargin-top"><span class="codelink"><a href="googleapiclient.http-pysrc.html">source&nbsp;code</a></span></p>
 <p>Classes to encapsulate a single HTTP request.</p>
-  <p>The classes implement a command pattern, with every object supporting 
+  <p>The classes implement a command pattern, with every object supporting
   an execute() method that does the actual HTTP request.</p>
 
 <hr />
@@ -222,11 +222,11 @@
       Determines whether a response should be retried.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="googleapiclient.http-pysrc.html#_should_retry_response">source&nbsp;code</a></span>
-            
+
           </td>
         </tr>
       </table>
-      
+
     </td>
   </tr>
 <tr class="private">
@@ -247,11 +247,11 @@
       Retries an HTTP request multiple times while handling errors.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="googleapiclient.http-pysrc.html#_retry_request">source&nbsp;code</a></span>
-            
+
           </td>
         </tr>
       </table>
-      
+
     </td>
   </tr>
 <tr>
@@ -265,11 +265,11 @@
       Set the user-agent on every request.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="googleapiclient.http-pysrc.html#set_user_agent">source&nbsp;code</a></span>
-            
+
           </td>
         </tr>
       </table>
-      
+
     </td>
   </tr>
 <tr>
@@ -282,11 +282,11 @@
       Tunnel PATCH requests over POST.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="googleapiclient.http-pysrc.html#tunnel_patch">source&nbsp;code</a></span>
-            
+
           </td>
         </tr>
       </table>
-      
+
     </td>
   </tr>
 <tr>
@@ -299,11 +299,11 @@
       Builds httplib2.Http object</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="googleapiclient.http-pysrc.html#build_http">source&nbsp;code</a></span>
-            
+
           </td>
         </tr>
       </table>
-      
+
     </td>
   </tr>
 </table>
@@ -420,7 +420,7 @@
     ><span class="codelink"><a href="googleapiclient.http-pysrc.html#_should_retry_response">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
-  
+
   <pre class="literalblock">
 Determines whether a response should be retried.
 
@@ -443,7 +443,7 @@ Returns:
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">retry_request</span>(<span class="sig-arg">http</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_retry_request</span>(<span class="sig-arg">http</span>,
         <span class="sig-arg">num_retries</span>,
         <span class="sig-arg">req_type</span>,
         <span class="sig-arg">sleep</span>,
@@ -457,7 +457,7 @@ Returns:
     ><span class="codelink"><a href="googleapiclient.http-pysrc.html#_retry_request">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
-  
+
   <pre class="literalblock">
 Retries an HTTP request multiple times while handling errors.
 
@@ -495,7 +495,7 @@ Returns:
     ><span class="codelink"><a href="googleapiclient.http-pysrc.html#set_user_agent">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
-  
+
   <pre class="literalblock">
 Set the user-agent on every request.
 
@@ -533,7 +533,7 @@ cases where you are accessing an unauthenticated endpoint.
     ><span class="codelink"><a href="googleapiclient.http-pysrc.html#tunnel_patch">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
-  
+
   <pre class="literalblock">
 Tunnel PATCH requests over POST.
 Args:
@@ -570,7 +570,7 @@ will result in a different signature.
     ><span class="codelink"><a href="googleapiclient.http-pysrc.html#build_http">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
-  
+
   <pre class="literalblock">
 Builds httplib2.Http object
 
