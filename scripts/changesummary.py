@@ -15,9 +15,10 @@
 from enum import IntEnum
 import json
 from multiprocessing import Pool
-import pandas as pd
 import pathlib
+
 import numpy as np
+import pandas as pd
 
 BRANCH_ARTIFACTS_DIR = (
     pathlib.Path(__file__).parent.resolve()
@@ -153,7 +154,7 @@ class ChangeSummary:
         # Split the Key into 2 columns for `Parent` and `Child` in order
         # to group keys with the same parents together to summarize the changes
         # by parent.
-        parent_child_df = combined_docs["Key"].str.rsplit(".", 1, expand=True)
+        parent_child_df = combined_docs["Key"].str.rsplit(".", n=1, expand=True)
         # Rename the columns and join them with the combined_docs dataframe.
         # If we only have a `Parent` column, it means that the Key doesn't have
         # any children.
@@ -509,13 +510,14 @@ class ChangeSummary:
         result = pd.DataFrame()
         # Process files in parallel to improve performance
         with Pool(processes=MULTIPROCESSING_NUM_AGENTS) as pool:
-            result = result.append(
-                pool.map(
-                    self._get_discovery_differences,
-                    self._file_list,
-                    MULTIPROCESSING_NUM_PER_BATCH,
+            if len(self._file_list):
+                result = pd.concat(
+                    pool.map(
+                        self._get_discovery_differences,
+                        self._file_list,
+                        MULTIPROCESSING_NUM_PER_BATCH,
+                    )
                 )
-            )
 
         if len(result):
             # Sort the resulting dataframe by `Name`, `Version`, `ChangeType`

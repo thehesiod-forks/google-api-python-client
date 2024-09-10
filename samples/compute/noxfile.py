@@ -14,13 +14,13 @@
 
 from __future__ import print_function
 
+import glob
 import os
 from pathlib import Path
 import sys
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, Optional
 
 import nox
-
 
 # WARNING - WARNING - WARNING - WARNING - WARNING
 # WARNING - WARNING - WARNING - WARNING - WARNING
@@ -28,7 +28,8 @@ import nox
 # WARNING - WARNING - WARNING - WARNING - WARNING
 # WARNING - WARNING - WARNING - WARNING - WARNING
 
-BLACK_VERSION = "black==19.10b0"
+BLACK_VERSION = "black==22.3.0"
+ISORT_VERSION = "isort==5.10.1"
 
 # Copy `noxfile_config.py` to your directory and modify it instead.
 
@@ -87,7 +88,7 @@ def get_pytest_env_vars() -> Dict[str, str]:
 
 # DO NOT EDIT - automatically generated.
 # All versions used to test samples.
-ALL_VERSIONS = ["3.6", "3.7", "3.8", "3.9"]
+ALL_VERSIONS = ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
 
 # Any default versions that should be ignored.
 IGNORED_VERSIONS = TEST_CONFIG["ignored_versions"]
@@ -107,22 +108,6 @@ nox.options.error_on_missing_interpreters = True
 #
 
 
-def _determine_local_import_names(start_dir: str) -> List[str]:
-    """Determines all import names that should be considered "local".
-
-    This is used when running the linter to insure that import order is
-    properly checked.
-    """
-    file_ext_pairs = [os.path.splitext(path) for path in os.listdir(start_dir)]
-    return [
-        basename
-        for basename, extension in file_ext_pairs
-        if extension == ".py"
-        or os.path.isdir(os.path.join(start_dir, basename))
-        and basename not in ("__pycache__")
-    ]
-
-
 # Linting with flake8.
 #
 # We ignore the following rules:
@@ -137,7 +122,6 @@ FLAKE8_COMMON_ARGS = [
     "--show-source",
     "--builtin=gettext",
     "--max-complexity=20",
-    "--import-order-style=google",
     "--exclude=.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
     "--ignore=E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202",
     "--max-line-length=88",
@@ -147,14 +131,11 @@ FLAKE8_COMMON_ARGS = [
 @nox.session
 def lint(session: nox.sessions.Session) -> None:
     if not TEST_CONFIG["enforce_type_hints"]:
-        session.install("flake8", "flake8-import-order")
+        session.install("flake8")
     else:
-        session.install("flake8", "flake8-import-order", "flake8-annotations")
+        session.install("flake8", "flake8-annotations")
 
-    local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
-        "--application-import-names",
-        ",".join(local_names),
         ".",
     ]
     session.run("flake8", *args)
@@ -167,9 +148,30 @@ def lint(session: nox.sessions.Session) -> None:
 
 @nox.session
 def blacken(session: nox.sessions.Session) -> None:
+    """Run black. Format code to uniform standard."""
     session.install(BLACK_VERSION)
     python_files = [path for path in os.listdir(".") if path.endswith(".py")]
 
+    session.run("black", *python_files)
+
+
+#
+# format = isort + black
+#
+
+
+@nox.session
+def format(session: nox.sessions.Session) -> None:
+    """
+    Run isort to sort imports. Then run black
+    to format code to uniform standard.
+    """
+    session.install(BLACK_VERSION, ISORT_VERSION)
+    python_files = [path for path in os.listdir(".") if path.endswith(".py")]
+
+    # Use the --fss option to sort imports using strict alphabetical order.
+    # See https://pycqa.github.io/isort/docs/configuration/options.html#force-sort-within-sections
+    session.run("isort", "--fss", *python_files)
     session.run("black", *python_files)
 
 
@@ -184,21 +186,36 @@ PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 def _session_tests(
     session: nox.sessions.Session, post_install: Callable = None
 ) -> None:
+    # check for presence of tests
+    test_list = glob.glob("**/*_test.py", recursive=True) + glob.glob(
+        "**/test_*.py", recursive=True
+    )
+    test_list.extend(glob.glob("**/tests", recursive=True))
+
+    if len(test_list) == 0:
+        print("No tests found, skipping directory.")
+        return
+
     if TEST_CONFIG["pip_version_override"]:
         pip_version = TEST_CONFIG["pip_version_override"]
         session.install(f"pip=={pip_version}")
     """Runs py.test for a particular project."""
+    concurrent_args = []
     if os.path.exists("requirements.txt"):
         if os.path.exists("constraints.txt"):
             session.install("-r", "requirements.txt", "-c", "constraints.txt")
         else:
             session.install("-r", "requirements.txt")
+        with open("requirements.txt") as rfile:
+            packages = rfile.read()
 
     if os.path.exists("requirements-test.txt"):
         if os.path.exists("constraints-test.txt"):
             session.install("-r", "requirements-test.txt", "-c", "constraints-test.txt")
         else:
             session.install("-r", "requirements-test.txt")
+        with open("requirements-test.txt") as rtfile:
+            packages += rtfile.read()
 
     if INSTALL_LIBRARY_FROM_SOURCE:
         session.install("-e", _get_repo_root())
@@ -206,9 +223,14 @@ def _session_tests(
     if post_install:
         post_install(session)
 
+    if "pytest-parallel" in packages:
+        concurrent_args.extend(["--workers", "auto", "--tests-per-worker", "auto"])
+    elif "pytest-xdist" in packages:
+        concurrent_args.extend(["-n", "auto"])
+
     session.run(
         "pytest",
-        *(PYTEST_COMMON_ARGS + session.posargs),
+        *(PYTEST_COMMON_ARGS + session.posargs + concurrent_args),
         # Pytest will return 5 when no tests are collected. This can happen
         # on travis where slow and flaky tests are excluded.
         # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
@@ -234,7 +256,7 @@ def py(session: nox.sessions.Session) -> None:
 
 
 def _get_repo_root() -> Optional[str]:
-    """ Returns the root folder of the project. """
+    """Returns the root folder of the project."""
     # Get root of this repository. Assume we don't have directories nested deeper than 10 items.
     p = Path(os.getcwd())
     for i in range(10):

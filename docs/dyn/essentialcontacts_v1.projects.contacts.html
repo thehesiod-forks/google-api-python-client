@@ -81,7 +81,7 @@ h1, h2, h3 {
   <code><a href="#compute">compute(parent, notificationCategories=None, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Lists all contacts for the resource that are subscribed to the specified notification categories, including contacts inherited from any parent resources.</p>
 <p class="toc_element">
-  <code><a href="#compute_next">compute_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#compute_next">compute_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#create">create(parent, body=None, x__xgafv=None)</a></code></p>
@@ -96,7 +96,7 @@ h1, h2, h3 {
   <code><a href="#list">list(parent, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Lists the contacts that have been set on a resource.</p>
 <p class="toc_element">
-  <code><a href="#list_next">list_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#list_next">list_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#patch">patch(name, body=None, updateMask=None, x__xgafv=None)</a></code></p>
@@ -140,14 +140,14 @@ Returns:
     { # Response message for the ComputeContacts method.
   &quot;contacts&quot;: [ # All contacts for the resource that are subscribed to the specified notification categories, including contacts inherited from any parent resources.
     { # A contact that will receive notifications from Google Cloud.
-      &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. This does not need to be a Google account.
-      &quot;languageTag&quot;: &quot;A String&quot;, # The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
-      &quot;name&quot;: &quot;A String&quot;, # The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
-      &quot;notificationCategorySubscriptions&quot;: [ # The categories of notifications that the contact will receive communications for.
+      &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. The email address does not need to be a Google Account.
+      &quot;languageTag&quot;: &quot;A String&quot;, # Required. The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
+      &quot;name&quot;: &quot;A String&quot;, # Output only. The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
+      &quot;notificationCategorySubscriptions&quot;: [ # Required. The categories of notifications that the contact will receive communications for.
         &quot;A String&quot;,
       ],
       &quot;validateTime&quot;: &quot;A String&quot;, # The last time the validation_state was updated, either manually or automatically. A contact is considered stale if its validation state was updated more than 1 year ago.
-      &quot;validationState&quot;: &quot;A String&quot;, # The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
+      &quot;validationState&quot;: &quot;A String&quot;, # Output only. The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
     },
   ],
   &quot;nextPageToken&quot;: &quot;A String&quot;, # If there are more results than those appearing in this response, then `next_page_token` is included. To get the next set of results, call this method again using the value of `next_page_token` as `page_token` and the rest of the parameters the same as the original request.
@@ -155,17 +155,17 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="compute_next">compute_next(previous_request, previous_response)</code>
+    <code class="details" id="compute_next">compute_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
@@ -178,14 +178,14 @@ Args:
     The object takes the form of:
 
 { # A contact that will receive notifications from Google Cloud.
-  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. This does not need to be a Google account.
-  &quot;languageTag&quot;: &quot;A String&quot;, # The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
-  &quot;name&quot;: &quot;A String&quot;, # The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
-  &quot;notificationCategorySubscriptions&quot;: [ # The categories of notifications that the contact will receive communications for.
+  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. The email address does not need to be a Google Account.
+  &quot;languageTag&quot;: &quot;A String&quot;, # Required. The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
+  &quot;name&quot;: &quot;A String&quot;, # Output only. The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
+  &quot;notificationCategorySubscriptions&quot;: [ # Required. The categories of notifications that the contact will receive communications for.
     &quot;A String&quot;,
   ],
   &quot;validateTime&quot;: &quot;A String&quot;, # The last time the validation_state was updated, either manually or automatically. A contact is considered stale if its validation state was updated more than 1 year ago.
-  &quot;validationState&quot;: &quot;A String&quot;, # The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
+  &quot;validationState&quot;: &quot;A String&quot;, # Output only. The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
 }
 
   x__xgafv: string, V1 error format.
@@ -197,14 +197,14 @@ Returns:
   An object of the form:
 
     { # A contact that will receive notifications from Google Cloud.
-  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. This does not need to be a Google account.
-  &quot;languageTag&quot;: &quot;A String&quot;, # The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
-  &quot;name&quot;: &quot;A String&quot;, # The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
-  &quot;notificationCategorySubscriptions&quot;: [ # The categories of notifications that the contact will receive communications for.
+  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. The email address does not need to be a Google Account.
+  &quot;languageTag&quot;: &quot;A String&quot;, # Required. The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
+  &quot;name&quot;: &quot;A String&quot;, # Output only. The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
+  &quot;notificationCategorySubscriptions&quot;: [ # Required. The categories of notifications that the contact will receive communications for.
     &quot;A String&quot;,
   ],
   &quot;validateTime&quot;: &quot;A String&quot;, # The last time the validation_state was updated, either manually or automatically. A contact is considered stale if its validation state was updated more than 1 year ago.
-  &quot;validationState&quot;: &quot;A String&quot;, # The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
+  &quot;validationState&quot;: &quot;A String&quot;, # Output only. The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
 }</pre>
 </div>
 
@@ -222,7 +222,7 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 
@@ -241,14 +241,14 @@ Returns:
   An object of the form:
 
     { # A contact that will receive notifications from Google Cloud.
-  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. This does not need to be a Google account.
-  &quot;languageTag&quot;: &quot;A String&quot;, # The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
-  &quot;name&quot;: &quot;A String&quot;, # The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
-  &quot;notificationCategorySubscriptions&quot;: [ # The categories of notifications that the contact will receive communications for.
+  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. The email address does not need to be a Google Account.
+  &quot;languageTag&quot;: &quot;A String&quot;, # Required. The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
+  &quot;name&quot;: &quot;A String&quot;, # Output only. The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
+  &quot;notificationCategorySubscriptions&quot;: [ # Required. The categories of notifications that the contact will receive communications for.
     &quot;A String&quot;,
   ],
   &quot;validateTime&quot;: &quot;A String&quot;, # The last time the validation_state was updated, either manually or automatically. A contact is considered stale if its validation state was updated more than 1 year ago.
-  &quot;validationState&quot;: &quot;A String&quot;, # The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
+  &quot;validationState&quot;: &quot;A String&quot;, # Output only. The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
 }</pre>
 </div>
 
@@ -271,14 +271,14 @@ Returns:
     { # Response message for the ListContacts method.
   &quot;contacts&quot;: [ # The contacts for the specified resource.
     { # A contact that will receive notifications from Google Cloud.
-      &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. This does not need to be a Google account.
-      &quot;languageTag&quot;: &quot;A String&quot;, # The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
-      &quot;name&quot;: &quot;A String&quot;, # The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
-      &quot;notificationCategorySubscriptions&quot;: [ # The categories of notifications that the contact will receive communications for.
+      &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. The email address does not need to be a Google Account.
+      &quot;languageTag&quot;: &quot;A String&quot;, # Required. The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
+      &quot;name&quot;: &quot;A String&quot;, # Output only. The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
+      &quot;notificationCategorySubscriptions&quot;: [ # Required. The categories of notifications that the contact will receive communications for.
         &quot;A String&quot;,
       ],
       &quot;validateTime&quot;: &quot;A String&quot;, # The last time the validation_state was updated, either manually or automatically. A contact is considered stale if its validation state was updated more than 1 year ago.
-      &quot;validationState&quot;: &quot;A String&quot;, # The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
+      &quot;validationState&quot;: &quot;A String&quot;, # Output only. The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
     },
   ],
   &quot;nextPageToken&quot;: &quot;A String&quot;, # If there are more results than those appearing in this response, then `next_page_token` is included. To get the next set of results, call this method again using the value of `next_page_token` as `page_token` and the rest of the parameters the same as the original request.
@@ -286,17 +286,17 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="list_next">list_next(previous_request, previous_response)</code>
+    <code class="details" id="list_next">list_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
@@ -304,19 +304,19 @@ Returns:
   <pre>Updates a contact. Note: A contact&#x27;s email address cannot be changed.
 
 Args:
-  name: string, The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id} (required)
+  name: string, Output only. The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id} (required)
   body: object, The request body.
     The object takes the form of:
 
 { # A contact that will receive notifications from Google Cloud.
-  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. This does not need to be a Google account.
-  &quot;languageTag&quot;: &quot;A String&quot;, # The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
-  &quot;name&quot;: &quot;A String&quot;, # The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
-  &quot;notificationCategorySubscriptions&quot;: [ # The categories of notifications that the contact will receive communications for.
+  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. The email address does not need to be a Google Account.
+  &quot;languageTag&quot;: &quot;A String&quot;, # Required. The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
+  &quot;name&quot;: &quot;A String&quot;, # Output only. The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
+  &quot;notificationCategorySubscriptions&quot;: [ # Required. The categories of notifications that the contact will receive communications for.
     &quot;A String&quot;,
   ],
   &quot;validateTime&quot;: &quot;A String&quot;, # The last time the validation_state was updated, either manually or automatically. A contact is considered stale if its validation state was updated more than 1 year ago.
-  &quot;validationState&quot;: &quot;A String&quot;, # The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
+  &quot;validationState&quot;: &quot;A String&quot;, # Output only. The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
 }
 
   updateMask: string, Optional. The update mask applied to the resource. For the `FieldMask` definition, see https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask
@@ -329,14 +329,14 @@ Returns:
   An object of the form:
 
     { # A contact that will receive notifications from Google Cloud.
-  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. This does not need to be a Google account.
-  &quot;languageTag&quot;: &quot;A String&quot;, # The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
-  &quot;name&quot;: &quot;A String&quot;, # The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
-  &quot;notificationCategorySubscriptions&quot;: [ # The categories of notifications that the contact will receive communications for.
+  &quot;email&quot;: &quot;A String&quot;, # Required. The email address to send notifications to. The email address does not need to be a Google Account.
+  &quot;languageTag&quot;: &quot;A String&quot;, # Required. The preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages.
+  &quot;name&quot;: &quot;A String&quot;, # Output only. The identifier for the contact. Format: {resource_type}/{resource_id}/contacts/{contact_id}
+  &quot;notificationCategorySubscriptions&quot;: [ # Required. The categories of notifications that the contact will receive communications for.
     &quot;A String&quot;,
   ],
   &quot;validateTime&quot;: &quot;A String&quot;, # The last time the validation_state was updated, either manually or automatically. A contact is considered stale if its validation state was updated more than 1 year ago.
-  &quot;validationState&quot;: &quot;A String&quot;, # The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
+  &quot;validationState&quot;: &quot;A String&quot;, # Output only. The validity of the contact. A contact is considered valid if it is the correct recipient for notifications for a particular resource.
 }</pre>
 </div>
 
@@ -364,7 +364,7 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 

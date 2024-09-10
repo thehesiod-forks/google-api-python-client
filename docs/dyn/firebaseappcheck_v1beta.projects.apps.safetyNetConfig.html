@@ -76,7 +76,7 @@ h1, h2, h3 {
 <h2>Instance Methods</h2>
 <p class="toc_element">
   <code><a href="#batchGet">batchGet(parent, names=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Gets the SafetyNetConfigs for the specified list of apps atomically.</p>
+<p class="firstline">Atomically gets the SafetyNetConfigs for the specified list of apps.</p>
 <p class="toc_element">
   <code><a href="#close">close()</a></code></p>
 <p class="firstline">Close httplib2 connections.</p>
@@ -89,7 +89,7 @@ h1, h2, h3 {
 <h3>Method Details</h3>
 <div class="method">
     <code class="details" id="batchGet">batchGet(parent, names=None, x__xgafv=None)</code>
-  <pre>Gets the SafetyNetConfigs for the specified list of apps atomically.
+  <pre>Atomically gets the SafetyNetConfigs for the specified list of apps.
 
 Args:
   parent: string, Required. The parent project name shared by all SafetyNetConfigs being retrieved, in the format ``` projects/{project_number} ``` The parent collection in the `name` field of any resource being retrieved must match this field, or the entire batch fails. (required)
@@ -104,7 +104,7 @@ Returns:
 
     { # Response message for the BatchGetSafetyNetConfigs method.
   &quot;configs&quot;: [ # SafetyNetConfigs retrieved.
-    { # An app&#x27;s SafetyNet configuration object. This configuration controls certain properties of the App Check token returned by ExchangeSafetyNetToken, such as its ttl. Note that your registered SHA-256 certificate fingerprints are used to validate tokens issued by SafetyNet; please register them via the Firebase Console or programmatically via the [Firebase Management Service](https://firebase.google.com/docs/projects/api/reference/rest/v1beta1/projects.androidApps.sha/create).
+    { # An app&#x27;s SafetyNet configuration object. This configuration controls certain properties of the `AppCheckToken` returned by ExchangeSafetyNetToken, such as its ttl. Note that your registered SHA-256 certificate fingerprints are used to validate tokens issued by SafetyNet; please register them via the Firebase Console or programmatically via the [Firebase Management Service](https://firebase.google.com/docs/projects/api/reference/rest/v1beta1/projects.androidApps.sha/create).
       &quot;name&quot;: &quot;A String&quot;, # Required. The relative resource name of the SafetyNet configuration object, in the format: ``` projects/{project_number}/apps/{app_id}/safetyNetConfig ```
       &quot;tokenTtl&quot;: &quot;A String&quot;, # Specifies the duration for which App Check tokens exchanged from SafetyNet tokens will be valid. If unset, a default value of 1 hour is assumed. Must be between 30 minutes and 7 days, inclusive.
     },
@@ -131,7 +131,7 @@ Args:
 Returns:
   An object of the form:
 
-    { # An app&#x27;s SafetyNet configuration object. This configuration controls certain properties of the App Check token returned by ExchangeSafetyNetToken, such as its ttl. Note that your registered SHA-256 certificate fingerprints are used to validate tokens issued by SafetyNet; please register them via the Firebase Console or programmatically via the [Firebase Management Service](https://firebase.google.com/docs/projects/api/reference/rest/v1beta1/projects.androidApps.sha/create).
+    { # An app&#x27;s SafetyNet configuration object. This configuration controls certain properties of the `AppCheckToken` returned by ExchangeSafetyNetToken, such as its ttl. Note that your registered SHA-256 certificate fingerprints are used to validate tokens issued by SafetyNet; please register them via the Firebase Console or programmatically via the [Firebase Management Service](https://firebase.google.com/docs/projects/api/reference/rest/v1beta1/projects.androidApps.sha/create).
   &quot;name&quot;: &quot;A String&quot;, # Required. The relative resource name of the SafetyNet configuration object, in the format: ``` projects/{project_number}/apps/{app_id}/safetyNetConfig ```
   &quot;tokenTtl&quot;: &quot;A String&quot;, # Specifies the duration for which App Check tokens exchanged from SafetyNet tokens will be valid. If unset, a default value of 1 hour is assumed. Must be between 30 minutes and 7 days, inclusive.
 }</pre>
@@ -146,12 +146,12 @@ Args:
   body: object, The request body.
     The object takes the form of:
 
-{ # An app&#x27;s SafetyNet configuration object. This configuration controls certain properties of the App Check token returned by ExchangeSafetyNetToken, such as its ttl. Note that your registered SHA-256 certificate fingerprints are used to validate tokens issued by SafetyNet; please register them via the Firebase Console or programmatically via the [Firebase Management Service](https://firebase.google.com/docs/projects/api/reference/rest/v1beta1/projects.androidApps.sha/create).
+{ # An app&#x27;s SafetyNet configuration object. This configuration controls certain properties of the `AppCheckToken` returned by ExchangeSafetyNetToken, such as its ttl. Note that your registered SHA-256 certificate fingerprints are used to validate tokens issued by SafetyNet; please register them via the Firebase Console or programmatically via the [Firebase Management Service](https://firebase.google.com/docs/projects/api/reference/rest/v1beta1/projects.androidApps.sha/create).
   &quot;name&quot;: &quot;A String&quot;, # Required. The relative resource name of the SafetyNet configuration object, in the format: ``` projects/{project_number}/apps/{app_id}/safetyNetConfig ```
   &quot;tokenTtl&quot;: &quot;A String&quot;, # Specifies the duration for which App Check tokens exchanged from SafetyNet tokens will be valid. If unset, a default value of 1 hour is assumed. Must be between 30 minutes and 7 days, inclusive.
 }
 
-  updateMask: string, Required. A comma-separated list of names of fields in the SafetyNetConfig Gets to update. Example: `token_ttl`.
+  updateMask: string, Required. A comma-separated list of names of fields in the SafetyNetConfig to update. Example: `token_ttl`.
   x__xgafv: string, V1 error format.
     Allowed values
       1 - v1 error format
@@ -160,7 +160,7 @@ Args:
 Returns:
   An object of the form:
 
-    { # An app&#x27;s SafetyNet configuration object. This configuration controls certain properties of the App Check token returned by ExchangeSafetyNetToken, such as its ttl. Note that your registered SHA-256 certificate fingerprints are used to validate tokens issued by SafetyNet; please register them via the Firebase Console or programmatically via the [Firebase Management Service](https://firebase.google.com/docs/projects/api/reference/rest/v1beta1/projects.androidApps.sha/create).
+    { # An app&#x27;s SafetyNet configuration object. This configuration controls certain properties of the `AppCheckToken` returned by ExchangeSafetyNetToken, such as its ttl. Note that your registered SHA-256 certificate fingerprints are used to validate tokens issued by SafetyNet; please register them via the Firebase Console or programmatically via the [Firebase Management Service](https://firebase.google.com/docs/projects/api/reference/rest/v1beta1/projects.androidApps.sha/create).
   &quot;name&quot;: &quot;A String&quot;, # Required. The relative resource name of the SafetyNet configuration object, in the format: ``` projects/{project_number}/apps/{app_id}/safetyNetConfig ```
   &quot;tokenTtl&quot;: &quot;A String&quot;, # Specifies the duration for which App Check tokens exchanged from SafetyNet tokens will be valid. If unset, a default value of 1 hour is assumed. Must be between 30 minutes and 7 days, inclusive.
 }</pre>

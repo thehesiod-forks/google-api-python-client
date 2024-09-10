@@ -96,14 +96,20 @@ h1, h2, h3 {
   <code><a href="#list">list(parent, filter=None, orderBy=None, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Lists Instances in a given location.</p>
 <p class="toc_element">
-  <code><a href="#list_next">list_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#list_next">list_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#patch">patch(name, body=None, updateMask=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Updates an existing Instance in a given project and location.</p>
 <p class="toc_element">
+  <code><a href="#rescheduleMaintenance">rescheduleMaintenance(instance, body=None, x__xgafv=None)</a></code></p>
+<p class="firstline">Performs the apply phase of the RescheduleMaintenance verb.</p>
+<p class="toc_element">
   <code><a href="#updateParameters">updateParameters(name, body=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Updates the defined Memcached parameters for an existing instance. This method only stages the parameters, it must be followed by `ApplyParameters` to apply the parameters to nodes of the Memcached instance.</p>
+<p class="toc_element">
+  <code><a href="#upgrade">upgrade(name, body=None, x__xgafv=None)</a></code></p>
+<p class="firstline">Upgrades the Memcache instance to a newer memcached engine version specified in the request.</p>
 <h3>Method Details</h3>
 <div class="method">
     <code class="details" id="applyParameters">applyParameters(name, body=None, x__xgafv=None)</code>
@@ -144,7 +150,7 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
 }</pre>
@@ -189,7 +195,7 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
 }</pre>
@@ -223,13 +229,37 @@ Args:
   &quot;labels&quot;: { # Resource labels to represent user-provided metadata. Refer to cloud documentation on labels for more details. https://cloud.google.com/compute/docs/labeling-resources
     &quot;a_key&quot;: &quot;A String&quot;,
   },
+  &quot;maintenancePolicy&quot;: { # Maintenance policy per instance. # The maintenance policy for the instance. If not provided, the maintenance event will be performed based on Memorystore internal rollout schedule.
+    &quot;createTime&quot;: &quot;A String&quot;, # Output only. The time when the policy was created.
+    &quot;description&quot;: &quot;A String&quot;, # Description of what this policy is for. Create/Update methods return INVALID_ARGUMENT if the length is greater than 512.
+    &quot;updateTime&quot;: &quot;A String&quot;, # Output only. The time when the policy was updated.
+    &quot;weeklyMaintenanceWindow&quot;: [ # Required. Maintenance window that is applied to resources covered by this policy. Minimum 1. For the current version, the maximum number of weekly_maintenance_windows is expected to be one.
+      { # Time window specified for weekly operations.
+        &quot;day&quot;: &quot;A String&quot;, # Required. Allows to define schedule that runs specified day of the week.
+        &quot;duration&quot;: &quot;A String&quot;, # Required. Duration of the time window.
+        &quot;startTime&quot;: { # Represents a time of day. The date and time zone are either not significant or are specified elsewhere. An API may choose to allow leap seconds. Related types are google.type.Date and `google.protobuf.Timestamp`. # Required. Start time of the window in UTC.
+          &quot;hours&quot;: 42, # Hours of day in 24 hour format. Should be from 0 to 23. An API may choose to allow the value &quot;24:00:00&quot; for scenarios like business closing time.
+          &quot;minutes&quot;: 42, # Minutes of hour of day. Must be from 0 to 59.
+          &quot;nanos&quot;: 42, # Fractions of seconds in nanoseconds. Must be from 0 to 999,999,999.
+          &quot;seconds&quot;: 42, # Seconds of minutes of the time. Must normally be from 0 to 59. An API may allow the value 60 if it allows leap-seconds.
+        },
+      },
+    ],
+  },
+  &quot;maintenanceSchedule&quot;: { # Upcoming maintenance schedule. # Output only. Published maintenance schedule.
+    &quot;endTime&quot;: &quot;A String&quot;, # Output only. The end time of any upcoming scheduled maintenance for this instance.
+    &quot;scheduleDeadlineTime&quot;: &quot;A String&quot;, # Output only. The deadline that the maintenance schedule start time can not go beyond, including reschedule.
+    &quot;startTime&quot;: &quot;A String&quot;, # Output only. The start time of any upcoming scheduled maintenance for this instance.
+  },
   &quot;memcacheFullVersion&quot;: &quot;A String&quot;, # Output only. The full version of memcached server running on this instance. System automatically determines the full memcached version for an instance based on the input MemcacheVersion. The full version format will be &quot;memcached-1.5.16&quot;.
   &quot;memcacheNodes&quot;: [ # Output only. List of Memcached nodes. Refer to Node message for more details.
     {
       &quot;host&quot;: &quot;A String&quot;, # Output only. Hostname or IP address of the Memcached node used by the clients to connect to the Memcached server on this node.
+      &quot;memcacheFullVersion&quot;: &quot;A String&quot;, # Output only. The full version of memcached server running on this node. e.g. - memcached-1.5.16
+      &quot;memcacheVersion&quot;: &quot;A String&quot;, # Output only. Major version of memcached server running on this node, e.g. MEMCACHE_1_5
       &quot;nodeId&quot;: &quot;A String&quot;, # Output only. Identifier of the Memcached node. The node id does not include project or location like the Memcached instance name.
-      &quot;parameters&quot;: { # The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes. # User defined parameters currently applied to the node.
-        &quot;id&quot;: &quot;A String&quot;, # Output only.
+      &quot;parameters&quot;: { # User defined parameters currently applied to the node.
+        &quot;id&quot;: &quot;A String&quot;, # Output only. The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes.
         &quot;params&quot;: { # User defined set of parameters to use in the memcached process.
           &quot;a_key&quot;: &quot;A String&quot;,
         },
@@ -247,12 +277,17 @@ Args:
     &quot;memorySizeMb&quot;: 42, # Required. Memory size in MiB for each Memcached node.
   },
   &quot;nodeCount&quot;: 42, # Required. Number of nodes in the Memcached instance.
-  &quot;parameters&quot;: { # The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes. # Optional: User defined parameters to apply to the memcached process on each node.
-    &quot;id&quot;: &quot;A String&quot;, # Output only.
+  &quot;parameters&quot;: { # User defined parameters to apply to the memcached process on each node.
+    &quot;id&quot;: &quot;A String&quot;, # Output only. The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes.
     &quot;params&quot;: { # User defined set of parameters to use in the memcached process.
       &quot;a_key&quot;: &quot;A String&quot;,
     },
   },
+  &quot;reservedIpRangeId&quot;: [ # Optional. Contains the id of allocated IP address ranges associated with the private service access connection for example, &quot;test-default&quot; associated with IP range 10.0.0.0/29.
+    &quot;A String&quot;,
+  ],
+  &quot;satisfiesPzi&quot;: True or False, # Optional. Output only. Reserved for future use.
+  &quot;satisfiesPzs&quot;: True or False, # Optional. Output only. Reserved for future use.
   &quot;state&quot;: &quot;A String&quot;, # Output only. The state of this Memcached instance.
   &quot;updateAvailable&quot;: True or False, # Output only. Returns true if there is an update waiting to be applied
   &quot;updateTime&quot;: &quot;A String&quot;, # Output only. The time the instance was updated.
@@ -285,7 +320,7 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
 }</pre>
@@ -320,7 +355,7 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
 }</pre>
@@ -354,13 +389,37 @@ Returns:
   &quot;labels&quot;: { # Resource labels to represent user-provided metadata. Refer to cloud documentation on labels for more details. https://cloud.google.com/compute/docs/labeling-resources
     &quot;a_key&quot;: &quot;A String&quot;,
   },
+  &quot;maintenancePolicy&quot;: { # Maintenance policy per instance. # The maintenance policy for the instance. If not provided, the maintenance event will be performed based on Memorystore internal rollout schedule.
+    &quot;createTime&quot;: &quot;A String&quot;, # Output only. The time when the policy was created.
+    &quot;description&quot;: &quot;A String&quot;, # Description of what this policy is for. Create/Update methods return INVALID_ARGUMENT if the length is greater than 512.
+    &quot;updateTime&quot;: &quot;A String&quot;, # Output only. The time when the policy was updated.
+    &quot;weeklyMaintenanceWindow&quot;: [ # Required. Maintenance window that is applied to resources covered by this policy. Minimum 1. For the current version, the maximum number of weekly_maintenance_windows is expected to be one.
+      { # Time window specified for weekly operations.
+        &quot;day&quot;: &quot;A String&quot;, # Required. Allows to define schedule that runs specified day of the week.
+        &quot;duration&quot;: &quot;A String&quot;, # Required. Duration of the time window.
+        &quot;startTime&quot;: { # Represents a time of day. The date and time zone are either not significant or are specified elsewhere. An API may choose to allow leap seconds. Related types are google.type.Date and `google.protobuf.Timestamp`. # Required. Start time of the window in UTC.
+          &quot;hours&quot;: 42, # Hours of day in 24 hour format. Should be from 0 to 23. An API may choose to allow the value &quot;24:00:00&quot; for scenarios like business closing time.
+          &quot;minutes&quot;: 42, # Minutes of hour of day. Must be from 0 to 59.
+          &quot;nanos&quot;: 42, # Fractions of seconds in nanoseconds. Must be from 0 to 999,999,999.
+          &quot;seconds&quot;: 42, # Seconds of minutes of the time. Must normally be from 0 to 59. An API may allow the value 60 if it allows leap-seconds.
+        },
+      },
+    ],
+  },
+  &quot;maintenanceSchedule&quot;: { # Upcoming maintenance schedule. # Output only. Published maintenance schedule.
+    &quot;endTime&quot;: &quot;A String&quot;, # Output only. The end time of any upcoming scheduled maintenance for this instance.
+    &quot;scheduleDeadlineTime&quot;: &quot;A String&quot;, # Output only. The deadline that the maintenance schedule start time can not go beyond, including reschedule.
+    &quot;startTime&quot;: &quot;A String&quot;, # Output only. The start time of any upcoming scheduled maintenance for this instance.
+  },
   &quot;memcacheFullVersion&quot;: &quot;A String&quot;, # Output only. The full version of memcached server running on this instance. System automatically determines the full memcached version for an instance based on the input MemcacheVersion. The full version format will be &quot;memcached-1.5.16&quot;.
   &quot;memcacheNodes&quot;: [ # Output only. List of Memcached nodes. Refer to Node message for more details.
     {
       &quot;host&quot;: &quot;A String&quot;, # Output only. Hostname or IP address of the Memcached node used by the clients to connect to the Memcached server on this node.
+      &quot;memcacheFullVersion&quot;: &quot;A String&quot;, # Output only. The full version of memcached server running on this node. e.g. - memcached-1.5.16
+      &quot;memcacheVersion&quot;: &quot;A String&quot;, # Output only. Major version of memcached server running on this node, e.g. MEMCACHE_1_5
       &quot;nodeId&quot;: &quot;A String&quot;, # Output only. Identifier of the Memcached node. The node id does not include project or location like the Memcached instance name.
-      &quot;parameters&quot;: { # The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes. # User defined parameters currently applied to the node.
-        &quot;id&quot;: &quot;A String&quot;, # Output only.
+      &quot;parameters&quot;: { # User defined parameters currently applied to the node.
+        &quot;id&quot;: &quot;A String&quot;, # Output only. The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes.
         &quot;params&quot;: { # User defined set of parameters to use in the memcached process.
           &quot;a_key&quot;: &quot;A String&quot;,
         },
@@ -378,12 +437,17 @@ Returns:
     &quot;memorySizeMb&quot;: 42, # Required. Memory size in MiB for each Memcached node.
   },
   &quot;nodeCount&quot;: 42, # Required. Number of nodes in the Memcached instance.
-  &quot;parameters&quot;: { # The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes. # Optional: User defined parameters to apply to the memcached process on each node.
-    &quot;id&quot;: &quot;A String&quot;, # Output only.
+  &quot;parameters&quot;: { # User defined parameters to apply to the memcached process on each node.
+    &quot;id&quot;: &quot;A String&quot;, # Output only. The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes.
     &quot;params&quot;: { # User defined set of parameters to use in the memcached process.
       &quot;a_key&quot;: &quot;A String&quot;,
     },
   },
+  &quot;reservedIpRangeId&quot;: [ # Optional. Contains the id of allocated IP address ranges associated with the private service access connection for example, &quot;test-default&quot; associated with IP range 10.0.0.0/29.
+    &quot;A String&quot;,
+  ],
+  &quot;satisfiesPzi&quot;: True or False, # Optional. Output only. Reserved for future use.
+  &quot;satisfiesPzs&quot;: True or False, # Optional. Output only. Reserved for future use.
   &quot;state&quot;: &quot;A String&quot;, # Output only. The state of this Memcached instance.
   &quot;updateAvailable&quot;: True or False, # Output only. Returns true if there is an update waiting to be applied
   &quot;updateTime&quot;: &quot;A String&quot;, # Output only. The time the instance was updated.
@@ -428,13 +492,37 @@ Returns:
       &quot;labels&quot;: { # Resource labels to represent user-provided metadata. Refer to cloud documentation on labels for more details. https://cloud.google.com/compute/docs/labeling-resources
         &quot;a_key&quot;: &quot;A String&quot;,
       },
+      &quot;maintenancePolicy&quot;: { # Maintenance policy per instance. # The maintenance policy for the instance. If not provided, the maintenance event will be performed based on Memorystore internal rollout schedule.
+        &quot;createTime&quot;: &quot;A String&quot;, # Output only. The time when the policy was created.
+        &quot;description&quot;: &quot;A String&quot;, # Description of what this policy is for. Create/Update methods return INVALID_ARGUMENT if the length is greater than 512.
+        &quot;updateTime&quot;: &quot;A String&quot;, # Output only. The time when the policy was updated.
+        &quot;weeklyMaintenanceWindow&quot;: [ # Required. Maintenance window that is applied to resources covered by this policy. Minimum 1. For the current version, the maximum number of weekly_maintenance_windows is expected to be one.
+          { # Time window specified for weekly operations.
+            &quot;day&quot;: &quot;A String&quot;, # Required. Allows to define schedule that runs specified day of the week.
+            &quot;duration&quot;: &quot;A String&quot;, # Required. Duration of the time window.
+            &quot;startTime&quot;: { # Represents a time of day. The date and time zone are either not significant or are specified elsewhere. An API may choose to allow leap seconds. Related types are google.type.Date and `google.protobuf.Timestamp`. # Required. Start time of the window in UTC.
+              &quot;hours&quot;: 42, # Hours of day in 24 hour format. Should be from 0 to 23. An API may choose to allow the value &quot;24:00:00&quot; for scenarios like business closing time.
+              &quot;minutes&quot;: 42, # Minutes of hour of day. Must be from 0 to 59.
+              &quot;nanos&quot;: 42, # Fractions of seconds in nanoseconds. Must be from 0 to 999,999,999.
+              &quot;seconds&quot;: 42, # Seconds of minutes of the time. Must normally be from 0 to 59. An API may allow the value 60 if it allows leap-seconds.
+            },
+          },
+        ],
+      },
+      &quot;maintenanceSchedule&quot;: { # Upcoming maintenance schedule. # Output only. Published maintenance schedule.
+        &quot;endTime&quot;: &quot;A String&quot;, # Output only. The end time of any upcoming scheduled maintenance for this instance.
+        &quot;scheduleDeadlineTime&quot;: &quot;A String&quot;, # Output only. The deadline that the maintenance schedule start time can not go beyond, including reschedule.
+        &quot;startTime&quot;: &quot;A String&quot;, # Output only. The start time of any upcoming scheduled maintenance for this instance.
+      },
       &quot;memcacheFullVersion&quot;: &quot;A String&quot;, # Output only. The full version of memcached server running on this instance. System automatically determines the full memcached version for an instance based on the input MemcacheVersion. The full version format will be &quot;memcached-1.5.16&quot;.
       &quot;memcacheNodes&quot;: [ # Output only. List of Memcached nodes. Refer to Node message for more details.
         {
           &quot;host&quot;: &quot;A String&quot;, # Output only. Hostname or IP address of the Memcached node used by the clients to connect to the Memcached server on this node.
+          &quot;memcacheFullVersion&quot;: &quot;A String&quot;, # Output only. The full version of memcached server running on this node. e.g. - memcached-1.5.16
+          &quot;memcacheVersion&quot;: &quot;A String&quot;, # Output only. Major version of memcached server running on this node, e.g. MEMCACHE_1_5
           &quot;nodeId&quot;: &quot;A String&quot;, # Output only. Identifier of the Memcached node. The node id does not include project or location like the Memcached instance name.
-          &quot;parameters&quot;: { # The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes. # User defined parameters currently applied to the node.
-            &quot;id&quot;: &quot;A String&quot;, # Output only.
+          &quot;parameters&quot;: { # User defined parameters currently applied to the node.
+            &quot;id&quot;: &quot;A String&quot;, # Output only. The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes.
             &quot;params&quot;: { # User defined set of parameters to use in the memcached process.
               &quot;a_key&quot;: &quot;A String&quot;,
             },
@@ -452,12 +540,17 @@ Returns:
         &quot;memorySizeMb&quot;: 42, # Required. Memory size in MiB for each Memcached node.
       },
       &quot;nodeCount&quot;: 42, # Required. Number of nodes in the Memcached instance.
-      &quot;parameters&quot;: { # The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes. # Optional: User defined parameters to apply to the memcached process on each node.
-        &quot;id&quot;: &quot;A String&quot;, # Output only.
+      &quot;parameters&quot;: { # User defined parameters to apply to the memcached process on each node.
+        &quot;id&quot;: &quot;A String&quot;, # Output only. The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes.
         &quot;params&quot;: { # User defined set of parameters to use in the memcached process.
           &quot;a_key&quot;: &quot;A String&quot;,
         },
       },
+      &quot;reservedIpRangeId&quot;: [ # Optional. Contains the id of allocated IP address ranges associated with the private service access connection for example, &quot;test-default&quot; associated with IP range 10.0.0.0/29.
+        &quot;A String&quot;,
+      ],
+      &quot;satisfiesPzi&quot;: True or False, # Optional. Output only. Reserved for future use.
+      &quot;satisfiesPzs&quot;: True or False, # Optional. Output only. Reserved for future use.
       &quot;state&quot;: &quot;A String&quot;, # Output only. The state of this Memcached instance.
       &quot;updateAvailable&quot;: True or False, # Output only. Returns true if there is an update waiting to be applied
       &quot;updateTime&quot;: &quot;A String&quot;, # Output only. The time the instance was updated.
@@ -473,17 +566,17 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="list_next">list_next(previous_request, previous_response)</code>
+    <code class="details" id="list_next">list_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
@@ -509,13 +602,37 @@ Args:
   &quot;labels&quot;: { # Resource labels to represent user-provided metadata. Refer to cloud documentation on labels for more details. https://cloud.google.com/compute/docs/labeling-resources
     &quot;a_key&quot;: &quot;A String&quot;,
   },
+  &quot;maintenancePolicy&quot;: { # Maintenance policy per instance. # The maintenance policy for the instance. If not provided, the maintenance event will be performed based on Memorystore internal rollout schedule.
+    &quot;createTime&quot;: &quot;A String&quot;, # Output only. The time when the policy was created.
+    &quot;description&quot;: &quot;A String&quot;, # Description of what this policy is for. Create/Update methods return INVALID_ARGUMENT if the length is greater than 512.
+    &quot;updateTime&quot;: &quot;A String&quot;, # Output only. The time when the policy was updated.
+    &quot;weeklyMaintenanceWindow&quot;: [ # Required. Maintenance window that is applied to resources covered by this policy. Minimum 1. For the current version, the maximum number of weekly_maintenance_windows is expected to be one.
+      { # Time window specified for weekly operations.
+        &quot;day&quot;: &quot;A String&quot;, # Required. Allows to define schedule that runs specified day of the week.
+        &quot;duration&quot;: &quot;A String&quot;, # Required. Duration of the time window.
+        &quot;startTime&quot;: { # Represents a time of day. The date and time zone are either not significant or are specified elsewhere. An API may choose to allow leap seconds. Related types are google.type.Date and `google.protobuf.Timestamp`. # Required. Start time of the window in UTC.
+          &quot;hours&quot;: 42, # Hours of day in 24 hour format. Should be from 0 to 23. An API may choose to allow the value &quot;24:00:00&quot; for scenarios like business closing time.
+          &quot;minutes&quot;: 42, # Minutes of hour of day. Must be from 0 to 59.
+          &quot;nanos&quot;: 42, # Fractions of seconds in nanoseconds. Must be from 0 to 999,999,999.
+          &quot;seconds&quot;: 42, # Seconds of minutes of the time. Must normally be from 0 to 59. An API may allow the value 60 if it allows leap-seconds.
+        },
+      },
+    ],
+  },
+  &quot;maintenanceSchedule&quot;: { # Upcoming maintenance schedule. # Output only. Published maintenance schedule.
+    &quot;endTime&quot;: &quot;A String&quot;, # Output only. The end time of any upcoming scheduled maintenance for this instance.
+    &quot;scheduleDeadlineTime&quot;: &quot;A String&quot;, # Output only. The deadline that the maintenance schedule start time can not go beyond, including reschedule.
+    &quot;startTime&quot;: &quot;A String&quot;, # Output only. The start time of any upcoming scheduled maintenance for this instance.
+  },
   &quot;memcacheFullVersion&quot;: &quot;A String&quot;, # Output only. The full version of memcached server running on this instance. System automatically determines the full memcached version for an instance based on the input MemcacheVersion. The full version format will be &quot;memcached-1.5.16&quot;.
   &quot;memcacheNodes&quot;: [ # Output only. List of Memcached nodes. Refer to Node message for more details.
     {
       &quot;host&quot;: &quot;A String&quot;, # Output only. Hostname or IP address of the Memcached node used by the clients to connect to the Memcached server on this node.
+      &quot;memcacheFullVersion&quot;: &quot;A String&quot;, # Output only. The full version of memcached server running on this node. e.g. - memcached-1.5.16
+      &quot;memcacheVersion&quot;: &quot;A String&quot;, # Output only. Major version of memcached server running on this node, e.g. MEMCACHE_1_5
       &quot;nodeId&quot;: &quot;A String&quot;, # Output only. Identifier of the Memcached node. The node id does not include project or location like the Memcached instance name.
-      &quot;parameters&quot;: { # The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes. # User defined parameters currently applied to the node.
-        &quot;id&quot;: &quot;A String&quot;, # Output only.
+      &quot;parameters&quot;: { # User defined parameters currently applied to the node.
+        &quot;id&quot;: &quot;A String&quot;, # Output only. The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes.
         &quot;params&quot;: { # User defined set of parameters to use in the memcached process.
           &quot;a_key&quot;: &quot;A String&quot;,
         },
@@ -533,12 +650,17 @@ Args:
     &quot;memorySizeMb&quot;: 42, # Required. Memory size in MiB for each Memcached node.
   },
   &quot;nodeCount&quot;: 42, # Required. Number of nodes in the Memcached instance.
-  &quot;parameters&quot;: { # The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes. # Optional: User defined parameters to apply to the memcached process on each node.
-    &quot;id&quot;: &quot;A String&quot;, # Output only.
+  &quot;parameters&quot;: { # User defined parameters to apply to the memcached process on each node.
+    &quot;id&quot;: &quot;A String&quot;, # Output only. The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes.
     &quot;params&quot;: { # User defined set of parameters to use in the memcached process.
       &quot;a_key&quot;: &quot;A String&quot;,
     },
   },
+  &quot;reservedIpRangeId&quot;: [ # Optional. Contains the id of allocated IP address ranges associated with the private service access connection for example, &quot;test-default&quot; associated with IP range 10.0.0.0/29.
+    &quot;A String&quot;,
+  ],
+  &quot;satisfiesPzi&quot;: True or False, # Optional. Output only. Reserved for future use.
+  &quot;satisfiesPzs&quot;: True or False, # Optional. Output only. Reserved for future use.
   &quot;state&quot;: &quot;A String&quot;, # Output only. The state of this Memcached instance.
   &quot;updateAvailable&quot;: True or False, # Output only. Returns true if there is an update waiting to be applied
   &quot;updateTime&quot;: &quot;A String&quot;, # Output only. The time the instance was updated.
@@ -571,7 +693,50 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+    &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
+  },
+}</pre>
+</div>
+
+<div class="method">
+    <code class="details" id="rescheduleMaintenance">rescheduleMaintenance(instance, body=None, x__xgafv=None)</code>
+  <pre>Performs the apply phase of the RescheduleMaintenance verb.
+
+Args:
+  instance: string, Required. Memcache instance resource name using the form: `projects/{project_id}/locations/{location_id}/instances/{instance_id}` where `location_id` refers to a GCP region. (required)
+  body: object, The request body.
+    The object takes the form of:
+
+{ # Request for RescheduleMaintenance.
+  &quot;rescheduleType&quot;: &quot;A String&quot;, # Required. If reschedule type is SPECIFIC_TIME, must set up schedule_time as well.
+  &quot;scheduleTime&quot;: &quot;A String&quot;, # Timestamp when the maintenance shall be rescheduled to if reschedule_type=SPECIFIC_TIME, in RFC 3339 format, for example `2012-11-15T16:19:00.094Z`.
+}
+
+  x__xgafv: string, V1 error format.
+    Allowed values
+      1 - v1 error format
+      2 - v2 error format
+
+Returns:
+  An object of the form:
+
+    { # This resource represents a long-running operation that is the result of a network API call.
+  &quot;done&quot;: True or False, # If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available.
+  &quot;error&quot;: { # The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). # The error result of the operation in case of failure or cancellation.
+    &quot;code&quot;: 42, # The status code, which should be an enum value of google.rpc.Code.
+    &quot;details&quot;: [ # A list of messages that carry the error details. There is a common set of message types for APIs to use.
+      {
+        &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
+      },
+    ],
+    &quot;message&quot;: &quot;A String&quot;, # A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.
+  },
+  &quot;metadata&quot;: { # Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any.
+    &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
+  },
+  &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
 }</pre>
@@ -587,8 +752,8 @@ Args:
     The object takes the form of:
 
 { # Request for UpdateParameters.
-  &quot;parameters&quot;: { # The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes. # The parameters to apply to the instance.
-    &quot;id&quot;: &quot;A String&quot;, # Output only.
+  &quot;parameters&quot;: { # The parameters to apply to the instance.
+    &quot;id&quot;: &quot;A String&quot;, # Output only. The unique ID associated with this set of parameters. Users can use this id to determine if the parameters associated with the instance differ from the parameters associated with the nodes. A discrepancy between parameter ids can inform users that they may need to take action to apply parameters on nodes.
     &quot;params&quot;: { # User defined set of parameters to use in the memcached process.
       &quot;a_key&quot;: &quot;A String&quot;,
     },
@@ -619,7 +784,49 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+    &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
+  },
+}</pre>
+</div>
+
+<div class="method">
+    <code class="details" id="upgrade">upgrade(name, body=None, x__xgafv=None)</code>
+  <pre>Upgrades the Memcache instance to a newer memcached engine version specified in the request.
+
+Args:
+  name: string, Required. Memcache instance resource name using the form: `projects/{project}/locations/{location}/instances/{instance}` where `location_id` refers to a GCP region. (required)
+  body: object, The request body.
+    The object takes the form of:
+
+{ # Request for UpgradeInstance.
+  &quot;memcacheVersion&quot;: &quot;A String&quot;, # Required. Specifies the target version of memcached engine to upgrade to.
+}
+
+  x__xgafv: string, V1 error format.
+    Allowed values
+      1 - v1 error format
+      2 - v2 error format
+
+Returns:
+  An object of the form:
+
+    { # This resource represents a long-running operation that is the result of a network API call.
+  &quot;done&quot;: True or False, # If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available.
+  &quot;error&quot;: { # The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). # The error result of the operation in case of failure or cancellation.
+    &quot;code&quot;: 42, # The status code, which should be an enum value of google.rpc.Code.
+    &quot;details&quot;: [ # A list of messages that carry the error details. There is a common set of message types for APIs to use.
+      {
+        &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
+      },
+    ],
+    &quot;message&quot;: &quot;A String&quot;, # A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.
+  },
+  &quot;metadata&quot;: { # Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any.
+    &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
+  },
+  &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
 }</pre>

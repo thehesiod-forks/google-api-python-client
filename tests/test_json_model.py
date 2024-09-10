@@ -22,20 +22,28 @@ from __future__ import absolute_import
 
 __author__ = "jcgregorio@google.com (Joe Gregorio)"
 
-import httplib2
+import io
 import json
-import pkg_resources
 import platform
-import unittest2 as unittest
+import unittest
 import urllib
 
-import googleapiclient.model
+import httplib2
 
-
+from googleapiclient import version as googleapiclient_version
 from googleapiclient.errors import HttpError
+import googleapiclient.model
 from googleapiclient.model import JsonModel
 
-_LIBRARY_VERSION = pkg_resources.get_distribution("google-api-python-client").version
+try:
+    from google.api_core.version_header import API_VERSION_METADATA_KEY
+
+    HAS_API_VERSION = True
+except ImportError:
+    HAS_API_VERSION = False
+
+_LIBRARY_VERSION = googleapiclient_version.__version__
+CSV_TEXT_MOCK = "column1,column2,column3\nstring1,1.2,string2"
 
 
 class Model(unittest.TestCase):
@@ -115,7 +123,7 @@ class Model(unittest.TestCase):
         path_params = {}
         query_params = {
             "foo": 1,
-            "bar": u"\N{COMET}",
+            "bar": "\N{COMET}",
             "baz": ["fe", "fi", "fo", "fum"],  # Repeated parameters
             "qux": [],
         }
@@ -130,7 +138,7 @@ class Model(unittest.TestCase):
 
         query_dict = urllib.parse.parse_qs(query[1:])
         self.assertEqual(query_dict["foo"], ["1"])
-        self.assertEqual(query_dict["bar"], [u"\N{COMET}"])
+        self.assertEqual(query_dict["bar"], ["\N{COMET}"])
         self.assertEqual(query_dict["baz"], ["fe", "fi", "fo", "fum"])
         self.assertTrue("qux" not in query_dict)
         self.assertEqual(body, "{}")
@@ -169,6 +177,29 @@ class Model(unittest.TestCase):
             + _LIBRARY_VERSION
             + " gl-python/"
             + platform.python_version(),
+        )
+
+    @unittest.skipIf(
+        not HAS_API_VERSION,
+        "Skip this test when an older version of google-api-core is used",
+    )
+    def test_x_goog_api_version(self):
+        model = JsonModel(data_wrapper=False)
+
+        # test header composition for clients that wrap discovery
+        headers = {}
+        path_params = {}
+        query_params = {}
+        body = {}
+        api_version = "20240401"
+
+        headers, _, _, body = model.request(
+            headers, path_params, query_params, body, api_version
+        )
+
+        self.assertEqual(
+            headers[API_VERSION_METADATA_KEY],
+            api_version,
         )
 
     def test_bad_response(self):
@@ -289,6 +320,24 @@ class Model(unittest.TestCase):
         content = '{"data": "is good"}'
         content = model.response(resp, content)
         self.assertEqual(content, {"data": "is good"})
+
+    def test_no_data_wrapper_deserialize_text_format(self):
+        model = JsonModel(data_wrapper=False)
+        resp = httplib2.Response({"status": "200"})
+        resp.reason = "OK"
+        content = CSV_TEXT_MOCK
+        content = model.response(resp, content)
+        self.assertEqual(content, CSV_TEXT_MOCK)
+
+    def test_no_data_wrapper_deserialize_raise_type_error(self):
+        buffer = io.StringIO()
+        buffer.write("String buffer")
+        model = JsonModel(data_wrapper=False)
+        resp = httplib2.Response({"status": "500"})
+        resp.reason = "The JSON object must be str, bytes or bytearray, not StringIO"
+        content = buffer
+        with self.assertRaises(TypeError):
+            model.response(resp, content)
 
     def test_data_wrapper_deserialize(self):
         model = JsonModel(data_wrapper=True)

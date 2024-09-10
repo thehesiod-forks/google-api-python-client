@@ -90,7 +90,7 @@ h1, h2, h3 {
   <code><a href="#list">list(parent, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Returns the list of all webhooks in the specified agent.</p>
 <p class="toc_element">
-  <code><a href="#list_next">list_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#list_next">list_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#patch">patch(name, body=None, updateMask=None, x__xgafv=None)</a></code></p>
@@ -114,22 +114,58 @@ Args:
   &quot;disabled&quot;: True or False, # Indicates whether the webhook is disabled.
   &quot;displayName&quot;: &quot;A String&quot;, # Required. The human-readable name of the webhook, unique within the agent.
   &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Configuration for a generic web service.
+    &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+      &quot;A String&quot;,
+    ],
+    &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+    &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+      &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+      &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+      &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+        &quot;A String&quot;,
+      ],
+      &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+    },
+    &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+      &quot;a_key&quot;: &quot;A String&quot;,
+    },
     &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+    &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
     &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
       &quot;a_key&quot;: &quot;A String&quot;,
     },
+    &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
     &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
     &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+    &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
   },
   &quot;name&quot;: &quot;A String&quot;, # The unique identifier of the webhook. Required for the Webhooks.UpdateWebhook method. Webhooks.CreateWebhook populates the name automatically. Format: `projects//locations//agents//webhooks/`.
   &quot;serviceDirectory&quot;: { # Represents configuration for a [Service Directory](https://cloud.google.com/service-directory) service. # Configuration for a [Service Directory](https://cloud.google.com/service-directory) service.
     &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Generic Service configuration of this webhook.
+      &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+        &quot;A String&quot;,
+      ],
+      &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+      &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+        &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+        &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+        &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+          &quot;A String&quot;,
+        ],
+        &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+      },
+      &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+        &quot;a_key&quot;: &quot;A String&quot;,
+      },
       &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+      &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
       &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
         &quot;a_key&quot;: &quot;A String&quot;,
       },
+      &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
       &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
       &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+      &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
     },
     &quot;service&quot;: &quot;A String&quot;, # Required. The name of [Service Directory](https://cloud.google.com/service-directory) service. Format: `projects//locations//namespaces//services/`. `Location ID` of the service directory must be the same as the location of the agent.
   },
@@ -148,22 +184,58 @@ Returns:
   &quot;disabled&quot;: True or False, # Indicates whether the webhook is disabled.
   &quot;displayName&quot;: &quot;A String&quot;, # Required. The human-readable name of the webhook, unique within the agent.
   &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Configuration for a generic web service.
+    &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+      &quot;A String&quot;,
+    ],
+    &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+    &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+      &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+      &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+      &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+        &quot;A String&quot;,
+      ],
+      &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+    },
+    &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+      &quot;a_key&quot;: &quot;A String&quot;,
+    },
     &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+    &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
     &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
       &quot;a_key&quot;: &quot;A String&quot;,
     },
+    &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
     &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
     &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+    &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
   },
   &quot;name&quot;: &quot;A String&quot;, # The unique identifier of the webhook. Required for the Webhooks.UpdateWebhook method. Webhooks.CreateWebhook populates the name automatically. Format: `projects//locations//agents//webhooks/`.
   &quot;serviceDirectory&quot;: { # Represents configuration for a [Service Directory](https://cloud.google.com/service-directory) service. # Configuration for a [Service Directory](https://cloud.google.com/service-directory) service.
     &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Generic Service configuration of this webhook.
+      &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+        &quot;A String&quot;,
+      ],
+      &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+      &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+        &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+        &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+        &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+          &quot;A String&quot;,
+        ],
+        &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+      },
+      &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+        &quot;a_key&quot;: &quot;A String&quot;,
+      },
       &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+      &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
       &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
         &quot;a_key&quot;: &quot;A String&quot;,
       },
+      &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
       &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
       &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+      &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
     },
     &quot;service&quot;: &quot;A String&quot;, # Required. The name of [Service Directory](https://cloud.google.com/service-directory) service. Format: `projects//locations//namespaces//services/`. `Location ID` of the service directory must be the same as the location of the agent.
   },
@@ -186,7 +258,7 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 
@@ -208,22 +280,58 @@ Returns:
   &quot;disabled&quot;: True or False, # Indicates whether the webhook is disabled.
   &quot;displayName&quot;: &quot;A String&quot;, # Required. The human-readable name of the webhook, unique within the agent.
   &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Configuration for a generic web service.
+    &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+      &quot;A String&quot;,
+    ],
+    &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+    &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+      &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+      &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+      &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+        &quot;A String&quot;,
+      ],
+      &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+    },
+    &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+      &quot;a_key&quot;: &quot;A String&quot;,
+    },
     &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+    &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
     &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
       &quot;a_key&quot;: &quot;A String&quot;,
     },
+    &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
     &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
     &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+    &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
   },
   &quot;name&quot;: &quot;A String&quot;, # The unique identifier of the webhook. Required for the Webhooks.UpdateWebhook method. Webhooks.CreateWebhook populates the name automatically. Format: `projects//locations//agents//webhooks/`.
   &quot;serviceDirectory&quot;: { # Represents configuration for a [Service Directory](https://cloud.google.com/service-directory) service. # Configuration for a [Service Directory](https://cloud.google.com/service-directory) service.
     &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Generic Service configuration of this webhook.
+      &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+        &quot;A String&quot;,
+      ],
+      &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+      &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+        &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+        &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+        &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+          &quot;A String&quot;,
+        ],
+        &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+      },
+      &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+        &quot;a_key&quot;: &quot;A String&quot;,
+      },
       &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+      &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
       &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
         &quot;a_key&quot;: &quot;A String&quot;,
       },
+      &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
       &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
       &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+      &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
     },
     &quot;service&quot;: &quot;A String&quot;, # Required. The name of [Service Directory](https://cloud.google.com/service-directory) service. Format: `projects//locations//namespaces//services/`. `Location ID` of the service directory must be the same as the location of the agent.
   },
@@ -254,22 +362,58 @@ Returns:
       &quot;disabled&quot;: True or False, # Indicates whether the webhook is disabled.
       &quot;displayName&quot;: &quot;A String&quot;, # Required. The human-readable name of the webhook, unique within the agent.
       &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Configuration for a generic web service.
+        &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+          &quot;A String&quot;,
+        ],
+        &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+        &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+          &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+          &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+          &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+            &quot;A String&quot;,
+          ],
+          &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+        },
+        &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+          &quot;a_key&quot;: &quot;A String&quot;,
+        },
         &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+        &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
         &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
           &quot;a_key&quot;: &quot;A String&quot;,
         },
+        &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
         &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
         &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+        &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
       },
       &quot;name&quot;: &quot;A String&quot;, # The unique identifier of the webhook. Required for the Webhooks.UpdateWebhook method. Webhooks.CreateWebhook populates the name automatically. Format: `projects//locations//agents//webhooks/`.
       &quot;serviceDirectory&quot;: { # Represents configuration for a [Service Directory](https://cloud.google.com/service-directory) service. # Configuration for a [Service Directory](https://cloud.google.com/service-directory) service.
         &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Generic Service configuration of this webhook.
+          &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+            &quot;A String&quot;,
+          ],
+          &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+          &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+            &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+            &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+            &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+              &quot;A String&quot;,
+            ],
+            &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+          },
+          &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+            &quot;a_key&quot;: &quot;A String&quot;,
+          },
           &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+          &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
           &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
             &quot;a_key&quot;: &quot;A String&quot;,
           },
+          &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
           &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
           &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+          &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
         },
         &quot;service&quot;: &quot;A String&quot;, # Required. The name of [Service Directory](https://cloud.google.com/service-directory) service. Format: `projects//locations//namespaces//services/`. `Location ID` of the service directory must be the same as the location of the agent.
       },
@@ -280,17 +424,17 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="list_next">list_next(previous_request, previous_response)</code>
+    <code class="details" id="list_next">list_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
@@ -306,22 +450,58 @@ Args:
   &quot;disabled&quot;: True or False, # Indicates whether the webhook is disabled.
   &quot;displayName&quot;: &quot;A String&quot;, # Required. The human-readable name of the webhook, unique within the agent.
   &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Configuration for a generic web service.
+    &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+      &quot;A String&quot;,
+    ],
+    &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+    &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+      &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+      &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+      &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+        &quot;A String&quot;,
+      ],
+      &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+    },
+    &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+      &quot;a_key&quot;: &quot;A String&quot;,
+    },
     &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+    &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
     &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
       &quot;a_key&quot;: &quot;A String&quot;,
     },
+    &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
     &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
     &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+    &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
   },
   &quot;name&quot;: &quot;A String&quot;, # The unique identifier of the webhook. Required for the Webhooks.UpdateWebhook method. Webhooks.CreateWebhook populates the name automatically. Format: `projects//locations//agents//webhooks/`.
   &quot;serviceDirectory&quot;: { # Represents configuration for a [Service Directory](https://cloud.google.com/service-directory) service. # Configuration for a [Service Directory](https://cloud.google.com/service-directory) service.
     &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Generic Service configuration of this webhook.
+      &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+        &quot;A String&quot;,
+      ],
+      &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+      &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+        &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+        &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+        &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+          &quot;A String&quot;,
+        ],
+        &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+      },
+      &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+        &quot;a_key&quot;: &quot;A String&quot;,
+      },
       &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+      &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
       &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
         &quot;a_key&quot;: &quot;A String&quot;,
       },
+      &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
       &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
       &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+      &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
     },
     &quot;service&quot;: &quot;A String&quot;, # Required. The name of [Service Directory](https://cloud.google.com/service-directory) service. Format: `projects//locations//namespaces//services/`. `Location ID` of the service directory must be the same as the location of the agent.
   },
@@ -341,22 +521,58 @@ Returns:
   &quot;disabled&quot;: True or False, # Indicates whether the webhook is disabled.
   &quot;displayName&quot;: &quot;A String&quot;, # Required. The human-readable name of the webhook, unique within the agent.
   &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Configuration for a generic web service.
+    &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+      &quot;A String&quot;,
+    ],
+    &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+    &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+      &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+      &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+      &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+        &quot;A String&quot;,
+      ],
+      &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+    },
+    &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+      &quot;a_key&quot;: &quot;A String&quot;,
+    },
     &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+    &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
     &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
       &quot;a_key&quot;: &quot;A String&quot;,
     },
+    &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
     &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
     &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+    &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
   },
   &quot;name&quot;: &quot;A String&quot;, # The unique identifier of the webhook. Required for the Webhooks.UpdateWebhook method. Webhooks.CreateWebhook populates the name automatically. Format: `projects//locations//agents//webhooks/`.
   &quot;serviceDirectory&quot;: { # Represents configuration for a [Service Directory](https://cloud.google.com/service-directory) service. # Configuration for a [Service Directory](https://cloud.google.com/service-directory) service.
     &quot;genericWebService&quot;: { # Represents configuration for a generic web service. # Generic Service configuration of this webhook.
+      &quot;allowedCaCerts&quot;: [ # Optional. Specifies a list of allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, Dialogflow will use Google&#x27;s default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with &quot;subject alt name&quot;. For instance a certificate can be self-signed using the following command, ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile &lt;(printf &quot;\nsubjectAltName=&#x27;DNS:www.example.com&#x27;&quot;) ```
+        &quot;A String&quot;,
+      ],
+      &quot;httpMethod&quot;: &quot;A String&quot;, # Optional. HTTP method for the flexible webhook calls. Standard webhook always uses POST.
+      &quot;oauthConfig&quot;: { # Represents configuration of OAuth client credential flow for 3rd party API authentication. # Optional. The OAuth configuration of the webhook. If specified, Dialogflow will initiate the OAuth client credential flow to exchange an access token from the 3rd party platform and put it in the auth header.
+        &quot;clientId&quot;: &quot;A String&quot;, # Required. The client ID provided by the 3rd party platform.
+        &quot;clientSecret&quot;: &quot;A String&quot;, # Required. The client secret provided by the 3rd party platform.
+        &quot;scopes&quot;: [ # Optional. The OAuth scopes to grant.
+          &quot;A String&quot;,
+        ],
+        &quot;tokenEndpoint&quot;: &quot;A String&quot;, # Required. The token endpoint provided by the 3rd party platform to exchange an access token.
+      },
+      &quot;parameterMapping&quot;: { # Optional. Maps the values extracted from specific fields of the flexible webhook response into session parameters. - Key: session parameter name - Value: field path in the webhook response
+        &quot;a_key&quot;: &quot;A String&quot;,
+      },
       &quot;password&quot;: &quot;A String&quot;, # The password for HTTP Basic authentication.
+      &quot;requestBody&quot;: &quot;A String&quot;, # Optional. Defines a custom JSON object as request body to send to flexible webhook.
       &quot;requestHeaders&quot;: { # The HTTP request headers to send together with webhook requests.
         &quot;a_key&quot;: &quot;A String&quot;,
       },
+      &quot;serviceAgentAuth&quot;: &quot;A String&quot;, # Optional. Indicate the auth token type generated from the [Diglogflow service agent](https://cloud.google.com/iam/docs/service-agents#dialogflow-service-agent). The generated token is sent in the Authorization header.
       &quot;uri&quot;: &quot;A String&quot;, # Required. The webhook URI for receiving POST requests. It must use https protocol.
       &quot;username&quot;: &quot;A String&quot;, # The user name for HTTP Basic authentication.
+      &quot;webhookType&quot;: &quot;A String&quot;, # Optional. Type of the webhook.
     },
     &quot;service&quot;: &quot;A String&quot;, # Required. The name of [Service Directory](https://cloud.google.com/service-directory) service. Format: `projects//locations//namespaces//services/`. `Location ID` of the service directory must be the same as the location of the agent.
   },

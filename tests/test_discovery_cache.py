@@ -18,12 +18,10 @@
 """Discovery document cache tests."""
 
 import datetime
-import unittest2 as unittest
-
-import mock
+import unittest
+from unittest import mock
 
 from googleapiclient.discovery_cache import DISCOVERY_DOC_MAX_AGE
-from googleapiclient.discovery_cache.base import Cache
 
 try:
     from googleapiclient.discovery_cache.file_cache import Cache as FileCache

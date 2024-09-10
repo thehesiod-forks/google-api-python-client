@@ -96,13 +96,13 @@ h1, h2, h3 {
   <code><a href="#get">get(customerId, subscriptionId, x__xgafv=None)</a></code></p>
 <p class="firstline">Gets a specific subscription. The `subscriptionId` can be found using the [Retrieve all reseller subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#get_all_subscriptions) method. For more information about retrieving a specific subscription, see the information descrived in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#get_subscription).</p>
 <p class="toc_element">
-  <code><a href="#insert">insert(customerId, body=None, customerAuthToken=None, x__xgafv=None)</a></code></p>
+  <code><a href="#insert">insert(customerId, action=None, body=None, customerAuthToken=None, sourceSkuId=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Creates or transfer a subscription. Create a subscription for a customer's account that you ordered using the [Order a new customer account](/admin-sdk/reseller/v1/reference/customers/insert.html) method. For more information about creating a subscription for different payment plans, see [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#create_subscription).\ If you did not order the customer's account using the customer insert method, use the customer's `customerAuthToken` when creating a subscription for that customer. If transferring a G Suite subscription with an associated Google Drive or Google Vault subscription, use the [batch operation](/admin-sdk/reseller/v1/how-tos/batch.html) to transfer all of these subscriptions. For more information, see how to [transfer subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#transfer_a_subscription).</p>
 <p class="toc_element">
   <code><a href="#list">list(customerAuthToken=None, customerId=None, customerNamePrefix=None, maxResults=None, pageToken=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Lists of subscriptions managed by the reseller. The list can be all subscriptions, all of a customer's subscriptions, or all of a customer's transferable subscriptions. Optionally, this method can filter the response by a `customerNamePrefix`. For more information, see [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions).</p>
 <p class="toc_element">
-  <code><a href="#list_next">list_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#list_next">list_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#startPaidService">startPaidService(customerId, subscriptionId, x__xgafv=None)</a></code></p>
@@ -116,7 +116,7 @@ h1, h2, h3 {
   <pre>Activates a subscription previously suspended by the reseller. If you did not suspend the customer subscription and it is suspended for any other reason, such as for abuse or a pending ToS acceptance, this call will not reactivate the customer subscription.
 
 Args:
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates. (required)
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable. (required)
   subscriptionId: string, This is a required property. The `subscriptionId` is the subscription identifier and is unique for each customer. Since a `subscriptionId` changes when a subscription is updated, we recommend to not use this ID as a key for persistent data. And the `subscriptionId` can be found using the retrieve all reseller subscriptions method. (required)
   x__xgafv: string, V1 error format.
     Allowed values
@@ -177,7 +177,7 @@ Returns:
   <pre>Updates a subscription plan. Use this method to update a plan for a 30-day trial or a flexible plan subscription to an annual commitment plan with monthly or yearly payments. How a plan is updated differs depending on the plan and the products. For more information, see the description in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_subscription_plan).
 
 Args:
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates. (required)
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable. (required)
   subscriptionId: string, This is a required property. The `subscriptionId` is the subscription identifier and is unique for each customer. Since a `subscriptionId` changes when a subscription is updated, we recommend to not use this ID as a key for persistent data. And the `subscriptionId` can be found using the retrieve all reseller subscriptions method. (required)
   body: object, The request body.
     The object takes the form of:
@@ -254,7 +254,7 @@ Returns:
   <pre>Updates a user license&#x27;s renewal settings. This is applicable for accounts with annual commitment plans only. For more information, see the description in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_renewal).
 
 Args:
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates. (required)
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable. (required)
   subscriptionId: string, This is a required property. The `subscriptionId` is the subscription identifier and is unique for each customer. Since a `subscriptionId` changes when a subscription is updated, we recommend to not use this ID as a key for persistent data. And the `subscriptionId` can be found using the retrieve all reseller subscriptions method. (required)
   body: object, The request body.
     The object takes the form of:
@@ -323,7 +323,7 @@ Returns:
   <pre>Updates a subscription&#x27;s user license settings. For more information about updating an annual commitment plan or a flexible plan subscription’s licenses, see [Manage Subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_subscription_seat).
 
 Args:
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates. (required)
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable. (required)
   subscriptionId: string, This is a required property. The `subscriptionId` is the subscription identifier and is unique for each customer. Since a `subscriptionId` changes when a subscription is updated, we recommend to not use this ID as a key for persistent data. And the `subscriptionId` can be found using the retrieve all reseller subscriptions method. (required)
   body: object, The request body.
     The object takes the form of:
@@ -399,7 +399,7 @@ Returns:
   <pre>Cancels, suspends, or transfers a subscription to direct.
 
 Args:
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates. (required)
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable. (required)
   subscriptionId: string, This is a required property. The `subscriptionId` is the subscription identifier and is unique for each customer. Since a `subscriptionId` changes when a subscription is updated, we recommend to not use this ID as a key for persistent data. And the `subscriptionId` can be found using the retrieve all reseller subscriptions method. (required)
   deletionType: string, The `deletionType` query string enables the cancellation, downgrade, or suspension of a subscription. (required)
     Allowed values
@@ -418,7 +418,7 @@ Args:
   <pre>Gets a specific subscription. The `subscriptionId` can be found using the [Retrieve all reseller subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#get_all_subscriptions) method. For more information about retrieving a specific subscription, see the information descrived in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#get_subscription).
 
 Args:
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates. (required)
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable. (required)
   subscriptionId: string, This is a required property. The `subscriptionId` is the subscription identifier and is unique for each customer. Since a `subscriptionId` changes when a subscription is updated, we recommend to not use this ID as a key for persistent data. And the `subscriptionId` can be found using the retrieve all reseller subscriptions method. (required)
   x__xgafv: string, V1 error format.
     Allowed values
@@ -475,11 +475,11 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="insert">insert(customerId, body=None, customerAuthToken=None, x__xgafv=None)</code>
+    <code class="details" id="insert">insert(customerId, action=None, body=None, customerAuthToken=None, sourceSkuId=None, x__xgafv=None)</code>
   <pre>Creates or transfer a subscription. Create a subscription for a customer&#x27;s account that you ordered using the [Order a new customer account](/admin-sdk/reseller/v1/reference/customers/insert.html) method. For more information about creating a subscription for different payment plans, see [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#create_subscription).\ If you did not order the customer&#x27;s account using the customer insert method, use the customer&#x27;s `customerAuthToken` when creating a subscription for that customer. If transferring a G Suite subscription with an associated Google Drive or Google Vault subscription, use the [batch operation](/admin-sdk/reseller/v1/how-tos/batch.html) to transfer all of these subscriptions. For more information, see how to [transfer subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#transfer_a_subscription).
 
 Args:
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates. (required)
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable. (required)
   body: object, The request body.
     The object takes the form of:
 
@@ -528,7 +528,13 @@ Args:
   },
 }
 
+  action: string, The intented insert action. The usage of this field is governed by certain policies which are being developed &amp; tested currently. Hence, these might not work as intended. Once this is fully tested &amp; available to consume, we will share more information about its usage, limitations and policy documentation.
+    Allowed values
+      actionUnspecified - Auto determines whether to create new subscription, upgrade or downagrade existing subscription or transfer the existing subscription
+      buy - Create new subscription
+      switch - Switch existing subscription to another sku (upgrade/downgrade)
   customerAuthToken: string, The `customerAuthToken` query string is required when creating a resold account that transfers a direct customer&#x27;s subscription or transfers another reseller customer&#x27;s subscription to your reseller management. This is a hexadecimal authentication token needed to complete the subscription transfer. For more information, see the administrator help center.
+  sourceSkuId: string, The sku_id of the existing subscription to be upgraded or downgraded. This is required when action is SWITCH. The usage of this field is governed by certain policies which are being developed &amp; tested currently. Hence, these might not work as intended. Once this is fully tested &amp; available to consume, we will share more information about its usage, limitations and policy documentation.
   x__xgafv: string, V1 error format.
     Allowed values
       1 - v1 error format
@@ -589,7 +595,7 @@ Returns:
 
 Args:
   customerAuthToken: string, The `customerAuthToken` query string is required when creating a resold account that transfers a direct customer&#x27;s subscription or transfers another reseller customer&#x27;s subscription to your reseller management. This is a hexadecimal authentication token needed to complete the subscription transfer. For more information, see the administrator help center.
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates.
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable.
   customerNamePrefix: string, When retrieving all of your subscriptions and filtering for specific customers, you can enter a prefix for a customer name. Using an example customer group that includes `exam.com`, `example20.com` and `example.com`: - `exa` -- Returns all customer names that start with &#x27;exa&#x27; which could include `exam.com`, `example20.com`, and `example.com`. A name prefix is similar to using a regular expression&#x27;s asterisk, exa*. - `example` -- Returns `example20.com` and `example.com`. 
   maxResults: integer, When retrieving a large list, the `maxResults` is the maximum number of results per page. The `nextPageToken` value takes you to the next page. The default is 20.
   pageToken: string, Token to specify next page in the list
@@ -654,17 +660,17 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="list_next">list_next(previous_request, previous_response)</code>
+    <code class="details" id="list_next">list_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
@@ -672,7 +678,7 @@ Returns:
   <pre>Immediately move a 30-day free trial subscription to a paid service subscription. This method is only applicable if a payment plan has already been set up for the 30-day trial subscription. For more information, see [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#paid_service).
 
 Args:
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates. (required)
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable. (required)
   subscriptionId: string, This is a required property. The `subscriptionId` is the subscription identifier and is unique for each customer. Since a `subscriptionId` changes when a subscription is updated, we recommend to not use this ID as a key for persistent data. And the `subscriptionId` can be found using the retrieve all reseller subscriptions method. (required)
   x__xgafv: string, V1 error format.
     Allowed values
@@ -733,7 +739,7 @@ Returns:
   <pre>Suspends an active subscription. You can use this method to suspend a paid subscription that is currently in the `ACTIVE` state. * For `FLEXIBLE` subscriptions, billing is paused. * For `ANNUAL_MONTHLY_PAY` or `ANNUAL_YEARLY_PAY` subscriptions: * Suspending the subscription does not change the renewal date that was originally committed to. * A suspended subscription does not renew. If you activate the subscription after the original renewal date, a new annual subscription will be created, starting on the day of activation. We strongly encourage you to suspend subscriptions only for short periods of time as suspensions over 60 days may result in the subscription being cancelled.
 
 Args:
-  customerId: string, Either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If using the domain name, we do not recommend using a `customerId` as a key for persistent data. If the domain name for a `customerId` is changed, the Google system automatically updates. (required)
+  customerId: string, This can be either the customer&#x27;s primary domain name or the customer&#x27;s unique identifier. If the domain name for a customer changes, the old domain name cannot be used to access the customer, but the customer&#x27;s unique identifier (as returned by the API) can always be used. We recommend storing the unique identifier in your systems where applicable. (required)
   subscriptionId: string, This is a required property. The `subscriptionId` is the subscription identifier and is unique for each customer. Since a `subscriptionId` changes when a subscription is updated, we recommend to not use this ID as a key for persistent data. And the `subscriptionId` can be found using the retrieve all reseller subscriptions method. (required)
   x__xgafv: string, V1 error format.
     Allowed values

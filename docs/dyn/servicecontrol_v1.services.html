@@ -103,14 +103,14 @@ Args:
       &quot;a_key&quot;: &quot;A String&quot;,
     },
     &quot;methodName&quot;: &quot;A String&quot;, # Fully qualified name of the API method for which this quota operation is requested. This name is used for matching quota rules or metric rules and billing status rules defined in service configuration. This field should not be set if any of the following is true: (1) the quota operation is performed on non-API resources. (2) quota_metrics is set because the caller is doing quota override. Example of an RPC method name: google.example.library.v1.LibraryService.CreateShelf
-    &quot;operationId&quot;: &quot;A String&quot;, # Identity of the operation. This is expected to be unique within the scope of the service that generated the operation, and guarantees idempotency in case of retries. In order to ensure best performance and latency in the Quota backends, operation_ids are optimally associated with time, so that related operations can be accessed fast in storage. For this reason, the recommended token for services that intend to operate at a high QPS is Unix time in nanos + UUID
+    &quot;operationId&quot;: &quot;A String&quot;, # Identity of the operation. For Allocation Quota, this is expected to be unique within the scope of the service that generated the operation, and guarantees idempotency in case of retries. In order to ensure best performance and latency in the Quota backends, operation_ids are optimally associated with time, so that related operations can be accessed fast in storage. For this reason, the recommended token for services that intend to operate at a high QPS is Unix time in nanos + UUID
     &quot;quotaMetrics&quot;: [ # Represents information about this operation. Each MetricValueSet corresponds to a metric defined in the service configuration. The data type used in the MetricValueSet must agree with the data type specified in the metric definition. Within a single operation, it is not allowed to have more than one MetricValue instances that have the same metric names and identical label value combinations. If a request has such duplicated MetricValue instances, the entire request is rejected with an invalid argument error. This field is mutually exclusive with method_name.
       { # Represents a set of metric values in the same metric. Each metric value in the set should have a unique combination of start time, end time, and label values.
         &quot;metricName&quot;: &quot;A String&quot;, # The metric name defined in the service configuration.
         &quot;metricValues&quot;: [ # The values in this metric.
           { # Represents a single metric value.
             &quot;boolValue&quot;: True or False, # A boolean value.
-            &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: - the arithmetic mean of the samples - the minimum and maximum of the samples - the sum-squared-deviation of the samples, used to compute variance - a histogram of the values of the sample points # A distribution value.
+            &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: * the arithmetic mean of the samples * the minimum and maximum of the samples * the sum-squared-deviation of the samples, used to compute variance * a histogram of the values of the sample points # A distribution value.
               &quot;bucketCounts&quot;: [ # The number of samples in each histogram bucket. `bucket_counts` are optional. If present, they must sum to the `count` value. The buckets are defined below in `bucket_option`. There are N buckets. `bucket_counts[0]` is the number of samples in the underflow bucket. `bucket_counts[1]` to `bucket_counts[N-1]` are the numbers of samples in each of the finite buckets. And `bucket_counts[N] is the number of samples in the overflow bucket. See the comments of `bucket_option` below for more details. Any suffix of trailing zeros may be omitted.
                 &quot;A String&quot;,
               ],
@@ -205,7 +205,7 @@ Returns:
       &quot;metricValues&quot;: [ # The values in this metric.
         { # Represents a single metric value.
           &quot;boolValue&quot;: True or False, # A boolean value.
-          &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: - the arithmetic mean of the samples - the minimum and maximum of the samples - the sum-squared-deviation of the samples, used to compute variance - a histogram of the values of the sample points # A distribution value.
+          &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: * the arithmetic mean of the samples * the minimum and maximum of the samples * the sum-squared-deviation of the samples, used to compute variance * a histogram of the values of the sample points # A distribution value.
             &quot;bucketCounts&quot;: [ # The number of samples in each histogram bucket. `bucket_counts` are optional. If present, they must sum to the `count` value. The buckets are defined below in `bucket_option`. There are N buckets. `bucket_counts[0]` is the number of samples in the underflow bucket. `bucket_counts[1]` to `bucket_counts[N-1]` are the numbers of samples in each of the finite buckets. And `bucket_counts[N] is the number of samples in the overflow bucket. See the comments of `bucket_option` below for more details. Any suffix of trailing zeros may be omitted.
               &quot;A String&quot;,
             ],
@@ -275,11 +275,6 @@ Args:
   &quot;operation&quot;: { # Represents information regarding an operation. # The operation to be checked.
     &quot;consumerId&quot;: &quot;A String&quot;, # Identity of the consumer who is using the service. This field should be filled in for the operations initiated by a consumer, but not for service-initiated operations that are not related to a specific consumer. - This can be in one of the following formats: - project:PROJECT_ID, - project`_`number:PROJECT_NUMBER, - projects/PROJECT_ID or PROJECT_NUMBER, - folders/FOLDER_NUMBER, - organizations/ORGANIZATION_NUMBER, - api`_`key:API_KEY.
     &quot;endTime&quot;: &quot;A String&quot;, # End time of the operation. Required when the operation is used in ServiceController.Report, but optional when the operation is used in ServiceController.Check.
-    &quot;extensions&quot;: [ # Unimplemented.
-      {
-        &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
-      },
-    ],
     &quot;importance&quot;: &quot;A String&quot;, # DO NOT USE. This is an experimental field.
     &quot;labels&quot;: { # Labels describing the operation. Only the following labels are allowed: - Labels describing monitored resources as defined in the service configuration. - Default labels of metric values. When specified, labels defined in the metric value override these default. - The following labels defined by Google Cloud Platform: - `cloud.googleapis.com/location` describing the location where the operation happened, - `servicecontrol.googleapis.com/user_agent` describing the user agent of the API request, - `servicecontrol.googleapis.com/service_agent` describing the service used to handle the API request (e.g. ESP), - `servicecontrol.googleapis.com/platform` describing the platform where the API is served, such as App Engine, Compute Engine, or Kubernetes Engine.
       &quot;a_key&quot;: &quot;A String&quot;,
@@ -337,7 +332,7 @@ Args:
         &quot;metricValues&quot;: [ # The values in this metric.
           { # Represents a single metric value.
             &quot;boolValue&quot;: True or False, # A boolean value.
-            &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: - the arithmetic mean of the samples - the minimum and maximum of the samples - the sum-squared-deviation of the samples, used to compute variance - a histogram of the values of the sample points # A distribution value.
+            &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: * the arithmetic mean of the samples * the minimum and maximum of the samples * the sum-squared-deviation of the samples, used to compute variance * a histogram of the values of the sample points # A distribution value.
               &quot;bucketCounts&quot;: [ # The number of samples in each histogram bucket. `bucket_counts` are optional. If present, they must sum to the `count` value. The buckets are defined below in `bucket_option`. There are N buckets. `bucket_counts[0]` is the number of samples in the underflow bucket. `bucket_counts[1]` to `bucket_counts[N-1]` are the numbers of samples in each of the finite buckets. And `bucket_counts[N] is the number of samples in the overflow bucket. See the comments of `bucket_option` below for more details. Any suffix of trailing zeros may be omitted.
                 &quot;A String&quot;,
               ],
@@ -397,6 +392,7 @@ Args:
     },
     &quot;resources&quot;: [ # The resources that are involved in the operation. The maximum supported number of entries in this field is 100.
       { # Describes a resource associated with this operation.
+        &quot;permission&quot;: &quot;A String&quot;, # The resource permission required for this request.
         &quot;resourceContainer&quot;: &quot;A String&quot;, # The identifier of the parent of this resource instance. Must be in one of the following formats: - `projects/` - `folders/` - `organizations/`
         &quot;resourceLocation&quot;: &quot;A String&quot;, # The location of the resource. If not empty, the resource will be checked against location policy. The value must be a valid zone, region or multiregion. For example: &quot;europe-west4&quot; or &quot;northamerica-northeast1-a&quot;
         &quot;resourceName&quot;: &quot;A String&quot;, # Name of the resource. This is used for auditing purposes.
@@ -476,6 +472,7 @@ Returns:
     },
   ],
   &quot;checkInfo&quot;: { # Contains additional information about the check operation. # Feedback data returned from the server during processing a Check request.
+    &quot;apiKeyUid&quot;: &quot;A String&quot;, # The unique id of the api key in the format of &quot;apikey:&quot;. This field will be populated when the consumer passed to Chemist is an API key and all the API key related validations are successful.
     &quot;consumerInfo&quot;: { # `ConsumerInfo` provides information about the consumer. # Consumer info of this check.
       &quot;consumerNumber&quot;: &quot;A String&quot;, # The consumer identity number, can be Google cloud project number, folder number or organization number e.g. 1234567890. A value of 0 indicates no consumer number is found.
       &quot;projectNumber&quot;: &quot;A String&quot;, # The Google cloud project number, e.g. 1234567890. A value of 0 indicates no project number is found. NOTE: This field is deprecated after Chemist support flexible consumer id. New code should not depend on this field anymore.
@@ -499,7 +496,7 @@ Returns:
         &quot;metricValues&quot;: [ # The values in this metric.
           { # Represents a single metric value.
             &quot;boolValue&quot;: True or False, # A boolean value.
-            &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: - the arithmetic mean of the samples - the minimum and maximum of the samples - the sum-squared-deviation of the samples, used to compute variance - a histogram of the values of the sample points # A distribution value.
+            &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: * the arithmetic mean of the samples * the minimum and maximum of the samples * the sum-squared-deviation of the samples, used to compute variance * a histogram of the values of the sample points # A distribution value.
               &quot;bucketCounts&quot;: [ # The number of samples in each histogram bucket. `bucket_counts` are optional. If present, they must sum to the `count` value. The buckets are defined below in `bucket_option`. There are N buckets. `bucket_counts[0]` is the number of samples in the underflow bucket. `bucket_counts[1]` to `bucket_counts[N-1]` are the numbers of samples in each of the finite buckets. And `bucket_counts[N] is the number of samples in the overflow bucket. See the comments of `bucket_option` below for more details. Any suffix of trailing zeros may be omitted.
                 &quot;A String&quot;,
               ],
@@ -577,11 +574,6 @@ Args:
     { # Represents information regarding an operation.
       &quot;consumerId&quot;: &quot;A String&quot;, # Identity of the consumer who is using the service. This field should be filled in for the operations initiated by a consumer, but not for service-initiated operations that are not related to a specific consumer. - This can be in one of the following formats: - project:PROJECT_ID, - project`_`number:PROJECT_NUMBER, - projects/PROJECT_ID or PROJECT_NUMBER, - folders/FOLDER_NUMBER, - organizations/ORGANIZATION_NUMBER, - api`_`key:API_KEY.
       &quot;endTime&quot;: &quot;A String&quot;, # End time of the operation. Required when the operation is used in ServiceController.Report, but optional when the operation is used in ServiceController.Check.
-      &quot;extensions&quot;: [ # Unimplemented.
-        {
-          &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
-        },
-      ],
       &quot;importance&quot;: &quot;A String&quot;, # DO NOT USE. This is an experimental field.
       &quot;labels&quot;: { # Labels describing the operation. Only the following labels are allowed: - Labels describing monitored resources as defined in the service configuration. - Default labels of metric values. When specified, labels defined in the metric value override these default. - The following labels defined by Google Cloud Platform: - `cloud.googleapis.com/location` describing the location where the operation happened, - `servicecontrol.googleapis.com/user_agent` describing the user agent of the API request, - `servicecontrol.googleapis.com/service_agent` describing the service used to handle the API request (e.g. ESP), - `servicecontrol.googleapis.com/platform` describing the platform where the API is served, such as App Engine, Compute Engine, or Kubernetes Engine.
         &quot;a_key&quot;: &quot;A String&quot;,
@@ -639,7 +631,7 @@ Args:
           &quot;metricValues&quot;: [ # The values in this metric.
             { # Represents a single metric value.
               &quot;boolValue&quot;: True or False, # A boolean value.
-              &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: - the arithmetic mean of the samples - the minimum and maximum of the samples - the sum-squared-deviation of the samples, used to compute variance - a histogram of the values of the sample points # A distribution value.
+              &quot;distributionValue&quot;: { # Distribution represents a frequency distribution of double-valued sample points. It contains the size of the population of sample points plus additional optional information: * the arithmetic mean of the samples * the minimum and maximum of the samples * the sum-squared-deviation of the samples, used to compute variance * a histogram of the values of the sample points # A distribution value.
                 &quot;bucketCounts&quot;: [ # The number of samples in each histogram bucket. `bucket_counts` are optional. If present, they must sum to the `count` value. The buckets are defined below in `bucket_option`. There are N buckets. `bucket_counts[0]` is the number of samples in the underflow bucket. `bucket_counts[1]` to `bucket_counts[N-1]` are the numbers of samples in each of the finite buckets. And `bucket_counts[N] is the number of samples in the overflow bucket. See the comments of `bucket_option` below for more details. Any suffix of trailing zeros may be omitted.
                   &quot;A String&quot;,
                 ],
@@ -699,6 +691,7 @@ Args:
       },
       &quot;resources&quot;: [ # The resources that are involved in the operation. The maximum supported number of entries in this field is 100.
         { # Describes a resource associated with this operation.
+          &quot;permission&quot;: &quot;A String&quot;, # The resource permission required for this request.
           &quot;resourceContainer&quot;: &quot;A String&quot;, # The identifier of the parent of this resource instance. Must be in one of the following formats: - `projects/` - `folders/` - `organizations/`
           &quot;resourceLocation&quot;: &quot;A String&quot;, # The location of the resource. If not empty, the resource will be checked against location policy. The value must be a valid zone, region or multiregion. For example: &quot;europe-west4&quot; or &quot;northamerica-northeast1-a&quot;
           &quot;resourceName&quot;: &quot;A String&quot;, # Name of the resource. This is used for auditing purposes.

@@ -18,9 +18,9 @@ import shutil
 import subprocess
 import tempfile
 
-import describe
 import changesummary
 
+import describe
 
 SCRIPTS_DIR = pathlib.Path(__file__).parent.resolve()
 DISCOVERY_DOC_DIR = (
@@ -45,7 +45,10 @@ with tempfile.TemporaryDirectory() as current_discovery_doc_dir:
     shutil.copytree(DISCOVERY_DOC_DIR, current_discovery_doc_dir, dirs_exist_ok=True)
 
     # Download discovery artifacts and generate documentation
-    describe.generate_all_api_documents()
+    describe.generate_all_api_documents(
+        doc_destination_dir=REFERENCE_DOC_DIR,
+        artifact_destination_dir=DISCOVERY_DOC_DIR,
+    )
 
     # Get a list of files changed using `git diff`
     git_diff_output = subprocess.check_output(

@@ -23,7 +23,6 @@ from __future__ import absolute_import
 __author__ = "jcgregorio@google.com (Joe Gregorio)"
 
 import copy
-import httplib2
 import http.client as http_client
 import io
 import json
@@ -35,6 +34,8 @@ import socket
 import time
 import urllib
 import uuid
+
+import httplib2
 
 # TODO(issue 221): Remove this conditional import jibbajabba.
 try:
@@ -49,15 +50,16 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
 from email.parser import FeedParser
 
-from googleapiclient import _helpers as util
-
 from googleapiclient import _auth
-from googleapiclient.errors import BatchError
-from googleapiclient.errors import HttpError
-from googleapiclient.errors import InvalidChunkSizeError
-from googleapiclient.errors import ResumableUploadError
-from googleapiclient.errors import UnexpectedBodyError
-from googleapiclient.errors import UnexpectedMethodError
+from googleapiclient import _helpers as util
+from googleapiclient.errors import (
+    BatchError,
+    HttpError,
+    InvalidChunkSizeError,
+    ResumableUploadError,
+    UnexpectedBodyError,
+    UnexpectedMethodError,
+)
 from googleapiclient.model import JsonModel
 
 # These are platform specific exceptions
@@ -752,7 +754,7 @@ class MediaIoBaseDownload(object):
         headers = self._headers.copy()
         headers["range"] = "bytes=%d-%d" % (
             self._progress,
-            self._progress + self._chunksize,
+            self._progress + self._chunksize - 1,
         )
         http = self._request.http
 

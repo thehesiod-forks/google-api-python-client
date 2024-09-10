@@ -93,16 +93,16 @@ h1, h2, h3 {
   <code><a href="#get">get(name, x__xgafv=None)</a></code></p>
 <p class="firstline">Returns a `Printer` resource (printer's config).</p>
 <p class="toc_element">
-  <code><a href="#list">list(parent, filter=None, orgUnitId=None, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
+  <code><a href="#list">list(parent, filter=None, orderBy=None, orgUnitId=None, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
 <p class="firstline">List printers configs.</p>
 <p class="toc_element">
   <code><a href="#listPrinterModels">listPrinterModels(parent, filter=None, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Lists the supported printer models.</p>
 <p class="toc_element">
-  <code><a href="#listPrinterModels_next">listPrinterModels_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#listPrinterModels_next">listPrinterModels_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
-  <code><a href="#list_next">list_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#list_next">list_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#patch">patch(name, body=None, clearMask=None, updateMask=None, x__xgafv=None)</a></code></p>
@@ -330,7 +330,7 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 
@@ -369,12 +369,13 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="list">list(parent, filter=None, orgUnitId=None, pageSize=None, pageToken=None, x__xgafv=None)</code>
+    <code class="details" id="list">list(parent, filter=None, orderBy=None, orgUnitId=None, pageSize=None, pageToken=None, x__xgafv=None)</code>
   <pre>List printers configs.
 
 Args:
   parent: string, Required. The name of the customer who owns this collection of printers. Format: customers/{customer_id} (required)
   filter: string, Search query. Search syntax is shared between this api and Admin Console printers pages.
+  orderBy: string, The order to sort results by. Must be one of display_name, description, make_and_model, or create_time. Default order is ascending, but descending order can be returned by appending &quot;desc&quot; to the order_by field. For instance, &quot;description desc&quot; will return the printers sorted by description in descending order.
   orgUnitId: string, Organization Unit that we want to list the printers for. When org_unit is not present in the request then all printers of the customer are returned (or filtered). When org_unit is present in the request then only printers available to this OU will be returned (owned or inherited). You may see if printer is owned or inherited for this OU by looking at Printer.org_unit_id.
   pageSize: integer, The maximum number of objects to return. The service may return fewer than this value.
   pageToken: string, A page token, received from a previous call.
@@ -388,7 +389,7 @@ Returns:
 
     { # Response for listing printers.
   &quot;nextPageToken&quot;: &quot;A String&quot;, # A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no subsequent pages.
-  &quot;printers&quot;: [ # List of printers. If `org_unit_id` was given in the request, then only printers visible for this OU will be returned. If `org_unit_id` was given in the request, then all printers will be returned.
+  &quot;printers&quot;: [ # List of printers. If `org_unit_id` was given in the request, then only printers visible for this OU will be returned. If `org_unit_id` was not given in the request, then all printers will be returned.
     { # Printer configuration.
       &quot;auxiliaryMessages&quot;: [ # Output only. Auxiliary messages about issues with the printer configuration if any.
         { # Auxiliary message about issues with printers or settings. Example: {message_type:AUXILIARY_MESSAGE_WARNING, field_mask:make_and_model, message:&quot;Given printer is invalid or no longer supported.&quot;}
@@ -441,31 +442,31 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="listPrinterModels_next">listPrinterModels_next(previous_request, previous_response)</code>
+    <code class="details" id="listPrinterModels_next">listPrinterModels_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
-    <code class="details" id="list_next">list_next(previous_request, previous_response)</code>
+    <code class="details" id="list_next">list_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">

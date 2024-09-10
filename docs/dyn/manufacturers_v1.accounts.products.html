@@ -87,7 +87,7 @@ h1, h2, h3 {
   <code><a href="#list">list(parent, include=None, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Lists all the products in a Manufacturer Center account.</p>
 <p class="toc_element">
-  <code><a href="#list_next">list_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#list_next">list_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#update">update(parent, name, body=None, x__xgafv=None)</a></code></p>
@@ -113,7 +113,7 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 
@@ -153,6 +153,13 @@ Returns:
       &quot;unit&quot;: &quot;A String&quot;, # The unit of the capacity, i.e., MB, GB, or TB.
       &quot;value&quot;: &quot;A String&quot;, # The numeric value of the capacity.
     },
+    &quot;certification&quot;: [ # Optional. List of certifications claimed by this product.
+      { # Description of a certification.
+        &quot;authority&quot;: &quot;A String&quot;, # Required. Name of the certification body.
+        &quot;code&quot;: &quot;A String&quot;, # Required. A unique code to identify the certification.
+        &quot;name&quot;: &quot;A String&quot;, # Required. Name of the certification.
+      },
+    ],
     &quot;color&quot;: &quot;A String&quot;, # The color of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#color.
     &quot;count&quot;: { # The number of products in a single package. For more information, see https://support.google.com/manufacturers/answer/6124116#count. # The count of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#count.
       &quot;unit&quot;: &quot;A String&quot;, # The unit in which these products are counted.
@@ -160,7 +167,7 @@ Returns:
     },
     &quot;description&quot;: &quot;A String&quot;, # The description of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#description.
     &quot;disclosureDate&quot;: &quot;A String&quot;, # The disclosure date of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#disclosure.
-    &quot;excludedDestination&quot;: [ # A list of excluded destinations.
+    &quot;excludedDestination&quot;: [ # A list of excluded destinations such as &quot;ClientExport&quot;, &quot;ClientShoppingCatalog&quot; or &quot;PartnerShoppingCatalog&quot;. For more information, see https://support.google.com/manufacturers/answer/7443550
       &quot;A String&quot;,
     ],
     &quot;featureDescription&quot;: [ # The rich format description of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#featuredesc.
@@ -177,6 +184,21 @@ Returns:
     &quot;flavor&quot;: &quot;A String&quot;, # The flavor of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#flavor.
     &quot;format&quot;: &quot;A String&quot;, # The format of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#format.
     &quot;gender&quot;: &quot;A String&quot;, # The target gender of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#gender.
+    &quot;grocery&quot;: { # Grocery Attributes. See more at https://support.google.com/manufacturers/answer/12098458#grocery.
+      &quot;activeIngredients&quot;: &quot;A String&quot;, # Active ingredients.
+      &quot;alcoholByVolume&quot;: 3.14, # Alcohol by volume.
+      &quot;allergens&quot;: &quot;A String&quot;, # Allergens.
+      &quot;derivedNutritionClaim&quot;: [ # Derived nutrition claim.
+        &quot;A String&quot;,
+      ],
+      &quot;directions&quot;: &quot;A String&quot;, # Directions.
+      &quot;indications&quot;: &quot;A String&quot;, # Indications.
+      &quot;ingredients&quot;: &quot;A String&quot;, # Ingredients.
+      &quot;nutritionClaim&quot;: [ # Nutrition claim.
+        &quot;A String&quot;,
+      ],
+      &quot;storageInstructions&quot;: &quot;A String&quot;, # Storage instructions.
+    },
     &quot;gtin&quot;: [ # The Global Trade Item Number (GTIN) of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#gtin.
       &quot;A String&quot;,
     ],
@@ -185,12 +207,135 @@ Returns:
       &quot;status&quot;: &quot;A String&quot;, # The status of the image. @OutputOnly
       &quot;type&quot;: &quot;A String&quot;, # The type of the image, i.e., crawled or uploaded. @OutputOnly
     },
-    &quot;includedDestination&quot;: [ # A list of included destinations.
+    &quot;includedDestination&quot;: [ # A list of included destinations such as &quot;ClientExport&quot;, &quot;ClientShoppingCatalog&quot; or &quot;PartnerShoppingCatalog&quot;. For more information, see https://support.google.com/manufacturers/answer/7443550
+      &quot;A String&quot;,
+    ],
+    &quot;intendedCountry&quot;: [ # Optional. List of countries to show this product in. Countries provided in this attribute will override any of the countries configured at feed level. The values should be: the [CLDR territory code](http://www.unicode.org/repos/cldr/tags/latest/common/main/en.xml) of the countries in which this item will be shown.
       &quot;A String&quot;,
     ],
     &quot;itemGroupId&quot;: &quot;A String&quot;, # The item group id of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#itemgroupid.
     &quot;material&quot;: &quot;A String&quot;, # The material of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#material.
     &quot;mpn&quot;: &quot;A String&quot;, # The Manufacturer Part Number (MPN) of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#mpn.
+    &quot;nutrition&quot;: { # Nutrition Attributes. See more at https://support.google.com/manufacturers/answer/12098458#food-servings.
+      &quot;addedSugars&quot;: { # Combination of float amount and unit. # Added sugars.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;addedSugarsDailyPercentage&quot;: 3.14, # Added sugars daily percentage.
+      &quot;calcium&quot;: { # Combination of float amount and unit. # Calcium.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;calciumDailyPercentage&quot;: 3.14, # Calcium daily percentage.
+      &quot;cholesterol&quot;: { # Combination of float amount and unit. # Cholesterol.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;cholesterolDailyPercentage&quot;: 3.14, # Cholesterol daily percentage.
+      &quot;dietaryFiber&quot;: { # Combination of float amount and unit. # Dietary fiber.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;dietaryFiberDailyPercentage&quot;: 3.14, # Dietary fiber daily percentage.
+      &quot;energy&quot;: { # Combination of float amount and unit. # Mandatory Nutrition Facts. Energy.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;energyFromFat&quot;: { # Combination of float amount and unit. # Energy from fat.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;folateDailyPercentage&quot;: 3.14, # Folate daily percentage.
+      &quot;folateFolicAcid&quot;: { # Combination of float amount and unit. # Folate folic acid.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;folateMcgDfe&quot;: 3.14, # Folate mcg DFE.
+      &quot;iron&quot;: { # Combination of float amount and unit. # Iron.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;ironDailyPercentage&quot;: 3.14, # Iron daily percentage.
+      &quot;monounsaturatedFat&quot;: { # Combination of float amount and unit. # Monounsaturated fat.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;nutritionFactMeasure&quot;: &quot;A String&quot;, # Nutrition fact measure.
+      &quot;polyols&quot;: { # Combination of float amount and unit. # Polyols.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;polyunsaturatedFat&quot;: { # Combination of float amount and unit. # Polyunsaturated fat.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;potassium&quot;: { # Combination of float amount and unit. # Potassium.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;potassiumDailyPercentage&quot;: 3.14, # Potassium daily percentage.
+      &quot;preparedSizeDescription&quot;: &quot;A String&quot;, # Prepared size description.
+      &quot;protein&quot;: { # Combination of float amount and unit. # Protein.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;proteinDailyPercentage&quot;: 3.14, # Protein daily percentage.
+      &quot;saturatedFat&quot;: { # Combination of float amount and unit. # Saturated fat.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;saturatedFatDailyPercentage&quot;: 3.14, # Saturated fat daily percentage.
+      &quot;servingSizeDescription&quot;: &quot;A String&quot;, # Food Serving Size. Serving size description.
+      &quot;servingSizeMeasure&quot;: { # Combination of float amount and unit. # Serving size measure.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;servingsPerContainer&quot;: &quot;A String&quot;, # Servings per container.
+      &quot;sodium&quot;: { # Combination of float amount and unit. # Sodium.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;sodiumDailyPercentage&quot;: 3.14, # Sodium daily percentage.
+      &quot;starch&quot;: { # Combination of float amount and unit. # Starch.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;totalCarbohydrate&quot;: { # Combination of float amount and unit. # Total carbohydrate.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;totalCarbohydrateDailyPercentage&quot;: 3.14, # Total carbohydrate daily percentage.
+      &quot;totalFat&quot;: { # Combination of float amount and unit. # Total fat.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;totalFatDailyPercentage&quot;: 3.14, # Total fat daily percentage.
+      &quot;totalSugars&quot;: { # Combination of float amount and unit. # Total sugars.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;totalSugarsDailyPercentage&quot;: 3.14, # Total sugars daily percentage.
+      &quot;transFat&quot;: { # Combination of float amount and unit. # Trans fat.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;transFatDailyPercentage&quot;: 3.14, # Trans fat daily percentage.
+      &quot;vitaminD&quot;: { # Combination of float amount and unit. # Vitamin D.
+        &quot;amount&quot;: 3.14, # amount.
+        &quot;unit&quot;: &quot;A String&quot;, # unit.
+      },
+      &quot;vitaminDDailyPercentage&quot;: 3.14, # Vitamin D daily percentage.
+      &quot;voluntaryNutritionFact&quot;: [ # Voluntary nutrition fact.
+        { # Voluntary Nutrition Facts.
+          &quot;dailyPercentage&quot;: 3.14, # Daily percentage.
+          &quot;name&quot;: &quot;A String&quot;, # Name.
+          &quot;value&quot;: { # Combination of float amount and unit. # Value.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+        },
+      ],
+    },
     &quot;pattern&quot;: &quot;A String&quot;, # The pattern of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#pattern.
     &quot;productDetail&quot;: [ # The details of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#productdetail.
       { # A product detail of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#productdetail.
@@ -222,22 +367,36 @@ Returns:
       &quot;amount&quot;: &quot;A String&quot;, # The numeric value of the price.
       &quot;currency&quot;: &quot;A String&quot;, # The currency in which the price is denoted.
     },
-    &quot;targetClientId&quot;: &quot;A String&quot;, # The target client id. Should only be used in the accounts of the data partners.
+    &quot;targetClientId&quot;: &quot;A String&quot;, # The target client id. Should only be used in the accounts of the data partners. For more information, see https://support.google.com/manufacturers/answer/10857344
     &quot;theme&quot;: &quot;A String&quot;, # The theme of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#theme.
     &quot;title&quot;: &quot;A String&quot;, # The title of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#title.
     &quot;videoLink&quot;: [ # The videos of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#video.
       &quot;A String&quot;,
     ],
+    &quot;virtualModelLink&quot;: &quot;A String&quot;, # Virtual Model (3d) asset link.
   },
   &quot;contentLanguage&quot;: &quot;A String&quot;, # The content language of the product as a two-letter ISO 639-1 language code (for example, en).
   &quot;destinationStatuses&quot;: [ # The status of the destinations.
     { # The destination status.
+      &quot;approvedCountries&quot;: [ # Output only. List of country codes (ISO 3166-1 alpha-2) where the offer is approved.
+        &quot;A String&quot;,
+      ],
       &quot;destination&quot;: &quot;A String&quot;, # The name of the destination.
+      &quot;disapprovedCountries&quot;: [ # Output only. List of country codes (ISO 3166-1 alpha-2) where the offer is disapproved.
+        &quot;A String&quot;,
+      ],
+      &quot;pendingCountries&quot;: [ # Output only. List of country codes (ISO 3166-1 alpha-2) where the offer is pending approval.
+        &quot;A String&quot;,
+      ],
       &quot;status&quot;: &quot;A String&quot;, # The status of the destination.
     },
   ],
+  &quot;feedLabel&quot;: &quot;A String&quot;, # Optional. The feed label for the product.
   &quot;issues&quot;: [ # A server-generated list of issues associated with the product.
     { # Product issue.
+      &quot;applicableCountries&quot;: [ # Output only. List of country codes (ISO 3166-1 alpha-2) where issue applies to the manufacturer product.
+        &quot;A String&quot;,
+      ],
       &quot;attribute&quot;: &quot;A String&quot;, # If present, the attribute that triggered the issue. For more information about attributes, see https://support.google.com/manufacturers/answer/6124116.
       &quot;description&quot;: &quot;A String&quot;, # Longer description of the issue focused on how to resolve it.
       &quot;destination&quot;: &quot;A String&quot;, # The destination this issue applies to.
@@ -295,6 +454,13 @@ Returns:
           &quot;unit&quot;: &quot;A String&quot;, # The unit of the capacity, i.e., MB, GB, or TB.
           &quot;value&quot;: &quot;A String&quot;, # The numeric value of the capacity.
         },
+        &quot;certification&quot;: [ # Optional. List of certifications claimed by this product.
+          { # Description of a certification.
+            &quot;authority&quot;: &quot;A String&quot;, # Required. Name of the certification body.
+            &quot;code&quot;: &quot;A String&quot;, # Required. A unique code to identify the certification.
+            &quot;name&quot;: &quot;A String&quot;, # Required. Name of the certification.
+          },
+        ],
         &quot;color&quot;: &quot;A String&quot;, # The color of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#color.
         &quot;count&quot;: { # The number of products in a single package. For more information, see https://support.google.com/manufacturers/answer/6124116#count. # The count of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#count.
           &quot;unit&quot;: &quot;A String&quot;, # The unit in which these products are counted.
@@ -302,7 +468,7 @@ Returns:
         },
         &quot;description&quot;: &quot;A String&quot;, # The description of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#description.
         &quot;disclosureDate&quot;: &quot;A String&quot;, # The disclosure date of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#disclosure.
-        &quot;excludedDestination&quot;: [ # A list of excluded destinations.
+        &quot;excludedDestination&quot;: [ # A list of excluded destinations such as &quot;ClientExport&quot;, &quot;ClientShoppingCatalog&quot; or &quot;PartnerShoppingCatalog&quot;. For more information, see https://support.google.com/manufacturers/answer/7443550
           &quot;A String&quot;,
         ],
         &quot;featureDescription&quot;: [ # The rich format description of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#featuredesc.
@@ -319,6 +485,21 @@ Returns:
         &quot;flavor&quot;: &quot;A String&quot;, # The flavor of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#flavor.
         &quot;format&quot;: &quot;A String&quot;, # The format of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#format.
         &quot;gender&quot;: &quot;A String&quot;, # The target gender of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#gender.
+        &quot;grocery&quot;: { # Grocery Attributes. See more at https://support.google.com/manufacturers/answer/12098458#grocery.
+          &quot;activeIngredients&quot;: &quot;A String&quot;, # Active ingredients.
+          &quot;alcoholByVolume&quot;: 3.14, # Alcohol by volume.
+          &quot;allergens&quot;: &quot;A String&quot;, # Allergens.
+          &quot;derivedNutritionClaim&quot;: [ # Derived nutrition claim.
+            &quot;A String&quot;,
+          ],
+          &quot;directions&quot;: &quot;A String&quot;, # Directions.
+          &quot;indications&quot;: &quot;A String&quot;, # Indications.
+          &quot;ingredients&quot;: &quot;A String&quot;, # Ingredients.
+          &quot;nutritionClaim&quot;: [ # Nutrition claim.
+            &quot;A String&quot;,
+          ],
+          &quot;storageInstructions&quot;: &quot;A String&quot;, # Storage instructions.
+        },
         &quot;gtin&quot;: [ # The Global Trade Item Number (GTIN) of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#gtin.
           &quot;A String&quot;,
         ],
@@ -327,12 +508,135 @@ Returns:
           &quot;status&quot;: &quot;A String&quot;, # The status of the image. @OutputOnly
           &quot;type&quot;: &quot;A String&quot;, # The type of the image, i.e., crawled or uploaded. @OutputOnly
         },
-        &quot;includedDestination&quot;: [ # A list of included destinations.
+        &quot;includedDestination&quot;: [ # A list of included destinations such as &quot;ClientExport&quot;, &quot;ClientShoppingCatalog&quot; or &quot;PartnerShoppingCatalog&quot;. For more information, see https://support.google.com/manufacturers/answer/7443550
+          &quot;A String&quot;,
+        ],
+        &quot;intendedCountry&quot;: [ # Optional. List of countries to show this product in. Countries provided in this attribute will override any of the countries configured at feed level. The values should be: the [CLDR territory code](http://www.unicode.org/repos/cldr/tags/latest/common/main/en.xml) of the countries in which this item will be shown.
           &quot;A String&quot;,
         ],
         &quot;itemGroupId&quot;: &quot;A String&quot;, # The item group id of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#itemgroupid.
         &quot;material&quot;: &quot;A String&quot;, # The material of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#material.
         &quot;mpn&quot;: &quot;A String&quot;, # The Manufacturer Part Number (MPN) of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#mpn.
+        &quot;nutrition&quot;: { # Nutrition Attributes. See more at https://support.google.com/manufacturers/answer/12098458#food-servings.
+          &quot;addedSugars&quot;: { # Combination of float amount and unit. # Added sugars.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;addedSugarsDailyPercentage&quot;: 3.14, # Added sugars daily percentage.
+          &quot;calcium&quot;: { # Combination of float amount and unit. # Calcium.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;calciumDailyPercentage&quot;: 3.14, # Calcium daily percentage.
+          &quot;cholesterol&quot;: { # Combination of float amount and unit. # Cholesterol.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;cholesterolDailyPercentage&quot;: 3.14, # Cholesterol daily percentage.
+          &quot;dietaryFiber&quot;: { # Combination of float amount and unit. # Dietary fiber.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;dietaryFiberDailyPercentage&quot;: 3.14, # Dietary fiber daily percentage.
+          &quot;energy&quot;: { # Combination of float amount and unit. # Mandatory Nutrition Facts. Energy.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;energyFromFat&quot;: { # Combination of float amount and unit. # Energy from fat.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;folateDailyPercentage&quot;: 3.14, # Folate daily percentage.
+          &quot;folateFolicAcid&quot;: { # Combination of float amount and unit. # Folate folic acid.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;folateMcgDfe&quot;: 3.14, # Folate mcg DFE.
+          &quot;iron&quot;: { # Combination of float amount and unit. # Iron.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;ironDailyPercentage&quot;: 3.14, # Iron daily percentage.
+          &quot;monounsaturatedFat&quot;: { # Combination of float amount and unit. # Monounsaturated fat.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;nutritionFactMeasure&quot;: &quot;A String&quot;, # Nutrition fact measure.
+          &quot;polyols&quot;: { # Combination of float amount and unit. # Polyols.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;polyunsaturatedFat&quot;: { # Combination of float amount and unit. # Polyunsaturated fat.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;potassium&quot;: { # Combination of float amount and unit. # Potassium.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;potassiumDailyPercentage&quot;: 3.14, # Potassium daily percentage.
+          &quot;preparedSizeDescription&quot;: &quot;A String&quot;, # Prepared size description.
+          &quot;protein&quot;: { # Combination of float amount and unit. # Protein.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;proteinDailyPercentage&quot;: 3.14, # Protein daily percentage.
+          &quot;saturatedFat&quot;: { # Combination of float amount and unit. # Saturated fat.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;saturatedFatDailyPercentage&quot;: 3.14, # Saturated fat daily percentage.
+          &quot;servingSizeDescription&quot;: &quot;A String&quot;, # Food Serving Size. Serving size description.
+          &quot;servingSizeMeasure&quot;: { # Combination of float amount and unit. # Serving size measure.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;servingsPerContainer&quot;: &quot;A String&quot;, # Servings per container.
+          &quot;sodium&quot;: { # Combination of float amount and unit. # Sodium.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;sodiumDailyPercentage&quot;: 3.14, # Sodium daily percentage.
+          &quot;starch&quot;: { # Combination of float amount and unit. # Starch.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;totalCarbohydrate&quot;: { # Combination of float amount and unit. # Total carbohydrate.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;totalCarbohydrateDailyPercentage&quot;: 3.14, # Total carbohydrate daily percentage.
+          &quot;totalFat&quot;: { # Combination of float amount and unit. # Total fat.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;totalFatDailyPercentage&quot;: 3.14, # Total fat daily percentage.
+          &quot;totalSugars&quot;: { # Combination of float amount and unit. # Total sugars.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;totalSugarsDailyPercentage&quot;: 3.14, # Total sugars daily percentage.
+          &quot;transFat&quot;: { # Combination of float amount and unit. # Trans fat.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;transFatDailyPercentage&quot;: 3.14, # Trans fat daily percentage.
+          &quot;vitaminD&quot;: { # Combination of float amount and unit. # Vitamin D.
+            &quot;amount&quot;: 3.14, # amount.
+            &quot;unit&quot;: &quot;A String&quot;, # unit.
+          },
+          &quot;vitaminDDailyPercentage&quot;: 3.14, # Vitamin D daily percentage.
+          &quot;voluntaryNutritionFact&quot;: [ # Voluntary nutrition fact.
+            { # Voluntary Nutrition Facts.
+              &quot;dailyPercentage&quot;: 3.14, # Daily percentage.
+              &quot;name&quot;: &quot;A String&quot;, # Name.
+              &quot;value&quot;: { # Combination of float amount and unit. # Value.
+                &quot;amount&quot;: 3.14, # amount.
+                &quot;unit&quot;: &quot;A String&quot;, # unit.
+              },
+            },
+          ],
+        },
         &quot;pattern&quot;: &quot;A String&quot;, # The pattern of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#pattern.
         &quot;productDetail&quot;: [ # The details of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#productdetail.
           { # A product detail of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#productdetail.
@@ -364,22 +668,36 @@ Returns:
           &quot;amount&quot;: &quot;A String&quot;, # The numeric value of the price.
           &quot;currency&quot;: &quot;A String&quot;, # The currency in which the price is denoted.
         },
-        &quot;targetClientId&quot;: &quot;A String&quot;, # The target client id. Should only be used in the accounts of the data partners.
+        &quot;targetClientId&quot;: &quot;A String&quot;, # The target client id. Should only be used in the accounts of the data partners. For more information, see https://support.google.com/manufacturers/answer/10857344
         &quot;theme&quot;: &quot;A String&quot;, # The theme of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#theme.
         &quot;title&quot;: &quot;A String&quot;, # The title of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#title.
         &quot;videoLink&quot;: [ # The videos of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#video.
           &quot;A String&quot;,
         ],
+        &quot;virtualModelLink&quot;: &quot;A String&quot;, # Virtual Model (3d) asset link.
       },
       &quot;contentLanguage&quot;: &quot;A String&quot;, # The content language of the product as a two-letter ISO 639-1 language code (for example, en).
       &quot;destinationStatuses&quot;: [ # The status of the destinations.
         { # The destination status.
+          &quot;approvedCountries&quot;: [ # Output only. List of country codes (ISO 3166-1 alpha-2) where the offer is approved.
+            &quot;A String&quot;,
+          ],
           &quot;destination&quot;: &quot;A String&quot;, # The name of the destination.
+          &quot;disapprovedCountries&quot;: [ # Output only. List of country codes (ISO 3166-1 alpha-2) where the offer is disapproved.
+            &quot;A String&quot;,
+          ],
+          &quot;pendingCountries&quot;: [ # Output only. List of country codes (ISO 3166-1 alpha-2) where the offer is pending approval.
+            &quot;A String&quot;,
+          ],
           &quot;status&quot;: &quot;A String&quot;, # The status of the destination.
         },
       ],
+      &quot;feedLabel&quot;: &quot;A String&quot;, # Optional. The feed label for the product.
       &quot;issues&quot;: [ # A server-generated list of issues associated with the product.
         { # Product issue.
+          &quot;applicableCountries&quot;: [ # Output only. List of country codes (ISO 3166-1 alpha-2) where issue applies to the manufacturer product.
+            &quot;A String&quot;,
+          ],
           &quot;attribute&quot;: &quot;A String&quot;, # If present, the attribute that triggered the issue. For more information about attributes, see https://support.google.com/manufacturers/answer/6124116.
           &quot;description&quot;: &quot;A String&quot;, # Longer description of the issue focused on how to resolve it.
           &quot;destination&quot;: &quot;A String&quot;, # The destination this issue applies to.
@@ -400,17 +718,17 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="list_next">list_next(previous_request, previous_response)</code>
+    <code class="details" id="list_next">list_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
@@ -437,6 +755,13 @@ Args:
     &quot;unit&quot;: &quot;A String&quot;, # The unit of the capacity, i.e., MB, GB, or TB.
     &quot;value&quot;: &quot;A String&quot;, # The numeric value of the capacity.
   },
+  &quot;certification&quot;: [ # Optional. List of certifications claimed by this product.
+    { # Description of a certification.
+      &quot;authority&quot;: &quot;A String&quot;, # Required. Name of the certification body.
+      &quot;code&quot;: &quot;A String&quot;, # Required. A unique code to identify the certification.
+      &quot;name&quot;: &quot;A String&quot;, # Required. Name of the certification.
+    },
+  ],
   &quot;color&quot;: &quot;A String&quot;, # The color of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#color.
   &quot;count&quot;: { # The number of products in a single package. For more information, see https://support.google.com/manufacturers/answer/6124116#count. # The count of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#count.
     &quot;unit&quot;: &quot;A String&quot;, # The unit in which these products are counted.
@@ -444,7 +769,7 @@ Args:
   },
   &quot;description&quot;: &quot;A String&quot;, # The description of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#description.
   &quot;disclosureDate&quot;: &quot;A String&quot;, # The disclosure date of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#disclosure.
-  &quot;excludedDestination&quot;: [ # A list of excluded destinations.
+  &quot;excludedDestination&quot;: [ # A list of excluded destinations such as &quot;ClientExport&quot;, &quot;ClientShoppingCatalog&quot; or &quot;PartnerShoppingCatalog&quot;. For more information, see https://support.google.com/manufacturers/answer/7443550
     &quot;A String&quot;,
   ],
   &quot;featureDescription&quot;: [ # The rich format description of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#featuredesc.
@@ -461,6 +786,21 @@ Args:
   &quot;flavor&quot;: &quot;A String&quot;, # The flavor of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#flavor.
   &quot;format&quot;: &quot;A String&quot;, # The format of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#format.
   &quot;gender&quot;: &quot;A String&quot;, # The target gender of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#gender.
+  &quot;grocery&quot;: { # Grocery Attributes. See more at https://support.google.com/manufacturers/answer/12098458#grocery.
+    &quot;activeIngredients&quot;: &quot;A String&quot;, # Active ingredients.
+    &quot;alcoholByVolume&quot;: 3.14, # Alcohol by volume.
+    &quot;allergens&quot;: &quot;A String&quot;, # Allergens.
+    &quot;derivedNutritionClaim&quot;: [ # Derived nutrition claim.
+      &quot;A String&quot;,
+    ],
+    &quot;directions&quot;: &quot;A String&quot;, # Directions.
+    &quot;indications&quot;: &quot;A String&quot;, # Indications.
+    &quot;ingredients&quot;: &quot;A String&quot;, # Ingredients.
+    &quot;nutritionClaim&quot;: [ # Nutrition claim.
+      &quot;A String&quot;,
+    ],
+    &quot;storageInstructions&quot;: &quot;A String&quot;, # Storage instructions.
+  },
   &quot;gtin&quot;: [ # The Global Trade Item Number (GTIN) of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#gtin.
     &quot;A String&quot;,
   ],
@@ -469,12 +809,135 @@ Args:
     &quot;status&quot;: &quot;A String&quot;, # The status of the image. @OutputOnly
     &quot;type&quot;: &quot;A String&quot;, # The type of the image, i.e., crawled or uploaded. @OutputOnly
   },
-  &quot;includedDestination&quot;: [ # A list of included destinations.
+  &quot;includedDestination&quot;: [ # A list of included destinations such as &quot;ClientExport&quot;, &quot;ClientShoppingCatalog&quot; or &quot;PartnerShoppingCatalog&quot;. For more information, see https://support.google.com/manufacturers/answer/7443550
+    &quot;A String&quot;,
+  ],
+  &quot;intendedCountry&quot;: [ # Optional. List of countries to show this product in. Countries provided in this attribute will override any of the countries configured at feed level. The values should be: the [CLDR territory code](http://www.unicode.org/repos/cldr/tags/latest/common/main/en.xml) of the countries in which this item will be shown.
     &quot;A String&quot;,
   ],
   &quot;itemGroupId&quot;: &quot;A String&quot;, # The item group id of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#itemgroupid.
   &quot;material&quot;: &quot;A String&quot;, # The material of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#material.
   &quot;mpn&quot;: &quot;A String&quot;, # The Manufacturer Part Number (MPN) of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#mpn.
+  &quot;nutrition&quot;: { # Nutrition Attributes. See more at https://support.google.com/manufacturers/answer/12098458#food-servings.
+    &quot;addedSugars&quot;: { # Combination of float amount and unit. # Added sugars.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;addedSugarsDailyPercentage&quot;: 3.14, # Added sugars daily percentage.
+    &quot;calcium&quot;: { # Combination of float amount and unit. # Calcium.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;calciumDailyPercentage&quot;: 3.14, # Calcium daily percentage.
+    &quot;cholesterol&quot;: { # Combination of float amount and unit. # Cholesterol.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;cholesterolDailyPercentage&quot;: 3.14, # Cholesterol daily percentage.
+    &quot;dietaryFiber&quot;: { # Combination of float amount and unit. # Dietary fiber.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;dietaryFiberDailyPercentage&quot;: 3.14, # Dietary fiber daily percentage.
+    &quot;energy&quot;: { # Combination of float amount and unit. # Mandatory Nutrition Facts. Energy.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;energyFromFat&quot;: { # Combination of float amount and unit. # Energy from fat.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;folateDailyPercentage&quot;: 3.14, # Folate daily percentage.
+    &quot;folateFolicAcid&quot;: { # Combination of float amount and unit. # Folate folic acid.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;folateMcgDfe&quot;: 3.14, # Folate mcg DFE.
+    &quot;iron&quot;: { # Combination of float amount and unit. # Iron.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;ironDailyPercentage&quot;: 3.14, # Iron daily percentage.
+    &quot;monounsaturatedFat&quot;: { # Combination of float amount and unit. # Monounsaturated fat.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;nutritionFactMeasure&quot;: &quot;A String&quot;, # Nutrition fact measure.
+    &quot;polyols&quot;: { # Combination of float amount and unit. # Polyols.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;polyunsaturatedFat&quot;: { # Combination of float amount and unit. # Polyunsaturated fat.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;potassium&quot;: { # Combination of float amount and unit. # Potassium.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;potassiumDailyPercentage&quot;: 3.14, # Potassium daily percentage.
+    &quot;preparedSizeDescription&quot;: &quot;A String&quot;, # Prepared size description.
+    &quot;protein&quot;: { # Combination of float amount and unit. # Protein.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;proteinDailyPercentage&quot;: 3.14, # Protein daily percentage.
+    &quot;saturatedFat&quot;: { # Combination of float amount and unit. # Saturated fat.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;saturatedFatDailyPercentage&quot;: 3.14, # Saturated fat daily percentage.
+    &quot;servingSizeDescription&quot;: &quot;A String&quot;, # Food Serving Size. Serving size description.
+    &quot;servingSizeMeasure&quot;: { # Combination of float amount and unit. # Serving size measure.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;servingsPerContainer&quot;: &quot;A String&quot;, # Servings per container.
+    &quot;sodium&quot;: { # Combination of float amount and unit. # Sodium.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;sodiumDailyPercentage&quot;: 3.14, # Sodium daily percentage.
+    &quot;starch&quot;: { # Combination of float amount and unit. # Starch.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;totalCarbohydrate&quot;: { # Combination of float amount and unit. # Total carbohydrate.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;totalCarbohydrateDailyPercentage&quot;: 3.14, # Total carbohydrate daily percentage.
+    &quot;totalFat&quot;: { # Combination of float amount and unit. # Total fat.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;totalFatDailyPercentage&quot;: 3.14, # Total fat daily percentage.
+    &quot;totalSugars&quot;: { # Combination of float amount and unit. # Total sugars.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;totalSugarsDailyPercentage&quot;: 3.14, # Total sugars daily percentage.
+    &quot;transFat&quot;: { # Combination of float amount and unit. # Trans fat.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;transFatDailyPercentage&quot;: 3.14, # Trans fat daily percentage.
+    &quot;vitaminD&quot;: { # Combination of float amount and unit. # Vitamin D.
+      &quot;amount&quot;: 3.14, # amount.
+      &quot;unit&quot;: &quot;A String&quot;, # unit.
+    },
+    &quot;vitaminDDailyPercentage&quot;: 3.14, # Vitamin D daily percentage.
+    &quot;voluntaryNutritionFact&quot;: [ # Voluntary nutrition fact.
+      { # Voluntary Nutrition Facts.
+        &quot;dailyPercentage&quot;: 3.14, # Daily percentage.
+        &quot;name&quot;: &quot;A String&quot;, # Name.
+        &quot;value&quot;: { # Combination of float amount and unit. # Value.
+          &quot;amount&quot;: 3.14, # amount.
+          &quot;unit&quot;: &quot;A String&quot;, # unit.
+        },
+      },
+    ],
+  },
   &quot;pattern&quot;: &quot;A String&quot;, # The pattern of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#pattern.
   &quot;productDetail&quot;: [ # The details of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#productdetail.
     { # A product detail of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#productdetail.
@@ -506,12 +969,13 @@ Args:
     &quot;amount&quot;: &quot;A String&quot;, # The numeric value of the price.
     &quot;currency&quot;: &quot;A String&quot;, # The currency in which the price is denoted.
   },
-  &quot;targetClientId&quot;: &quot;A String&quot;, # The target client id. Should only be used in the accounts of the data partners.
+  &quot;targetClientId&quot;: &quot;A String&quot;, # The target client id. Should only be used in the accounts of the data partners. For more information, see https://support.google.com/manufacturers/answer/10857344
   &quot;theme&quot;: &quot;A String&quot;, # The theme of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#theme.
   &quot;title&quot;: &quot;A String&quot;, # The title of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#title.
   &quot;videoLink&quot;: [ # The videos of the product. For more information, see https://support.google.com/manufacturers/answer/6124116#video.
     &quot;A String&quot;,
   ],
+  &quot;virtualModelLink&quot;: &quot;A String&quot;, # Virtual Model (3d) asset link.
 }
 
   x__xgafv: string, V1 error format.
@@ -522,7 +986,7 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 

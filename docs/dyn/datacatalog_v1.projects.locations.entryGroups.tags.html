@@ -79,15 +79,15 @@ h1, h2, h3 {
 <p class="firstline">Close httplib2 connections.</p>
 <p class="toc_element">
   <code><a href="#create">create(parent, body=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Creates a tag and assigns it to: * An Entry if the method name is ``projects.locations.entryGroups.entries.tags.create``. * Or EntryGroupif the method name is ``projects.locations.entryGroups.tags.create``. Note: The project identified by the `parent` parameter for the [tag] (https://cloud.google.com/data-catalog/docs/reference/rest/v1/projects.locations.entryGroups.entries.tags/create#path-parameters) and the [tag template] (https://cloud.google.com/data-catalog/docs/reference/rest/v1/projects.locations.tagTemplates/create#path-parameters) used to create the tag must be in the same organization.</p>
+<p class="firstline">Creates a tag and assigns it to: * An Entry if the method name is `projects.locations.entryGroups.entries.tags.create`. * Or EntryGroupif the method name is `projects.locations.entryGroups.tags.create`. Note: The project identified by the `parent` parameter for the [tag] (https://cloud.google.com/data-catalog/docs/reference/rest/v1/projects.locations.entryGroups.entries.tags/create#path-parameters) and the [tag template] (https://cloud.google.com/data-catalog/docs/reference/rest/v1/projects.locations.tagTemplates/create#path-parameters) used to create the tag must be in the same organization.</p>
 <p class="toc_element">
   <code><a href="#delete">delete(name, x__xgafv=None)</a></code></p>
 <p class="firstline">Deletes a tag.</p>
 <p class="toc_element">
   <code><a href="#list">list(parent, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Lists tags assigned to an Entry.</p>
+<p class="firstline">Lists tags assigned to an Entry. The columns in the response are lowercased.</p>
 <p class="toc_element">
-  <code><a href="#list_next">list_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#list_next">list_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#patch">patch(name, body=None, updateMask=None, x__xgafv=None)</a></code></p>
@@ -100,7 +100,7 @@ h1, h2, h3 {
 
 <div class="method">
     <code class="details" id="create">create(parent, body=None, x__xgafv=None)</code>
-  <pre>Creates a tag and assigns it to: * An Entry if the method name is ``projects.locations.entryGroups.entries.tags.create``. * Or EntryGroupif the method name is ``projects.locations.entryGroups.tags.create``. Note: The project identified by the `parent` parameter for the [tag] (https://cloud.google.com/data-catalog/docs/reference/rest/v1/projects.locations.entryGroups.entries.tags/create#path-parameters) and the [tag template] (https://cloud.google.com/data-catalog/docs/reference/rest/v1/projects.locations.tagTemplates/create#path-parameters) used to create the tag must be in the same organization.
+  <pre>Creates a tag and assigns it to: * An Entry if the method name is `projects.locations.entryGroups.entries.tags.create`. * Or EntryGroupif the method name is `projects.locations.entryGroups.tags.create`. Note: The project identified by the `parent` parameter for the [tag] (https://cloud.google.com/data-catalog/docs/reference/rest/v1/projects.locations.entryGroups.entries.tags/create#path-parameters) and the [tag template] (https://cloud.google.com/data-catalog/docs/reference/rest/v1/projects.locations.tagTemplates/create#path-parameters) used to create the tag must be in the same organization.
 
 Args:
   parent: string, Required. The name of the resource to attach this tag to. Tags can be attached to entries or entry groups. An entry can have up to 1000 attached tags. Note: The tag and its child resources might not be stored in the location specified in its name. (required)
@@ -123,7 +123,7 @@ Args:
       &quot;timestampValue&quot;: &quot;A String&quot;, # The value of a tag field with a timestamp type.
     },
   },
-  &quot;name&quot;: &quot;A String&quot;, # The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
+  &quot;name&quot;: &quot;A String&quot;, # Identifier. The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
   &quot;template&quot;: &quot;A String&quot;, # Required. The resource name of the tag template this tag uses. Example: `projects/{PROJECT_ID}/locations/{LOCATION}/tagTemplates/{TAG_TEMPLATE_ID}` This field cannot be modified after creation.
   &quot;templateDisplayName&quot;: &quot;A String&quot;, # Output only. The display name of the tag template.
 }
@@ -152,7 +152,7 @@ Returns:
       &quot;timestampValue&quot;: &quot;A String&quot;, # The value of a tag field with a timestamp type.
     },
   },
-  &quot;name&quot;: &quot;A String&quot;, # The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
+  &quot;name&quot;: &quot;A String&quot;, # Identifier. The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
   &quot;template&quot;: &quot;A String&quot;, # Required. The resource name of the tag template this tag uses. Example: `projects/{PROJECT_ID}/locations/{LOCATION}/tagTemplates/{TAG_TEMPLATE_ID}` This field cannot be modified after creation.
   &quot;templateDisplayName&quot;: &quot;A String&quot;, # Output only. The display name of the tag template.
 }</pre>
@@ -172,13 +172,13 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 
 <div class="method">
     <code class="details" id="list">list(parent, pageSize=None, pageToken=None, x__xgafv=None)</code>
-  <pre>Lists tags assigned to an Entry.
+  <pre>Lists tags assigned to an Entry. The columns in the response are lowercased.
 
 Args:
   parent: string, Required. The name of the Data Catalog resource to list the tags of. The resource can be an Entry or an EntryGroup (without `/entries/{entries}` at the end). (required)
@@ -211,7 +211,7 @@ Returns:
           &quot;timestampValue&quot;: &quot;A String&quot;, # The value of a tag field with a timestamp type.
         },
       },
-      &quot;name&quot;: &quot;A String&quot;, # The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
+      &quot;name&quot;: &quot;A String&quot;, # Identifier. The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
       &quot;template&quot;: &quot;A String&quot;, # Required. The resource name of the tag template this tag uses. Example: `projects/{PROJECT_ID}/locations/{LOCATION}/tagTemplates/{TAG_TEMPLATE_ID}` This field cannot be modified after creation.
       &quot;templateDisplayName&quot;: &quot;A String&quot;, # Output only. The display name of the tag template.
     },
@@ -220,17 +220,17 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="list_next">list_next(previous_request, previous_response)</code>
+    <code class="details" id="list_next">list_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
@@ -238,7 +238,7 @@ Returns:
   <pre>Updates an existing tag.
 
 Args:
-  name: string, The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name. (required)
+  name: string, Identifier. The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name. (required)
   body: object, The request body.
     The object takes the form of:
 
@@ -258,7 +258,7 @@ Args:
       &quot;timestampValue&quot;: &quot;A String&quot;, # The value of a tag field with a timestamp type.
     },
   },
-  &quot;name&quot;: &quot;A String&quot;, # The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
+  &quot;name&quot;: &quot;A String&quot;, # Identifier. The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
   &quot;template&quot;: &quot;A String&quot;, # Required. The resource name of the tag template this tag uses. Example: `projects/{PROJECT_ID}/locations/{LOCATION}/tagTemplates/{TAG_TEMPLATE_ID}` This field cannot be modified after creation.
   &quot;templateDisplayName&quot;: &quot;A String&quot;, # Output only. The display name of the tag template.
 }
@@ -288,7 +288,7 @@ Returns:
       &quot;timestampValue&quot;: &quot;A String&quot;, # The value of a tag field with a timestamp type.
     },
   },
-  &quot;name&quot;: &quot;A String&quot;, # The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
+  &quot;name&quot;: &quot;A String&quot;, # Identifier. The resource name of the tag in URL format where tag ID is a system-generated identifier. Note: The tag itself might not be stored in the location specified in its name.
   &quot;template&quot;: &quot;A String&quot;, # Required. The resource name of the tag template this tag uses. Example: `projects/{PROJECT_ID}/locations/{LOCATION}/tagTemplates/{TAG_TEMPLATE_ID}` This field cannot be modified after creation.
   &quot;templateDisplayName&quot;: &quot;A String&quot;, # Output only. The display name of the tag template.
 }</pre>

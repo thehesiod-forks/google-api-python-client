@@ -22,49 +22,48 @@ from __future__ import absolute_import
 
 __author__ = "jcgregorio@google.com (Joe Gregorio)"
 
+import io
 from io import FileIO
 
 # Do not remove the httplib2 import
 import json
-import httplib2
-import io
 import logging
-import mock
 import os
-import unittest2 as unittest
-import urllib
 import random
 import socket
 import ssl
 import time
+import unittest
+from unittest import mock
+import urllib
 import math
+
+import httplib2
 
 import googleapiclient
 from googleapiclient.discovery import build
-from googleapiclient.errors import BatchError
-from googleapiclient.errors import HttpError
-from googleapiclient.errors import InvalidChunkSizeError
-from googleapiclient.http import build_http
-from googleapiclient.http import BatchHttpRequest
-from googleapiclient.http import HttpMock
-from googleapiclient.http import HttpMockSequence
-from googleapiclient.http import HttpRequest
-from googleapiclient.http import MAX_URI_LENGTH
-from googleapiclient.http import MediaFileUpload
-from googleapiclient.http import MediaInMemoryUpload
-from googleapiclient.http import MediaIoBaseDownload
-from googleapiclient.http import MediaIoBaseUpload
-from googleapiclient.http import MediaUpload
-from googleapiclient.http import _StreamSlice
-from googleapiclient.http import set_user_agent
+from googleapiclient.errors import BatchError, HttpError, InvalidChunkSizeError
+from googleapiclient.http import (
+    MAX_URI_LENGTH,
+    BatchHttpRequest,
+    HttpMock,
+    HttpMockSequence,
+    HttpRequest,
+    MediaFileUpload,
+    MediaInMemoryUpload,
+    MediaIoBaseDownload,
+    MediaIoBaseUpload,
+    MediaUpload,
+    _StreamSlice,
+    build_http,
+    set_user_agent,
+)
 from googleapiclient.model import JsonModel
-from oauth2client.client import Credentials
 
 
 googleapiclient.http._MAX_SLEEP_S = math.inf
 
-
-class MockCredentials(Credentials):
+class MockCredentials:
     """Mock class for all Credentials objects."""
 
     def __init__(self, bearer_token, expired=False):
@@ -332,7 +331,6 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         except NotImplementedError:
             pass
 
-
     def test_media_io_base_upload_from_bytes(self):
         f = open(datafile("small.png"), "rb")
         fd = io.BytesIO(f.read())
@@ -388,8 +386,8 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         )
 
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/upload/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/upload/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http, model.response, uri, method=method, headers={}, resumable=upload
         )
@@ -412,8 +410,8 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         )
 
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/upload/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/upload/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http, model.response, uri, method=method, headers={}, resumable=upload
         )
@@ -425,7 +423,6 @@ class TestMediaIoBaseUpload(unittest.TestCase):
             request.execute(num_retries=3)
         request._sleep.assert_not_called()
 
-
     def test_media_io_base_empty_file(self):
         fd = io.BytesIO()
         upload = MediaIoBaseUpload(
@@ -434,14 +431,26 @@ class TestMediaIoBaseUpload(unittest.TestCase):
 
         http = HttpMockSequence(
             [
-                ({"status": "200", "location": "https://www.googleapis.com/someapi/v1/upload?foo=bar"}, "{}"),
-                ({"status": "200", "location": "https://www.googleapis.com/someapi/v1/upload?foo=bar"}, "{}")
+                (
+                    {
+                        "status": "200",
+                        "location": "https://www.googleapis.com/someapi/v1/upload?foo=bar",
+                    },
+                    "{}",
+                ),
+                (
+                    {
+                        "status": "200",
+                        "location": "https://www.googleapis.com/someapi/v1/upload?foo=bar",
+                    },
+                    "{}",
+                ),
             ]
         )
 
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/upload/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/upload/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http, model.response, uri, method=method, headers={}, resumable=upload
         )
@@ -492,6 +501,23 @@ class TestMediaIoBaseDownload(unittest.TestCase):
         self.assertEqual(True, done)
         self.assertEqual(5, download._progress)
         self.assertEqual(5, download._total_size)
+
+    def test_media_io_base_download_range_request_header(self):
+        self.request.http = HttpMockSequence(
+            [
+                (
+                    {"status": "200", "content-range": "0-2/5"},
+                    "echo_request_headers_as_json",
+                ),
+            ]
+        )
+
+        download = MediaIoBaseDownload(fd=self.fd, request=self.request, chunksize=3)
+
+        status, done = download.next_chunk()
+        result = json.loads(self.fd.getvalue().decode("utf-8"))
+
+        self.assertEqual(result.get("range"), "bytes=0-2")
 
     def test_media_io_base_download_custom_request_headers(self):
         self.request.http = HttpMockSequence(
@@ -921,14 +947,14 @@ class TestHttpRequest(unittest.TestCase):
     def test_unicode(self):
         http = HttpMock(datafile("zoo.json"), headers={"status": "200"})
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/collection/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/collection/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http,
             model.response,
             uri,
             method=method,
-            body=u"{}",
+            body="{}",
             headers={"content-type": "application/json"},
         )
         request.execute()
@@ -940,8 +966,8 @@ class TestHttpRequest(unittest.TestCase):
     def test_empty_content_type(self):
         """Test for #284"""
         http = HttpMock(None, headers={"status": 200})
-        uri = u"https://www.googleapis.com/someapi/v1/upload/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/upload/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http, _postproc_none, uri, method=method, headers={"content-type": ""}
         )
@@ -953,7 +979,7 @@ class TestHttpRequest(unittest.TestCase):
         request = HttpRequest(
             HttpMockWithNonRetriableErrors(1, {"status": "200"}, '{"foo": "bar"}'),
             model.response,
-            u"https://www.example.com/json_api_endpoint",
+            "https://www.example.com/json_api_endpoint",
         )
         request._sleep = lambda _x: 0  # do nothing
         request._rand = lambda: 10
@@ -965,12 +991,12 @@ class TestHttpRequest(unittest.TestCase):
         request = HttpRequest(
             HttpMockWithErrors(5, {"status": "200"}, '{"foo": "bar"}'),
             model.response,
-            u"https://www.example.com/json_api_endpoint",
+            "https://www.example.com/json_api_endpoint",
         )
         request._sleep = lambda _x: 0  # do nothing
         request._rand = lambda: 10
         response = request.execute(num_retries=5)
-        self.assertEqual({u"foo": u"bar"}, response)
+        self.assertEqual({"foo": "bar"}, response)
 
     def test_retry_connection_errors_resumable(self):
         with open(datafile("small.png"), "rb") as small_png_file:
@@ -985,34 +1011,38 @@ class TestHttpRequest(unittest.TestCase):
                 5, {"status": "200", "location": "location"}, '{"foo": "bar"}'
             ),
             model.response,
-            u"https://www.example.com/file_upload",
+            "https://www.example.com/file_upload",
             method="POST",
             resumable=upload,
         )
         request._sleep = lambda _x: 0  # do nothing
         request._rand = lambda: 10
         response = request.execute(num_retries=5)
-        self.assertEqual({u"foo": u"bar"}, response)
+        self.assertEqual({"foo": "bar"}, response)
 
     def test_retry(self):
         num_retries = 6
         resp_seq = [({"status": "500"}, "")] * (num_retries - 4)
         resp_seq.append(({"status": "403"}, RATE_LIMIT_EXCEEDED_RESPONSE))
-        resp_seq.append(({"status": "403"}, USER_RATE_LIMIT_EXCEEDED_RESPONSE_NO_STATUS))
-        resp_seq.append(({"status": "403"}, USER_RATE_LIMIT_EXCEEDED_RESPONSE_WITH_STATUS))
+        resp_seq.append(
+            ({"status": "403"}, USER_RATE_LIMIT_EXCEEDED_RESPONSE_NO_STATUS)
+        )
+        resp_seq.append(
+            ({"status": "403"}, USER_RATE_LIMIT_EXCEEDED_RESPONSE_WITH_STATUS)
+        )
         resp_seq.append(({"status": "429"}, ""))
         resp_seq.append(({"status": "200"}, "{}"))
 
         http = HttpMockSequence(resp_seq)
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/collection/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/collection/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http,
             model.response,
             uri,
             method=method,
-            body=u"{}",
+            body="{}",
             headers={"content-type": "application/json"},
         )
 
@@ -1032,14 +1062,14 @@ class TestHttpRequest(unittest.TestCase):
 
         http = HttpMockSequence(resp_seq)
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/collection/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/collection/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http,
             model.response,
             uri,
             method=method,
-            body=u"{}",
+            body="{}",
             headers={"content-type": "application/json"},
         )
 
@@ -1054,14 +1084,14 @@ class TestHttpRequest(unittest.TestCase):
     def test_no_retry_fails_fast(self):
         http = HttpMockSequence([({"status": "500"}, ""), ({"status": "200"}, "{}")])
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/collection/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/collection/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http,
             model.response,
             uri,
             method=method,
-            body=u"{}",
+            body="{}",
             headers={"content-type": "application/json"},
         )
 
@@ -1077,14 +1107,14 @@ class TestHttpRequest(unittest.TestCase):
             [({"status": "403"}, NOT_CONFIGURED_RESPONSE), ({"status": "200"}, "{}")]
         )
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/collection/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/collection/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http,
             model.response,
             uri,
             method=method,
-            body=u"{}",
+            body="{}",
             headers={"content-type": "application/json"},
         )
 
@@ -1098,14 +1128,14 @@ class TestHttpRequest(unittest.TestCase):
     def test_no_retry_403_fails_fast(self):
         http = HttpMockSequence([({"status": "403"}, ""), ({"status": "200"}, "{}")])
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/collection/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/collection/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http,
             model.response,
             uri,
             method=method,
-            body=u"{}",
+            body="{}",
             headers={"content-type": "application/json"},
         )
 
@@ -1119,14 +1149,14 @@ class TestHttpRequest(unittest.TestCase):
     def test_no_retry_401_fails_fast(self):
         http = HttpMockSequence([({"status": "401"}, ""), ({"status": "200"}, "{}")])
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/collection/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/collection/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http,
             model.response,
             uri,
             method=method,
-            body=u"{}",
+            body="{}",
             headers={"content-type": "application/json"},
         )
 
@@ -1145,14 +1175,14 @@ class TestHttpRequest(unittest.TestCase):
             ]
         )
         model = JsonModel()
-        uri = u"https://www.googleapis.com/someapi/v1/collection/?foo=bar"
-        method = u"POST"
+        uri = "https://www.googleapis.com/someapi/v1/collection/?foo=bar"
+        method = "POST"
         request = HttpRequest(
             http,
             model.response,
             uri,
             method=method,
-            body=u"{}",
+            body="{}",
             headers={"content-type": "application/json"},
         )
 
@@ -1207,7 +1237,7 @@ class TestBatch(unittest.TestCase):
             None,
             "https://www.googleapis.com/someapi/v1/collection/?foo=bar",
             method="POST",
-            body=u"{}",
+            body="{}",
             headers={"content-type": "application/json"},
             methodId=None,
             resumable=None,
@@ -1582,7 +1612,7 @@ class TestBatch(unittest.TestCase):
         self.assertEqual(
             "Authorization Required", callbacks.exceptions["1"].resp.reason
         )
-        self.assertEqual({u"baz": u"qux"}, callbacks.responses["2"])
+        self.assertEqual({"baz": "qux"}, callbacks.responses["2"])
         self.assertEqual(None, callbacks.exceptions["2"])
 
     def test_execute_global_callback(self):

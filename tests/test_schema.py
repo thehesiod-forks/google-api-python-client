@@ -19,10 +19,9 @@ __author__ = "jcgregorio@google.com (Joe Gregorio)"
 
 import json
 import os
-import unittest2 as unittest
+import unittest
 
 from googleapiclient.schema import Schemas
-
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 

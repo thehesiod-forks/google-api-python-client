@@ -79,25 +79,28 @@ h1, h2, h3 {
 <p class="firstline">Close httplib2 connections.</p>
 <p class="toc_element">
   <code><a href="#create">create(parent, body=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Create an Access Level. The longrunning operation from this RPC will have a successful status once the Access Level has propagated to long-lasting storage. Access Levels containing errors will result in an error response for the first error encountered.</p>
+<p class="firstline">Creates an access level. The long-running operation from this RPC has a successful status after the access level propagates to long-lasting storage. If access levels contain errors, an error response is returned for the first error encountered.</p>
 <p class="toc_element">
   <code><a href="#delete">delete(name, x__xgafv=None)</a></code></p>
-<p class="firstline">Delete an Access Level by resource name. The longrunning operation from this RPC will have a successful status once the Access Level has been removed from long-lasting storage.</p>
+<p class="firstline">Deletes an access level based on the resource name. The long-running operation from this RPC has a successful status after the access level has been removed from long-lasting storage.</p>
 <p class="toc_element">
   <code><a href="#get">get(name, accessLevelFormat=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Get an Access Level by resource name.</p>
+<p class="firstline">Gets an access level based on the resource name.</p>
 <p class="toc_element">
   <code><a href="#list">list(parent, accessLevelFormat=None, pageSize=None, pageToken=None, x__xgafv=None)</a></code></p>
-<p class="firstline">List all Access Levels for an access policy.</p>
+<p class="firstline">Lists all access levels for an access policy.</p>
 <p class="toc_element">
-  <code><a href="#list_next">list_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#list_next">list_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#patch">patch(name, body=None, updateMask=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Update an Access Level. The longrunning operation from this RPC will have a successful status once the changes to the Access Level have propagated to long-lasting storage. Access Levels containing errors will result in an error response for the first error encountered.</p>
+<p class="firstline">Updates an access level. The long-running operation from this RPC has a successful status after the changes to the access level propagate to long-lasting storage. If access levels contain errors, an error response is returned for the first error encountered.</p>
 <p class="toc_element">
   <code><a href="#replaceAll">replaceAll(parent, body=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Replace all existing Access Levels in an Access Policy with the Access Levels provided. This is done atomically. The longrunning operation from this RPC will have a successful status once all replacements have propagated to long-lasting storage. Replacements containing errors will result in an error response for the first error encountered. Replacement will be cancelled on error, existing Access Levels will not be affected. Operation.response field will contain ReplaceAccessLevelsResponse. Removing Access Levels contained in existing Service Perimeters will result in error.</p>
+<p class="firstline">Replaces all existing access levels in an access policy with the access levels provided. This is done atomically. The long-running operation from this RPC has a successful status after all replacements propagate to long-lasting storage. If the replacement contains errors, an error response is returned for the first error encountered. Upon error, the replacement is cancelled, and existing access levels are not affected. The Operation.response field contains ReplaceAccessLevelsResponse. Removing access levels contained in existing service perimeters result in an error.</p>
+<p class="toc_element">
+  <code><a href="#testIamPermissions">testIamPermissions(resource, body=None, x__xgafv=None)</a></code></p>
+<p class="firstline">Returns the IAM permissions that the caller has on the specified Access Context Manager resource. The resource can be an AccessPolicy, AccessLevel, or ServicePerimeter. This method does not support other resources.</p>
 <h3>Method Details</h3>
 <div class="method">
     <code class="details" id="close">close()</code>
@@ -106,7 +109,7 @@ h1, h2, h3 {
 
 <div class="method">
     <code class="details" id="create">create(parent, body=None, x__xgafv=None)</code>
-  <pre>Create an Access Level. The longrunning operation from this RPC will have a successful status once the Access Level has propagated to long-lasting storage. Access Levels containing errors will result in an error response for the first error encountered.
+  <pre>Creates an access level. The long-running operation from this RPC has a successful status after the access level propagates to long-lasting storage. If access levels contain errors, an error response is returned for the first error encountered.
 
 Args:
   parent: string, Required. Resource name for the access policy which owns this Access Level. Format: `accessPolicies/{policy_id}` (required)
@@ -142,12 +145,22 @@ Args:
         &quot;members&quot;: [ # The request must be made by one of the provided user or service accounts. Groups are not supported. Syntax: `user:{emailid}` `serviceAccount:{emailid}` If not specified, a request may come from any user.
           &quot;A String&quot;,
         ],
-        &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields, each field must be false for the Condition overall to be satisfied. Defaults to false.
+        &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields. Any non-empty field criteria evaluating to false will result in the Condition to be satisfied. Defaults to false.
         &quot;regions&quot;: [ # The request must originate from one of the provided countries/regions. Must be valid ISO 3166-1 alpha-2 codes.
           &quot;A String&quot;,
         ],
         &quot;requiredAccessLevels&quot;: [ # A list of other access levels defined in the same `Policy`, referenced by resource name. Referencing an `AccessLevel` which does not exist is an error. All access levels listed must be granted for the Condition to be true. Example: &quot;`accessPolicies/MY_POLICY/accessLevels/LEVEL_NAME&quot;`
           &quot;A String&quot;,
+        ],
+        &quot;vpcNetworkSources&quot;: [ # The request must originate from one of the provided VPC networks in Google Cloud. Cannot specify this field together with `ip_subnetworks`.
+          { # The originating network source in Google Cloud.
+            &quot;vpcSubnetwork&quot;: { # Sub-segment ranges inside of a VPC Network. # Sub-segment ranges of a VPC network.
+              &quot;network&quot;: &quot;A String&quot;, # Required. Network name. If the network is not part of the organization, the `compute.network.get` permission must be granted to the caller. Format: `//compute.googleapis.com/projects/{PROJECT_ID}/global/networks/{NETWORK_NAME}` Example: `//compute.googleapis.com/projects/my-project/global/networks/network-1`
+              &quot;vpcIpSubnetworks&quot;: [ # CIDR block IP subnetwork specification. The IP address must be an IPv4 address and can be a public or private IP address. Note that for a CIDR IP address block, the specified IP address portion must be properly truncated (i.e. all the host bits must be zero) or the input is considered malformed. For example, &quot;192.0.2.0/24&quot; is accepted but &quot;192.0.2.1/24&quot; is not. If empty, all IP addresses are allowed.
+                &quot;A String&quot;,
+              ],
+            },
+          },
         ],
       },
     ],
@@ -161,7 +174,7 @@ Args:
     },
   },
   &quot;description&quot;: &quot;A String&quot;, # Description of the `AccessLevel` and its use. Does not affect behavior.
-  &quot;name&quot;: &quot;A String&quot;, # Required. Resource name for the Access Level. The `short_name` component must begin with a letter and only include alphanumeric and &#x27;_&#x27;. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The maximum length of the `access_level` component is 50 characters.
+  &quot;name&quot;: &quot;A String&quot;, # Identifier. Resource name for the `AccessLevel`. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The `access_level` component must begin with a letter, followed by alphanumeric characters or `_`. Its maximum length is 50 characters. After you create an `AccessLevel`, you cannot change its `name`.
   &quot;title&quot;: &quot;A String&quot;, # Human readable title. Must be unique within the Policy.
 }
 
@@ -188,7 +201,7 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
 }</pre>
@@ -196,7 +209,7 @@ Returns:
 
 <div class="method">
     <code class="details" id="delete">delete(name, x__xgafv=None)</code>
-  <pre>Delete an Access Level by resource name. The longrunning operation from this RPC will have a successful status once the Access Level has been removed from long-lasting storage.
+  <pre>Deletes an access level based on the resource name. The long-running operation from this RPC has a successful status after the access level has been removed from long-lasting storage.
 
 Args:
   name: string, Required. Resource name for the Access Level. Format: `accessPolicies/{policy_id}/accessLevels/{access_level_id}` (required)
@@ -223,7 +236,7 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
 }</pre>
@@ -231,7 +244,7 @@ Returns:
 
 <div class="method">
     <code class="details" id="get">get(name, accessLevelFormat=None, x__xgafv=None)</code>
-  <pre>Get an Access Level by resource name.
+  <pre>Gets an access level based on the resource name.
 
 Args:
   name: string, Required. Resource name for the Access Level. Format: `accessPolicies/{policy_id}/accessLevels/{access_level_id}` (required)
@@ -277,12 +290,22 @@ Returns:
         &quot;members&quot;: [ # The request must be made by one of the provided user or service accounts. Groups are not supported. Syntax: `user:{emailid}` `serviceAccount:{emailid}` If not specified, a request may come from any user.
           &quot;A String&quot;,
         ],
-        &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields, each field must be false for the Condition overall to be satisfied. Defaults to false.
+        &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields. Any non-empty field criteria evaluating to false will result in the Condition to be satisfied. Defaults to false.
         &quot;regions&quot;: [ # The request must originate from one of the provided countries/regions. Must be valid ISO 3166-1 alpha-2 codes.
           &quot;A String&quot;,
         ],
         &quot;requiredAccessLevels&quot;: [ # A list of other access levels defined in the same `Policy`, referenced by resource name. Referencing an `AccessLevel` which does not exist is an error. All access levels listed must be granted for the Condition to be true. Example: &quot;`accessPolicies/MY_POLICY/accessLevels/LEVEL_NAME&quot;`
           &quot;A String&quot;,
+        ],
+        &quot;vpcNetworkSources&quot;: [ # The request must originate from one of the provided VPC networks in Google Cloud. Cannot specify this field together with `ip_subnetworks`.
+          { # The originating network source in Google Cloud.
+            &quot;vpcSubnetwork&quot;: { # Sub-segment ranges inside of a VPC Network. # Sub-segment ranges of a VPC network.
+              &quot;network&quot;: &quot;A String&quot;, # Required. Network name. If the network is not part of the organization, the `compute.network.get` permission must be granted to the caller. Format: `//compute.googleapis.com/projects/{PROJECT_ID}/global/networks/{NETWORK_NAME}` Example: `//compute.googleapis.com/projects/my-project/global/networks/network-1`
+              &quot;vpcIpSubnetworks&quot;: [ # CIDR block IP subnetwork specification. The IP address must be an IPv4 address and can be a public or private IP address. Note that for a CIDR IP address block, the specified IP address portion must be properly truncated (i.e. all the host bits must be zero) or the input is considered malformed. For example, &quot;192.0.2.0/24&quot; is accepted but &quot;192.0.2.1/24&quot; is not. If empty, all IP addresses are allowed.
+                &quot;A String&quot;,
+              ],
+            },
+          },
         ],
       },
     ],
@@ -296,14 +319,14 @@ Returns:
     },
   },
   &quot;description&quot;: &quot;A String&quot;, # Description of the `AccessLevel` and its use. Does not affect behavior.
-  &quot;name&quot;: &quot;A String&quot;, # Required. Resource name for the Access Level. The `short_name` component must begin with a letter and only include alphanumeric and &#x27;_&#x27;. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The maximum length of the `access_level` component is 50 characters.
+  &quot;name&quot;: &quot;A String&quot;, # Identifier. Resource name for the `AccessLevel`. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The `access_level` component must begin with a letter, followed by alphanumeric characters or `_`. Its maximum length is 50 characters. After you create an `AccessLevel`, you cannot change its `name`.
   &quot;title&quot;: &quot;A String&quot;, # Human readable title. Must be unique within the Policy.
 }</pre>
 </div>
 
 <div class="method">
     <code class="details" id="list">list(parent, accessLevelFormat=None, pageSize=None, pageToken=None, x__xgafv=None)</code>
-  <pre>List all Access Levels for an access policy.
+  <pre>Lists all access levels for an access policy.
 
 Args:
   parent: string, Required. Resource name for the access policy to list Access Levels from. Format: `accessPolicies/{policy_id}` (required)
@@ -353,12 +376,22 @@ Returns:
             &quot;members&quot;: [ # The request must be made by one of the provided user or service accounts. Groups are not supported. Syntax: `user:{emailid}` `serviceAccount:{emailid}` If not specified, a request may come from any user.
               &quot;A String&quot;,
             ],
-            &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields, each field must be false for the Condition overall to be satisfied. Defaults to false.
+            &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields. Any non-empty field criteria evaluating to false will result in the Condition to be satisfied. Defaults to false.
             &quot;regions&quot;: [ # The request must originate from one of the provided countries/regions. Must be valid ISO 3166-1 alpha-2 codes.
               &quot;A String&quot;,
             ],
             &quot;requiredAccessLevels&quot;: [ # A list of other access levels defined in the same `Policy`, referenced by resource name. Referencing an `AccessLevel` which does not exist is an error. All access levels listed must be granted for the Condition to be true. Example: &quot;`accessPolicies/MY_POLICY/accessLevels/LEVEL_NAME&quot;`
               &quot;A String&quot;,
+            ],
+            &quot;vpcNetworkSources&quot;: [ # The request must originate from one of the provided VPC networks in Google Cloud. Cannot specify this field together with `ip_subnetworks`.
+              { # The originating network source in Google Cloud.
+                &quot;vpcSubnetwork&quot;: { # Sub-segment ranges inside of a VPC Network. # Sub-segment ranges of a VPC network.
+                  &quot;network&quot;: &quot;A String&quot;, # Required. Network name. If the network is not part of the organization, the `compute.network.get` permission must be granted to the caller. Format: `//compute.googleapis.com/projects/{PROJECT_ID}/global/networks/{NETWORK_NAME}` Example: `//compute.googleapis.com/projects/my-project/global/networks/network-1`
+                  &quot;vpcIpSubnetworks&quot;: [ # CIDR block IP subnetwork specification. The IP address must be an IPv4 address and can be a public or private IP address. Note that for a CIDR IP address block, the specified IP address portion must be properly truncated (i.e. all the host bits must be zero) or the input is considered malformed. For example, &quot;192.0.2.0/24&quot; is accepted but &quot;192.0.2.1/24&quot; is not. If empty, all IP addresses are allowed.
+                    &quot;A String&quot;,
+                  ],
+                },
+              },
             ],
           },
         ],
@@ -372,7 +405,7 @@ Returns:
         },
       },
       &quot;description&quot;: &quot;A String&quot;, # Description of the `AccessLevel` and its use. Does not affect behavior.
-      &quot;name&quot;: &quot;A String&quot;, # Required. Resource name for the Access Level. The `short_name` component must begin with a letter and only include alphanumeric and &#x27;_&#x27;. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The maximum length of the `access_level` component is 50 characters.
+      &quot;name&quot;: &quot;A String&quot;, # Identifier. Resource name for the `AccessLevel`. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The `access_level` component must begin with a letter, followed by alphanumeric characters or `_`. Its maximum length is 50 characters. After you create an `AccessLevel`, you cannot change its `name`.
       &quot;title&quot;: &quot;A String&quot;, # Human readable title. Must be unique within the Policy.
     },
   ],
@@ -381,25 +414,25 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="list_next">list_next(previous_request, previous_response)</code>
+    <code class="details" id="list_next">list_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
     <code class="details" id="patch">patch(name, body=None, updateMask=None, x__xgafv=None)</code>
-  <pre>Update an Access Level. The longrunning operation from this RPC will have a successful status once the changes to the Access Level have propagated to long-lasting storage. Access Levels containing errors will result in an error response for the first error encountered.
+  <pre>Updates an access level. The long-running operation from this RPC has a successful status after the changes to the access level propagate to long-lasting storage. If access levels contain errors, an error response is returned for the first error encountered.
 
 Args:
-  name: string, Required. Resource name for the Access Level. The `short_name` component must begin with a letter and only include alphanumeric and &#x27;_&#x27;. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The maximum length of the `access_level` component is 50 characters. (required)
+  name: string, Identifier. Resource name for the `AccessLevel`. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The `access_level` component must begin with a letter, followed by alphanumeric characters or `_`. Its maximum length is 50 characters. After you create an `AccessLevel`, you cannot change its `name`. (required)
   body: object, The request body.
     The object takes the form of:
 
@@ -432,12 +465,22 @@ Args:
         &quot;members&quot;: [ # The request must be made by one of the provided user or service accounts. Groups are not supported. Syntax: `user:{emailid}` `serviceAccount:{emailid}` If not specified, a request may come from any user.
           &quot;A String&quot;,
         ],
-        &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields, each field must be false for the Condition overall to be satisfied. Defaults to false.
+        &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields. Any non-empty field criteria evaluating to false will result in the Condition to be satisfied. Defaults to false.
         &quot;regions&quot;: [ # The request must originate from one of the provided countries/regions. Must be valid ISO 3166-1 alpha-2 codes.
           &quot;A String&quot;,
         ],
         &quot;requiredAccessLevels&quot;: [ # A list of other access levels defined in the same `Policy`, referenced by resource name. Referencing an `AccessLevel` which does not exist is an error. All access levels listed must be granted for the Condition to be true. Example: &quot;`accessPolicies/MY_POLICY/accessLevels/LEVEL_NAME&quot;`
           &quot;A String&quot;,
+        ],
+        &quot;vpcNetworkSources&quot;: [ # The request must originate from one of the provided VPC networks in Google Cloud. Cannot specify this field together with `ip_subnetworks`.
+          { # The originating network source in Google Cloud.
+            &quot;vpcSubnetwork&quot;: { # Sub-segment ranges inside of a VPC Network. # Sub-segment ranges of a VPC network.
+              &quot;network&quot;: &quot;A String&quot;, # Required. Network name. If the network is not part of the organization, the `compute.network.get` permission must be granted to the caller. Format: `//compute.googleapis.com/projects/{PROJECT_ID}/global/networks/{NETWORK_NAME}` Example: `//compute.googleapis.com/projects/my-project/global/networks/network-1`
+              &quot;vpcIpSubnetworks&quot;: [ # CIDR block IP subnetwork specification. The IP address must be an IPv4 address and can be a public or private IP address. Note that for a CIDR IP address block, the specified IP address portion must be properly truncated (i.e. all the host bits must be zero) or the input is considered malformed. For example, &quot;192.0.2.0/24&quot; is accepted but &quot;192.0.2.1/24&quot; is not. If empty, all IP addresses are allowed.
+                &quot;A String&quot;,
+              ],
+            },
+          },
         ],
       },
     ],
@@ -451,7 +494,7 @@ Args:
     },
   },
   &quot;description&quot;: &quot;A String&quot;, # Description of the `AccessLevel` and its use. Does not affect behavior.
-  &quot;name&quot;: &quot;A String&quot;, # Required. Resource name for the Access Level. The `short_name` component must begin with a letter and only include alphanumeric and &#x27;_&#x27;. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The maximum length of the `access_level` component is 50 characters.
+  &quot;name&quot;: &quot;A String&quot;, # Identifier. Resource name for the `AccessLevel`. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The `access_level` component must begin with a letter, followed by alphanumeric characters or `_`. Its maximum length is 50 characters. After you create an `AccessLevel`, you cannot change its `name`.
   &quot;title&quot;: &quot;A String&quot;, # Human readable title. Must be unique within the Policy.
 }
 
@@ -479,7 +522,7 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
 }</pre>
@@ -487,7 +530,7 @@ Returns:
 
 <div class="method">
     <code class="details" id="replaceAll">replaceAll(parent, body=None, x__xgafv=None)</code>
-  <pre>Replace all existing Access Levels in an Access Policy with the Access Levels provided. This is done atomically. The longrunning operation from this RPC will have a successful status once all replacements have propagated to long-lasting storage. Replacements containing errors will result in an error response for the first error encountered. Replacement will be cancelled on error, existing Access Levels will not be affected. Operation.response field will contain ReplaceAccessLevelsResponse. Removing Access Levels contained in existing Service Perimeters will result in error.
+  <pre>Replaces all existing access levels in an access policy with the access levels provided. This is done atomically. The long-running operation from this RPC has a successful status after all replacements propagate to long-lasting storage. If the replacement contains errors, an error response is returned for the first error encountered. Upon error, the replacement is cancelled, and existing access levels are not affected. The Operation.response field contains ReplaceAccessLevelsResponse. Removing access levels contained in existing service perimeters result in an error.
 
 Args:
   parent: string, Required. Resource name for the access policy which owns these Access Levels. Format: `accessPolicies/{policy_id}` (required)
@@ -525,12 +568,22 @@ Args:
             &quot;members&quot;: [ # The request must be made by one of the provided user or service accounts. Groups are not supported. Syntax: `user:{emailid}` `serviceAccount:{emailid}` If not specified, a request may come from any user.
               &quot;A String&quot;,
             ],
-            &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields, each field must be false for the Condition overall to be satisfied. Defaults to false.
+            &quot;negate&quot;: True or False, # Whether to negate the Condition. If true, the Condition becomes a NAND over its non-empty fields. Any non-empty field criteria evaluating to false will result in the Condition to be satisfied. Defaults to false.
             &quot;regions&quot;: [ # The request must originate from one of the provided countries/regions. Must be valid ISO 3166-1 alpha-2 codes.
               &quot;A String&quot;,
             ],
             &quot;requiredAccessLevels&quot;: [ # A list of other access levels defined in the same `Policy`, referenced by resource name. Referencing an `AccessLevel` which does not exist is an error. All access levels listed must be granted for the Condition to be true. Example: &quot;`accessPolicies/MY_POLICY/accessLevels/LEVEL_NAME&quot;`
               &quot;A String&quot;,
+            ],
+            &quot;vpcNetworkSources&quot;: [ # The request must originate from one of the provided VPC networks in Google Cloud. Cannot specify this field together with `ip_subnetworks`.
+              { # The originating network source in Google Cloud.
+                &quot;vpcSubnetwork&quot;: { # Sub-segment ranges inside of a VPC Network. # Sub-segment ranges of a VPC network.
+                  &quot;network&quot;: &quot;A String&quot;, # Required. Network name. If the network is not part of the organization, the `compute.network.get` permission must be granted to the caller. Format: `//compute.googleapis.com/projects/{PROJECT_ID}/global/networks/{NETWORK_NAME}` Example: `//compute.googleapis.com/projects/my-project/global/networks/network-1`
+                  &quot;vpcIpSubnetworks&quot;: [ # CIDR block IP subnetwork specification. The IP address must be an IPv4 address and can be a public or private IP address. Note that for a CIDR IP address block, the specified IP address portion must be properly truncated (i.e. all the host bits must be zero) or the input is considered malformed. For example, &quot;192.0.2.0/24&quot; is accepted but &quot;192.0.2.1/24&quot; is not. If empty, all IP addresses are allowed.
+                    &quot;A String&quot;,
+                  ],
+                },
+              },
             ],
           },
         ],
@@ -544,7 +597,7 @@ Args:
         },
       },
       &quot;description&quot;: &quot;A String&quot;, # Description of the `AccessLevel` and its use. Does not affect behavior.
-      &quot;name&quot;: &quot;A String&quot;, # Required. Resource name for the Access Level. The `short_name` component must begin with a letter and only include alphanumeric and &#x27;_&#x27;. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The maximum length of the `access_level` component is 50 characters.
+      &quot;name&quot;: &quot;A String&quot;, # Identifier. Resource name for the `AccessLevel`. Format: `accessPolicies/{access_policy}/accessLevels/{access_level}`. The `access_level` component must begin with a letter, followed by alphanumeric characters or `_`. Its maximum length is 50 characters. After you create an `AccessLevel`, you cannot change its `name`.
       &quot;title&quot;: &quot;A String&quot;, # Human readable title. Must be unique within the Policy.
     },
   ],
@@ -574,9 +627,39 @@ Returns:
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
   &quot;name&quot;: &quot;A String&quot;, # The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.
-  &quot;response&quot;: { # The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
+  &quot;response&quot;: { # The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
     &quot;a_key&quot;: &quot;&quot;, # Properties of the object. Contains field @type with type URL.
   },
+}</pre>
+</div>
+
+<div class="method">
+    <code class="details" id="testIamPermissions">testIamPermissions(resource, body=None, x__xgafv=None)</code>
+  <pre>Returns the IAM permissions that the caller has on the specified Access Context Manager resource. The resource can be an AccessPolicy, AccessLevel, or ServicePerimeter. This method does not support other resources.
+
+Args:
+  resource: string, REQUIRED: The resource for which the policy detail is being requested. See [Resource names](https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field. (required)
+  body: object, The request body.
+    The object takes the form of:
+
+{ # Request message for `TestIamPermissions` method.
+  &quot;permissions&quot;: [ # The set of permissions to check for the `resource`. Permissions with wildcards (such as `*` or `storage.*`) are not allowed. For more information see [IAM Overview](https://cloud.google.com/iam/docs/overview#permissions).
+    &quot;A String&quot;,
+  ],
+}
+
+  x__xgafv: string, V1 error format.
+    Allowed values
+      1 - v1 error format
+      2 - v2 error format
+
+Returns:
+  An object of the form:
+
+    { # Response message for `TestIamPermissions` method.
+  &quot;permissions&quot;: [ # A subset of `TestPermissionsRequest.permissions` that the caller is allowed.
+    &quot;A String&quot;,
+  ],
 }</pre>
 </div>
 

@@ -3,11 +3,10 @@ from __future__ import absolute_import
 
 __author__ = "jcgregorio@google.com (Joe Gregorio)"
 
-import unittest2 as unittest
 import datetime
+import unittest
 
-from googleapiclient import channel
-from googleapiclient import errors
+from googleapiclient import channel, errors
 
 
 class TestChannel(unittest.TestCase):

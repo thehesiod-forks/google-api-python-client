@@ -76,17 +76,17 @@ h1, h2, h3 {
 <h2>Instance Methods</h2>
 <p class="toc_element">
   <code><a href="#batchInherit">batchInherit(customer, body=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Modify multiple policy values that are applied to a specific org unit so that they now inherit the value from a parent (if applicable). All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status.</p>
+<p class="firstline">Modify multiple policy values that are applied to a specific org unit so that they now inherit the value from a parent (if applicable). All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`, though the values for those keys may be different. On failure the request will return the error details as part of the google.rpc.Status.</p>
 <p class="toc_element">
   <code><a href="#batchModify">batchModify(customer, body=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Modify multiple policy values that are applied to a specific org unit. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status.</p>
+<p class="firstline">Modify multiple policy values that are applied to a specific org unit. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`, though the values for those keys may be different. On failure the request will return the error details as part of the google.rpc.Status.</p>
 <p class="toc_element">
   <code><a href="#close">close()</a></code></p>
 <p class="firstline">Close httplib2 connections.</p>
 <h3>Method Details</h3>
 <div class="method">
     <code class="details" id="batchInherit">batchInherit(customer, body=None, x__xgafv=None)</code>
-  <pre>Modify multiple policy values that are applied to a specific org unit so that they now inherit the value from a parent (if applicable). All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status.
+  <pre>Modify multiple policy values that are applied to a specific org unit so that they now inherit the value from a parent (if applicable). All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`, though the values for those keys may be different. On failure the request will return the error details as part of the google.rpc.Status.
 
 Args:
   customer: string, ID of the G Suite account or literal &quot;my_customer&quot; for the customer associated to the request. (required)
@@ -101,7 +101,7 @@ Args:
         &quot;additionalTargetKeys&quot;: { # Map containing the additional target key name and value pairs used to further identify the target of the policy.
           &quot;a_key&quot;: &quot;A String&quot;,
         },
-        &quot;targetResource&quot;: &quot;A String&quot;, # The target resource on which this policy is applied. The following resources are supported: * Organizational Unit (&quot;orgunits/{orgunit_id}&quot;)
+        &quot;targetResource&quot;: &quot;A String&quot;, # The target resource on which this policy is applied. The following resources are supported: * Organizational Unit (&quot;orgunits/{orgunit_id}&quot;) * Group (&quot;groups/{group_id}&quot;)
       },
     },
   ],
@@ -115,13 +115,13 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 
 <div class="method">
     <code class="details" id="batchModify">batchModify(customer, body=None, x__xgafv=None)</code>
-  <pre>Modify multiple policy values that are applied to a specific org unit. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status.
+  <pre>Modify multiple policy values that are applied to a specific org unit. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`, though the values for those keys may be different. On failure the request will return the error details as part of the google.rpc.Status.
 
 Args:
   customer: string, ID of the G Suite account or literal &quot;my_customer&quot; for the customer associated to the request. (required)
@@ -135,7 +135,7 @@ Args:
         &quot;additionalTargetKeys&quot;: { # Map containing the additional target key name and value pairs used to further identify the target of the policy.
           &quot;a_key&quot;: &quot;A String&quot;,
         },
-        &quot;targetResource&quot;: &quot;A String&quot;, # The target resource on which this policy is applied. The following resources are supported: * Organizational Unit (&quot;orgunits/{orgunit_id}&quot;)
+        &quot;targetResource&quot;: &quot;A String&quot;, # The target resource on which this policy is applied. The following resources are supported: * Organizational Unit (&quot;orgunits/{orgunit_id}&quot;) * Group (&quot;groups/{group_id}&quot;)
       },
       &quot;policyValue&quot;: { # A particular value for a policy managed by the service. # The new value for the policy.
         &quot;policySchema&quot;: &quot;A String&quot;, # The fully qualified name of the policy schema associated with this policy.
@@ -156,7 +156,7 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 

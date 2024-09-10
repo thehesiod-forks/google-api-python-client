@@ -81,25 +81,25 @@ h1, h2, h3 {
 
 <p class="toc_element">
   <code><a href="#batchCreateContacts">batchCreateContacts(body=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Create a batch of new contacts and return the PersonResponses for the newly created contacts. Limited to 10 parallel requests per user.</p>
+<p class="firstline">Create a batch of new contacts and return the PersonResponses for the newly Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.</p>
 <p class="toc_element">
   <code><a href="#batchDeleteContacts">batchDeleteContacts(body=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Delete a batch of contacts. Any non-contact data will not be deleted. Limited to 10 parallel requests per user.</p>
+<p class="firstline">Delete a batch of contacts. Any non-contact data will not be deleted. Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.</p>
 <p class="toc_element">
   <code><a href="#batchUpdateContacts">batchUpdateContacts(body=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Update a batch of contacts and return a map of resource names to PersonResponses for the updated contacts. Limited to 10 parallel requests per user.</p>
+<p class="firstline">Update a batch of contacts and return a map of resource names to PersonResponses for the updated contacts. Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.</p>
 <p class="toc_element">
   <code><a href="#close">close()</a></code></p>
 <p class="firstline">Close httplib2 connections.</p>
 <p class="toc_element">
   <code><a href="#createContact">createContact(body=None, personFields=None, sources=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Create a new contact and return the person resource for that contact. The request returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names</p>
+<p class="firstline">Create a new contact and return the person resource for that contact. The request returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.</p>
 <p class="toc_element">
   <code><a href="#deleteContact">deleteContact(resourceName, x__xgafv=None)</a></code></p>
-<p class="firstline">Delete a contact person. Any non-contact data will not be deleted.</p>
+<p class="firstline">Delete a contact person. Any non-contact data will not be deleted. Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.</p>
 <p class="toc_element">
   <code><a href="#deleteContactPhoto">deleteContactPhoto(resourceName, personFields=None, sources=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Delete a contact's photo.</p>
+<p class="firstline">Delete a contact's photo. Mutate requests for the same user should be done sequentially to avoid // lock contention.</p>
 <p class="toc_element">
   <code><a href="#get">get(resourceName, personFields=None, requestMask_includeField=None, sources=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Provides information about a person by specifying a resource name. Use `people/me` to indicate the authenticated user. The request returns a 400 error if 'personFields' is not specified.</p>
@@ -110,7 +110,7 @@ h1, h2, h3 {
   <code><a href="#listDirectoryPeople">listDirectoryPeople(mergeSources=None, pageSize=None, pageToken=None, readMask=None, requestSyncToken=None, sources=None, syncToken=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Provides a list of domain profiles and domain contacts in the authenticated user's domain directory. When the `sync_token` is specified, resources deleted since the last sync will be returned as a person with `PersonMetadata.deleted` set to true. When the `page_token` or `sync_token` is specified, all other request parameters must match the first call. Writes may have a propagation delay of several minutes for sync requests. Incremental syncs are not intended for read-after-write use cases. See example usage at [List the directory people that have changed](/people/v1/directory#list_the_directory_people_that_have_changed).</p>
 <p class="toc_element">
-  <code><a href="#listDirectoryPeople_next">listDirectoryPeople_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#listDirectoryPeople_next">listDirectoryPeople_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#searchContacts">searchContacts(pageSize=None, query=None, readMask=None, sources=None, x__xgafv=None)</a></code></p>
@@ -119,18 +119,18 @@ h1, h2, h3 {
   <code><a href="#searchDirectoryPeople">searchDirectoryPeople(mergeSources=None, pageSize=None, pageToken=None, query=None, readMask=None, sources=None, x__xgafv=None)</a></code></p>
 <p class="firstline">Provides a list of domain profiles and domain contacts in the authenticated user's domain directory that match the search query.</p>
 <p class="toc_element">
-  <code><a href="#searchDirectoryPeople_next">searchDirectoryPeople_next(previous_request, previous_response)</a></code></p>
+  <code><a href="#searchDirectoryPeople_next">searchDirectoryPeople_next()</a></code></p>
 <p class="firstline">Retrieves the next page of results.</p>
 <p class="toc_element">
   <code><a href="#updateContact">updateContact(resourceName, body=None, personFields=None, sources=None, updatePersonFields=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Update contact data for an existing contact person. Any non-contact data will not be modified. Any non-contact data in the person to update will be ignored. All fields specified in the `update_mask` will be replaced. The server returns a 400 error if `person.metadata.sources` is not specified for the contact to be updated or if there is no contact source. The server returns a 400 error with reason `"failedPrecondition"` if `person.metadata.sources.etag` is different than the contact's etag, which indicates the contact has changed since its data was read. Clients should get the latest person and merge their updates into the latest person. The server returns a 400 error if `memberships` are being updated and there are no contact group memberships specified on the person. The server returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names</p>
+<p class="firstline">Update contact data for an existing contact person. Any non-contact data will not be modified. Any non-contact data in the person to update will be ignored. All fields specified in the `update_mask` will be replaced. The server returns a 400 error if `person.metadata.sources` is not specified for the contact to be updated or if there is no contact source. The server returns a 400 error with reason `"failedPrecondition"` if `person.metadata.sources.etag` is different than the contact's etag, which indicates the contact has changed since its data was read. Clients should get the latest person and merge their updates into the latest person. The server returns a 400 error if `memberships` are being updated and there are no contact group memberships specified on the person. The server returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.</p>
 <p class="toc_element">
   <code><a href="#updateContactPhoto">updateContactPhoto(resourceName, body=None, x__xgafv=None)</a></code></p>
-<p class="firstline">Update a contact's photo.</p>
+<p class="firstline">Update a contact's photo. Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.</p>
 <h3>Method Details</h3>
 <div class="method">
     <code class="details" id="batchCreateContacts">batchCreateContacts(body=None, x__xgafv=None)</code>
-  <pre>Create a batch of new contacts and return the PersonResponses for the newly created contacts. Limited to 10 parallel requests per user.
+  <pre>Create a batch of new contacts and return the PersonResponses for the newly Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.
 
 Args:
   body: object, The request body.
@@ -219,8 +219,8 @@ Args:
           },
         ],
         &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -242,7 +242,7 @@ Args:
               &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
               &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
             },
-            &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+            &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
           },
         ],
         &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -365,7 +365,7 @@ Args:
         &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
         &quot;events&quot;: [ # The person&#x27;s events.
           { # An event related to the person.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -721,7 +721,7 @@ Args:
             &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
             &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
             &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -749,7 +749,7 @@ Args:
             },
             &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
             &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -900,7 +900,7 @@ Args:
             &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
           },
         ],
-        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
         &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
           { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
             &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -1117,8 +1117,8 @@ Returns:
           },
         ],
         &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -1140,7 +1140,7 @@ Returns:
               &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
               &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
             },
-            &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+            &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
           },
         ],
         &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -1263,7 +1263,7 @@ Returns:
         &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
         &quot;events&quot;: [ # The person&#x27;s events.
           { # An event related to the person.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -1619,7 +1619,7 @@ Returns:
             &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
             &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
             &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -1647,7 +1647,7 @@ Returns:
             },
             &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
             &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -1798,7 +1798,7 @@ Returns:
             &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
           },
         ],
-        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
         &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
           { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
             &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -1932,7 +1932,7 @@ Returns:
 
 <div class="method">
     <code class="details" id="batchDeleteContacts">batchDeleteContacts(body=None, x__xgafv=None)</code>
-  <pre>Delete a batch of contacts. Any non-contact data will not be deleted. Limited to 10 parallel requests per user.
+  <pre>Delete a batch of contacts. Any non-contact data will not be deleted. Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.
 
 Args:
   body: object, The request body.
@@ -1952,13 +1952,13 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 
 <div class="method">
     <code class="details" id="batchUpdateContacts">batchUpdateContacts(body=None, x__xgafv=None)</code>
-  <pre>Update a batch of contacts and return a map of resource names to PersonResponses for the updated contacts. Limited to 10 parallel requests per user.
+  <pre>Update a batch of contacts and return a map of resource names to PersonResponses for the updated contacts. Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.
 
 Args:
   body: object, The request body.
@@ -2046,8 +2046,8 @@ Args:
         },
       ],
       &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-        { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+        { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -2069,7 +2069,7 @@ Args:
             &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
             &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
           },
-          &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+          &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
         },
       ],
       &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -2192,7 +2192,7 @@ Args:
       &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
       &quot;events&quot;: [ # The person&#x27;s events.
         { # An event related to the person.
-          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -2548,7 +2548,7 @@ Args:
           &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
           &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
           &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-          &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+          &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -2576,7 +2576,7 @@ Args:
           },
           &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
           &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-          &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+          &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -2727,7 +2727,7 @@ Args:
           &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
         },
       ],
-      &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+      &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
       &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
         { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
           &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -2944,8 +2944,8 @@ Returns:
           },
         ],
         &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -2967,7 +2967,7 @@ Returns:
               &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
               &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
             },
-            &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+            &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
           },
         ],
         &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -3090,7 +3090,7 @@ Returns:
         &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
         &quot;events&quot;: [ # The person&#x27;s events.
           { # An event related to the person.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -3446,7 +3446,7 @@ Returns:
             &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
             &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
             &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -3474,7 +3474,7 @@ Returns:
             },
             &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
             &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -3625,7 +3625,7 @@ Returns:
             &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
           },
         ],
-        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
         &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
           { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
             &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -3764,7 +3764,7 @@ Returns:
 
 <div class="method">
     <code class="details" id="createContact">createContact(body=None, personFields=None, sources=None, x__xgafv=None)</code>
-  <pre>Create a new contact and return the person resource for that contact. The request returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names
+  <pre>Create a new contact and return the person resource for that contact. The request returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.
 
 Args:
   body: object, The request body.
@@ -3850,8 +3850,8 @@ Args:
     },
   ],
   &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -3873,7 +3873,7 @@ Args:
         &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
         &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
       },
-      &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+      &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
     },
   ],
   &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -3996,7 +3996,7 @@ Args:
   &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
   &quot;events&quot;: [ # The person&#x27;s events.
     { # An event related to the person.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -4352,7 +4352,7 @@ Args:
       &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
       &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
       &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -4380,7 +4380,7 @@ Args:
       },
       &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
       &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -4531,7 +4531,7 @@ Args:
       &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
     },
   ],
-  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
   &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
     { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
       &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -4656,6 +4656,7 @@ Args:
       READ_SOURCE_TYPE_PROFILE - Returns SourceType.ACCOUNT, SourceType.DOMAIN_PROFILE, and SourceType.PROFILE.
       READ_SOURCE_TYPE_CONTACT - Returns SourceType.CONTACT.
       READ_SOURCE_TYPE_DOMAIN_CONTACT - Returns SourceType.DOMAIN_CONTACT.
+      READ_SOURCE_TYPE_OTHER_CONTACT - Returns SourceType.OTHER_CONTACT.
   x__xgafv: string, V1 error format.
     Allowed values
       1 - v1 error format
@@ -4744,8 +4745,8 @@ Returns:
     },
   ],
   &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -4767,7 +4768,7 @@ Returns:
         &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
         &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
       },
-      &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+      &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
     },
   ],
   &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -4890,7 +4891,7 @@ Returns:
   &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
   &quot;events&quot;: [ # The person&#x27;s events.
     { # An event related to the person.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -5246,7 +5247,7 @@ Returns:
       &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
       &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
       &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -5274,7 +5275,7 @@ Returns:
       },
       &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
       &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -5425,7 +5426,7 @@ Returns:
       &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
     },
   ],
-  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
   &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
     { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
       &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -5546,7 +5547,7 @@ Returns:
 
 <div class="method">
     <code class="details" id="deleteContact">deleteContact(resourceName, x__xgafv=None)</code>
-  <pre>Delete a contact person. Any non-contact data will not be deleted.
+  <pre>Delete a contact person. Any non-contact data will not be deleted. Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.
 
 Args:
   resourceName: string, Required. The resource name of the contact to delete. (required)
@@ -5558,13 +5559,13 @@ Args:
 Returns:
   An object of the form:
 
-    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.
+    { # A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }
 }</pre>
 </div>
 
 <div class="method">
     <code class="details" id="deleteContactPhoto">deleteContactPhoto(resourceName, personFields=None, sources=None, x__xgafv=None)</code>
-  <pre>Delete a contact&#x27;s photo.
+  <pre>Delete a contact&#x27;s photo. Mutate requests for the same user should be done sequentially to avoid // lock contention.
 
 Args:
   resourceName: string, Required. The resource name of the contact whose photo will be deleted. (required)
@@ -5575,6 +5576,7 @@ Args:
       READ_SOURCE_TYPE_PROFILE - Returns SourceType.ACCOUNT, SourceType.DOMAIN_PROFILE, and SourceType.PROFILE.
       READ_SOURCE_TYPE_CONTACT - Returns SourceType.CONTACT.
       READ_SOURCE_TYPE_DOMAIN_CONTACT - Returns SourceType.DOMAIN_CONTACT.
+      READ_SOURCE_TYPE_OTHER_CONTACT - Returns SourceType.OTHER_CONTACT.
   x__xgafv: string, V1 error format.
     Allowed values
       1 - v1 error format
@@ -5664,8 +5666,8 @@ Returns:
       },
     ],
     &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-      { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-        &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+      { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+        &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
           &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
           &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
           &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -5687,7 +5689,7 @@ Returns:
           &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
           &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
         },
-        &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+        &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
       },
     ],
     &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -5810,7 +5812,7 @@ Returns:
     &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
     &quot;events&quot;: [ # The person&#x27;s events.
       { # An event related to the person.
-        &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+        &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
           &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
           &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
           &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -6166,7 +6168,7 @@ Returns:
         &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
         &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
         &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-        &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+        &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
           &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
           &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
           &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -6194,7 +6196,7 @@ Returns:
         },
         &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
         &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-        &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+        &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
           &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
           &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
           &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -6345,7 +6347,7 @@ Returns:
         &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
       },
     ],
-    &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+    &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
     &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
       { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
         &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -6479,6 +6481,7 @@ Args:
       READ_SOURCE_TYPE_PROFILE - Returns SourceType.ACCOUNT, SourceType.DOMAIN_PROFILE, and SourceType.PROFILE.
       READ_SOURCE_TYPE_CONTACT - Returns SourceType.CONTACT.
       READ_SOURCE_TYPE_DOMAIN_CONTACT - Returns SourceType.DOMAIN_CONTACT.
+      READ_SOURCE_TYPE_OTHER_CONTACT - Returns SourceType.OTHER_CONTACT.
   x__xgafv: string, V1 error format.
     Allowed values
       1 - v1 error format
@@ -6567,8 +6570,8 @@ Returns:
     },
   ],
   &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -6590,7 +6593,7 @@ Returns:
         &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
         &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
       },
-      &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+      &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
     },
   ],
   &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -6713,7 +6716,7 @@ Returns:
   &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
   &quot;events&quot;: [ # The person&#x27;s events.
     { # An event related to the person.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -7069,7 +7072,7 @@ Returns:
       &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
       &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
       &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -7097,7 +7100,7 @@ Returns:
       },
       &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
       &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -7248,7 +7251,7 @@ Returns:
       &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
     },
   ],
-  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
   &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
     { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
       &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -7381,6 +7384,7 @@ Args:
       READ_SOURCE_TYPE_PROFILE - Returns SourceType.ACCOUNT, SourceType.DOMAIN_PROFILE, and SourceType.PROFILE.
       READ_SOURCE_TYPE_CONTACT - Returns SourceType.CONTACT.
       READ_SOURCE_TYPE_DOMAIN_CONTACT - Returns SourceType.DOMAIN_CONTACT.
+      READ_SOURCE_TYPE_OTHER_CONTACT - Returns SourceType.OTHER_CONTACT.
   x__xgafv: string, V1 error format.
     Allowed values
       1 - v1 error format
@@ -7473,8 +7477,8 @@ Returns:
           },
         ],
         &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -7496,7 +7500,7 @@ Returns:
               &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
               &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
             },
-            &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+            &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
           },
         ],
         &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -7619,7 +7623,7 @@ Returns:
         &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
         &quot;events&quot;: [ # The person&#x27;s events.
           { # An event related to the person.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -7975,7 +7979,7 @@ Returns:
             &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
             &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
             &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -8003,7 +8007,7 @@ Returns:
             },
             &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
             &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -8154,7 +8158,7 @@ Returns:
             &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
           },
         ],
-        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
         &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
           { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
             &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -8397,8 +8401,8 @@ Returns:
         },
       ],
       &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-        { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+        { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -8420,7 +8424,7 @@ Returns:
             &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
             &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
           },
-          &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+          &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
         },
       ],
       &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -8543,7 +8547,7 @@ Returns:
       &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
       &quot;events&quot;: [ # The person&#x27;s events.
         { # An event related to the person.
-          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -8899,7 +8903,7 @@ Returns:
           &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
           &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
           &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-          &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+          &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -8927,7 +8931,7 @@ Returns:
           },
           &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
           &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-          &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+          &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -9078,7 +9082,7 @@ Returns:
           &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
         },
       ],
-      &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+      &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
       &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
         { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
           &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -9200,17 +9204,17 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="listDirectoryPeople_next">listDirectoryPeople_next(previous_request, previous_response)</code>
+    <code class="details" id="listDirectoryPeople_next">listDirectoryPeople_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
@@ -9227,6 +9231,7 @@ Args:
       READ_SOURCE_TYPE_PROFILE - Returns SourceType.ACCOUNT, SourceType.DOMAIN_PROFILE, and SourceType.PROFILE.
       READ_SOURCE_TYPE_CONTACT - Returns SourceType.CONTACT.
       READ_SOURCE_TYPE_DOMAIN_CONTACT - Returns SourceType.DOMAIN_CONTACT.
+      READ_SOURCE_TYPE_OTHER_CONTACT - Returns SourceType.OTHER_CONTACT.
   x__xgafv: string, V1 error format.
     Allowed values
       1 - v1 error format
@@ -9318,8 +9323,8 @@ Returns:
           },
         ],
         &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+          { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -9341,7 +9346,7 @@ Returns:
               &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
               &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
             },
-            &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+            &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
           },
         ],
         &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -9464,7 +9469,7 @@ Returns:
         &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
         &quot;events&quot;: [ # The person&#x27;s events.
           { # An event related to the person.
-            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+            &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -9820,7 +9825,7 @@ Returns:
             &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
             &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
             &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+            &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -9848,7 +9853,7 @@ Returns:
             },
             &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
             &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+            &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
               &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
               &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
               &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -9999,7 +10004,7 @@ Returns:
             &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
           },
         ],
-        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+        &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
         &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
           { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
             &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -10230,8 +10235,8 @@ Returns:
         },
       ],
       &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-        { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+        { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -10253,7 +10258,7 @@ Returns:
             &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
             &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
           },
-          &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+          &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
         },
       ],
       &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -10376,7 +10381,7 @@ Returns:
       &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
       &quot;events&quot;: [ # The person&#x27;s events.
         { # An event related to the person.
-          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+          &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -10732,7 +10737,7 @@ Returns:
           &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
           &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
           &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-          &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+          &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -10760,7 +10765,7 @@ Returns:
           },
           &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
           &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-          &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+          &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
             &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
             &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
             &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -10911,7 +10916,7 @@ Returns:
           &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
         },
       ],
-      &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+      &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
       &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
         { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
           &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -11034,25 +11039,25 @@ Returns:
 </div>
 
 <div class="method">
-    <code class="details" id="searchDirectoryPeople_next">searchDirectoryPeople_next(previous_request, previous_response)</code>
+    <code class="details" id="searchDirectoryPeople_next">searchDirectoryPeople_next()</code>
   <pre>Retrieves the next page of results.
 
-Args:
-  previous_request: The request for the previous page. (required)
-  previous_response: The response from the request for the previous page. (required)
+        Args:
+          previous_request: The request for the previous page. (required)
+          previous_response: The response from the request for the previous page. (required)
 
-Returns:
-  A request object that you can call &#x27;execute()&#x27; on to request the next
-  page. Returns None if there are no more items in the collection.
-    </pre>
+        Returns:
+          A request object that you can call &#x27;execute()&#x27; on to request the next
+          page. Returns None if there are no more items in the collection.
+        </pre>
 </div>
 
 <div class="method">
     <code class="details" id="updateContact">updateContact(resourceName, body=None, personFields=None, sources=None, updatePersonFields=None, x__xgafv=None)</code>
-  <pre>Update contact data for an existing contact person. Any non-contact data will not be modified. Any non-contact data in the person to update will be ignored. All fields specified in the `update_mask` will be replaced. The server returns a 400 error if `person.metadata.sources` is not specified for the contact to be updated or if there is no contact source. The server returns a 400 error with reason `&quot;failedPrecondition&quot;` if `person.metadata.sources.etag` is different than the contact&#x27;s etag, which indicates the contact has changed since its data was read. Clients should get the latest person and merge their updates into the latest person. The server returns a 400 error if `memberships` are being updated and there are no contact group memberships specified on the person. The server returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names
+  <pre>Update contact data for an existing contact person. Any non-contact data will not be modified. Any non-contact data in the person to update will be ignored. All fields specified in the `update_mask` will be replaced. The server returns a 400 error if `person.metadata.sources` is not specified for the contact to be updated or if there is no contact source. The server returns a 400 error with reason `&quot;failedPrecondition&quot;` if `person.metadata.sources.etag` is different than the contact&#x27;s etag, which indicates the contact has changed since its data was read. Clients should get the latest person and merge their updates into the latest person. The server returns a 400 error if `memberships` are being updated and there are no contact group memberships specified on the person. The server returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.
 
 Args:
-  resourceName: string, The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`. (required)
+  resourceName: string, The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`. (required)
   body: object, The request body.
     The object takes the form of:
 
@@ -11136,8 +11141,8 @@ Args:
     },
   ],
   &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -11159,7 +11164,7 @@ Args:
         &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
         &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
       },
-      &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+      &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
     },
   ],
   &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -11282,7 +11287,7 @@ Args:
   &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
   &quot;events&quot;: [ # The person&#x27;s events.
     { # An event related to the person.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -11638,7 +11643,7 @@ Args:
       &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
       &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
       &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -11666,7 +11671,7 @@ Args:
       },
       &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
       &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -11817,7 +11822,7 @@ Args:
       &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
     },
   ],
-  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
   &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
     { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
       &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -11942,6 +11947,7 @@ Args:
       READ_SOURCE_TYPE_PROFILE - Returns SourceType.ACCOUNT, SourceType.DOMAIN_PROFILE, and SourceType.PROFILE.
       READ_SOURCE_TYPE_CONTACT - Returns SourceType.CONTACT.
       READ_SOURCE_TYPE_DOMAIN_CONTACT - Returns SourceType.DOMAIN_CONTACT.
+      READ_SOURCE_TYPE_OTHER_CONTACT - Returns SourceType.OTHER_CONTACT.
   updatePersonFields: string, Required. A field mask to restrict which fields on the person are updated. Multiple fields can be specified by separating them with commas. All updated fields will be replaced. Valid values are: * addresses * biographies * birthdays * calendarUrls * clientData * emailAddresses * events * externalIds * genders * imClients * interests * locales * locations * memberships * miscKeywords * names * nicknames * occupations * organizations * phoneNumbers * relations * sipAddresses * urls * userDefined
   x__xgafv: string, V1 error format.
     Allowed values
@@ -12031,8 +12037,8 @@ Returns:
     },
   ],
   &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+    { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -12054,7 +12060,7 @@ Returns:
         &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
         &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
       },
-      &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+      &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
     },
   ],
   &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -12177,7 +12183,7 @@ Returns:
   &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
   &quot;events&quot;: [ # The person&#x27;s events.
     { # An event related to the person.
-      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+      &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -12533,7 +12539,7 @@ Returns:
       &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
       &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
       &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+      &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -12561,7 +12567,7 @@ Returns:
       },
       &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
       &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+      &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
         &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
         &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
         &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -12712,7 +12718,7 @@ Returns:
       &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
     },
   ],
-  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+  &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
   &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
     { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
       &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
@@ -12833,7 +12839,7 @@ Returns:
 
 <div class="method">
     <code class="details" id="updateContactPhoto">updateContactPhoto(resourceName, body=None, x__xgafv=None)</code>
-  <pre>Update a contact&#x27;s photo.
+  <pre>Update a contact&#x27;s photo. Mutate requests for the same user should be sent sequentially to avoid increased latency and failures.
 
 Args:
   resourceName: string, Required. Person resource name (required)
@@ -12937,8 +12943,8 @@ Returns:
       },
     ],
     &quot;birthdays&quot;: [ # The person&#x27;s birthdays. This field is a singleton for contact sources.
-      { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to.
-        &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the birthday.
+      { # A person&#x27;s birthday. At least one of the `date` and `text` fields are specified. The `date` and `text` fields typically represent the same date, but are not guaranteed to. Clients should always set the `date` field when mutating birthdays.
+        &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The structured date of the birthday.
           &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
           &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
           &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -12960,7 +12966,7 @@ Returns:
           &quot;sourcePrimary&quot;: True or False, # True if the field is the primary field for the source. Each source must have at most one field with `source_primary` set to true.
           &quot;verified&quot;: True or False, # Output only. True if the field is verified; false if the field is unverified. A verified field is typically a name, email address, phone number, or website that has been confirmed to be owned by the person.
         },
-        &quot;text&quot;: &quot;A String&quot;, # A free-form string representing the user&#x27;s birthday.
+        &quot;text&quot;: &quot;A String&quot;, # Prefer to use the `date` field if set. A free-form string representing the user&#x27;s birthday. This value is not validated.
       },
     ],
     &quot;braggingRights&quot;: [ # **DEPRECATED**: No data will be returned The person&#x27;s bragging rights.
@@ -13083,7 +13089,7 @@ Returns:
     &quot;etag&quot;: &quot;A String&quot;, # The [HTTP entity tag](https://en.wikipedia.org/wiki/HTTP_ETag) of the resource. Used for web cache validation.
     &quot;events&quot;: [ # The person&#x27;s events.
       { # An event related to the person.
-        &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The date of the event.
+        &quot;date&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The date of the event.
           &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
           &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
           &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -13439,7 +13445,7 @@ Returns:
         &quot;current&quot;: True or False, # True if the organization is the person&#x27;s current organization; false if the organization is a past organization.
         &quot;department&quot;: &quot;A String&quot;, # The person&#x27;s department at the organization.
         &quot;domain&quot;: &quot;A String&quot;, # The domain name associated with the organization; for example, `google.com`.
-        &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The end date when the person left the organization.
+        &quot;endDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The end date when the person left the organization.
           &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
           &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
           &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -13467,7 +13473,7 @@ Returns:
         },
         &quot;name&quot;: &quot;A String&quot;, # The name of the organization.
         &quot;phoneticName&quot;: &quot;A String&quot;, # The phonetic name of the organization.
-        &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`. # The start date when the person joined the organization.
+        &quot;startDate&quot;: { # Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp # The start date when the person joined the organization.
           &quot;day&quot;: 42, # Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#x27;t significant.
           &quot;month&quot;: 42, # Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
           &quot;year&quot;: 42, # Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
@@ -13618,7 +13624,7 @@ Returns:
         &quot;value&quot;: &quot;A String&quot;, # The address of the residence.
       },
     ],
-    &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string with a max length of 27 characters, in the form of `people/{person_id}`.
+    &quot;resourceName&quot;: &quot;A String&quot;, # The resource name for the person, assigned by the server. An ASCII string in the form of `people/{person_id}`.
     &quot;sipAddresses&quot;: [ # The person&#x27;s SIP addresses.
       { # A person&#x27;s SIP address. Session Initial Protocol addresses are used for VoIP communications to make voice or video calls over the internet.
         &quot;formattedType&quot;: &quot;A String&quot;, # Output only. The type of the SIP address translated and formatted in the viewer&#x27;s account locale or the `Accept-Language` HTTP header locale.
